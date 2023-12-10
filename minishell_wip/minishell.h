@@ -24,7 +24,6 @@ char	*allocate_full_path(const char *token, const char *file);
 char	*find_command_path(const char *file);
 
 /* execution */
-int		ft_execvp(const char *file, char *const argv[]);
 int		execute_simple_command(const char *file, char *const argv[]);
 
 /* utils */

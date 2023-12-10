@@ -1,15 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   shell_shell.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/10 19:25:54 by zhedlund          #+#    #+#             */
+/*   Updated: 2023/12/10 19:27:17 by zhedlund         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char **tokenizer(char *input);
-void parser(char **tokens);
-void execute_command(char **command);
+#include "minishell.h"
 
+/* example main for minishell
+ * note: this is not a working program, just an outline
+*/
 int main(void)
 {
     char *input;
@@ -28,7 +33,7 @@ int main(void)
         // Parsing tokens
         parser(tokens);
         // Executing parsed command
-        executeCommand(tokens);
+        execute_command(tokens);
         free(input);
         free(tokens);
     }

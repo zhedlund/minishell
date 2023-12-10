@@ -1,13 +1,25 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/10 15:07:54 by zhedlund          #+#    #+#             */
+/*   Updated: 2023/12/10 19:20:30 by zhedlund         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 #define MAX_TOKENS 64
 #define MAX_TOKEN_LEN 128
 
-char **tokenizer(char *input, const char *delimiters);
 
-// Function to check if a command is a built-in command
+/* Function to check if command is a built-in command
+ * @param command: command to check
+ * @return: 1 if command is a built-in command, 0 if not
+*/
 int is_builtin(char *command)
 {
     char	*builtin_cmd[4];
@@ -22,14 +34,17 @@ int is_builtin(char *command)
 	i = 0;
 	while (i < num_cmd)
 	{
-		if (strncmp(command, builtin_cmd[i], sizeof(builtin_cmd)) == 0)
+		if (ft_strncmp(command, builtin_cmd[i], sizeof(builtin_cmd)) == 0)
 			return (1); // Command is a built-in command
 		i++;
 	}
     return (0); // Command is not a built-in command
 }
 
-// Function to identify command type
+/* Function to parse the command type
+ * @param tokens: array of tokens
+ * @return: command type
+ */
 int parse_cmd_type(char **tokens)
 {
 	int	i;
@@ -38,12 +53,12 @@ int parse_cmd_type(char **tokens)
 	{
 		if (is_builtin(tokens[0]))
 			return (0); // Process as a built-in command
-		else if (strcmp(tokens[0], "|") == 0)
+		else if (ft_strcmp(tokens[0], "|") == 0)
             return (1); // Process as a piped command
-		else if ((strcmp(tokens[0], ">") == 0 || strcmp(tokens[0], ">>") == 0
-			|| strcmp(tokens[0], "<") == 0) || strcmp(tokens[0], "<<") == 0)
+		else if ((ft_strcmp(tokens[0], ">") == 0 || strcmp(tokens[0], ">>") == 0
+			|| ft_strcmp(tokens[0], "<") == 0) || strcmp(tokens[0], "<<") == 0)
 			return (2); // Process as a redirection command
-		else if (strcmp(tokens[0], "$") == 0)
+		else if (ft_strcmp(tokens[0], "$") == 0)
 			return (3); // Process as expansion
 		else
 			printf("command not found\n");
@@ -55,6 +70,7 @@ int parse_cmd_type(char **tokens)
 	return (-1); // No command was entered
 }
 
+/* main to test parser */
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -75,11 +91,8 @@ int main(int argc, char *argv[])
 	if (execflag == 2)
 		printf("Parsed command is a redirection > >> << <\n"); 
 		//execute_redirection(tokens);
-if (execflag == 3)
+	if (execflag == 3)
 		printf("Parsed command is expansion command\n");
 		//execute_expansion(tokens);
     return (0);
 }
-
-
-// ft_execvp.c return -1 if command not found

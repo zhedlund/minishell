@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:07:54 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/10 19:20:30 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/12 22:56:40 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 */
 int is_builtin(char *command)
 {
-    char	*builtin_cmd[4];
+    char	*builtin_cmd[5];
     int		num_cmd;
 	int		i;
 
@@ -30,6 +30,7 @@ int is_builtin(char *command)
 	builtin_cmd[1] = "exit";
 	builtin_cmd[2] = "export";
 	builtin_cmd[3] = "unset";
+	builtin_cmd[4] = "env";
 	num_cmd = sizeof(builtin_cmd) / sizeof(builtin_cmd[0]); // total size of array / size of one element = number of elements in array
 	i = 0;
 	while (i < num_cmd)
@@ -40,6 +41,8 @@ int is_builtin(char *command)
 	}
     return (0); // Command is not a built-in command
 }
+
+
 
 /* Function to parse the command type
  * @param tokens: array of tokens
@@ -71,7 +74,7 @@ int parse_cmd_type(char **tokens)
 }
 
 /* main to test parser */
-int main(int argc, char *argv[])
+/*int main(int argc, char *argv[])
 {
     if (argc < 2)
 	{
@@ -93,6 +96,7 @@ int main(int argc, char *argv[])
 		//execute_redirection(tokens);
 	if (execflag == 3)
 		printf("Parsed command is expansion command\n");
+		expand_variables(tokens);
 		//execute_expansion(tokens);
     return (0);
-}
+}*/

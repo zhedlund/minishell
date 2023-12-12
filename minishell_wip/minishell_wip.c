@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:48 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/10 18:59:28 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:42:29 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,9 @@ int main(void)
 		pid = fork();
         if (pid == 0)
 		{
-			execute_simple_command(args[0], args); // Call your function to execute the command
-			printf("Command not found\n");
+			//execute_simple_command(args[0], args); // Call your function to execute the command
+			execute_simple_command(args[0], args);
+			perror("execve\n");
 			exit(1);
         }
         else if (pid > 0)

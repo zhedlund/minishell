@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/10 19:24:59 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/12 14:47:02 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,12 @@ int execute_simple_command(const char *file, char *const argv[])
 }
 
 /* simple main to test one comand + option.
-The parser will probably return an array with commands similar to args[] here./*
+The parser will probably return an array with commands similar to args[] here.*/
 
 /*int main()
 {
     char *args[] = {"ls", "-la", NULL}; // Example arguments
-    execute_command("ls", args); // Example usage of my_execvp
+    execute_command("ls", args); // Example usage
 
     return (0);
 }*/

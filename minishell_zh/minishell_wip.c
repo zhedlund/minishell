@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:48 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/12 14:42:29 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/14 16:41:37 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,22 +27,26 @@ int main(void)
             printf("\n");
             break; // User pressed Ctrl+D or error
         }
-        if (strcmp(input, "exit") == 0) {
+        if (strcmp(input, "exit") == 0)
+		{
             free(input);
             break;
         }
         add_history(input); // Add input to the history
         char *token = ft_strtok(input, " \n");
         i = 0;
-        while (token != NULL) {
+        while (token != NULL)
+		{
             args[i] = token;
-            token = ft_strtok(NULL, "\n"); // Read until end of line for the 'cd' command
+            token = ft_strtok(NULL, "\n"); // to read whole line for cd, touch etc, read and write file names with spaces
             i++;
         }
         args[i] = NULL;
-        if (strcmp(args[0], "cd") == 0) {
+        if (strcmp(args[0], "cd") == 0) // works w file name with/without space. can go back w cd .., ../ ..
+		{
             char dir[MAX_LINE] = "";
-            for (int j = 1; args[j] != NULL; ++j) {
+            for (int j = 1; args[j] != NULL; ++j)
+			{
                 ft_strcat(dir, args[j]);
                 if (args[j + 1] != NULL) ft_strcat(dir, " "); // Add space if there are more arguments
             }
@@ -54,7 +58,6 @@ int main(void)
 		pid = fork();
         if (pid == 0)
 		{
-			//execute_simple_command(args[0], args); // Call your function to execute the command
 			execute_simple_command(args[0], args);
 			perror("execve\n");
 			exit(1);

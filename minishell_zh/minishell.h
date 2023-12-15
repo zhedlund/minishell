@@ -13,6 +13,7 @@
 #include <signal.h>
 #include <limits.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
@@ -22,6 +23,7 @@ char	**tokenizer(char *input, const char *delimiters);
 int		parse_cmd_type(char **tokens);
 char	*allocate_full_path(const char *token, const char *file);
 char	*find_command_path(const char *file);
+void	expand_variables(char **tokens);
 
 /* execution */
 int		execute_simple_command(const char *file, char *const argv[]);

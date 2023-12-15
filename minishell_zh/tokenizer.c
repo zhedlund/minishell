@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 19:42:47 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/10 19:44:19 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/14 18:33:15 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,24 +49,35 @@ char **tokenizer(char *input, const char *delimiters)
     return (tokens);
 }
 
-/*
-int main() {
-    char input[] = "ls -l -a";
+/* with delimiters " \t\n", it will return an array like this:
+tokens[0]: ls
+tokens[1]: -la
+tokens[2]: |
+tokens[3]: grep
+tokens[4]: rw
+tokens[5]: |
+tokens[6]: wc
+tokens[7]: -l
+
+the array could then be separated into an array of pointers, by using ft_split
+and remove |, to be able to send each command as input to the next by piping. 
+*/
+
+int main()
+{
+    char input[] = "ls -la | grep rw | wc -l";
     const char delimiters[] = " \t\n"; // Delimiters: space, tab, newline
     char **tokens = tokenizer(input, delimiters);
 
     // Print tokens for testing
     int i = 0;
     while (tokens[i] != NULL) {
-        printf("Token %d: %s\n", i, tokens[i]);
+        printf("tokens[%d]: %s\n", i, tokens[i]);
         i++;
     }
-
     // Free memory allocated for tokens
-    for (int j = 0; j < MAX_TOKENS; j++) {
+    for (int j = 0; j < MAX_TOKENS; j++)
         free(tokens[j]);
-    }
     free(tokens);
-
-    return 0;
-} */
+    return (0);
+} 

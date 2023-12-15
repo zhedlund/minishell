@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:48 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/14 16:41:37 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/15 11:32:06 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,9 @@ int main(void)
             printf("\n");
             break; // User pressed Ctrl+D or error
         }
-        if (strcmp(input, "exit") == 0)
+        if (ft_strcmp(input, "exit") == 0)
 		{
+			printf("exit\n");
             free(input);
             break;
         }
@@ -42,7 +43,7 @@ int main(void)
             i++;
         }
         args[i] = NULL;
-        if (strcmp(args[0], "cd") == 0) // works w file name with/without space. can go back w cd .., ../ ..
+        if (ft_strcmp(args[0], "cd") == 0) // works w file name with/without space. can go back w cd .., ../ ..
 		{
             char dir[MAX_LINE] = "";
             for (int j = 1; args[j] != NULL; ++j)
@@ -59,7 +60,7 @@ int main(void)
         if (pid == 0)
 		{
 			execute_simple_command(args[0], args);
-			perror("execve\n");
+			perror("execve");
 			exit(1);
         }
         else if (pid > 0)

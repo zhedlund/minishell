@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/12 23:15:37 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/14 20:11:05 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char *find_command_path(const char *file)
         token = ft_strtok(NULL, ":");
     }
     free(path_copy);
-    return NULL;
+    return (NULL);
 }
 
 /* Function to execute a simple command w options. Works similar to execvp

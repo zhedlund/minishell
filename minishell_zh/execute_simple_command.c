@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/14 20:11:05 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:48:58 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char *allocate_full_path(const char *token, const char *file)
  * @param file: command to execute
  * @return: full path of command
  */
-char *find_command_path(const char *file)
+char *find_cmd_path(const char *file)
 {
     char *path = getenv("PATH");
     char *path_copy = ft_strdup(path);
@@ -70,7 +70,7 @@ char *find_command_path(const char *file)
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int execute_simple_command(const char *file, char *const argv[])
+int exec_simple_cmd(const char *file, char *const argv[])
 {
 	char *full_path;
 
@@ -79,7 +79,7 @@ int execute_simple_command(const char *file, char *const argv[])
 		printf("Invalid arguments.\n");
 		return (-1);
 	}
-	full_path = find_command_path(file);
+	full_path = find_cmd_path(file);
 	if (full_path == NULL)
 		printf("Command not found: %s\n", file);
 	else if (access(full_path, X_OK) != 0)

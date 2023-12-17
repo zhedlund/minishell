@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:48 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/15 11:32:06 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/17 17:49:26 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int main(void)
 		pid = fork();
         if (pid == 0)
 		{
-			execute_simple_command(args[0], args);
+			exec_simple_cmd(args[0], args);
 			perror("execve");
 			exit(1);
         }

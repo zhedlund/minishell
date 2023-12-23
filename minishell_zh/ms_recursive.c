@@ -28,7 +28,7 @@ void run_cmd(t_cmd *cmd)
 		if (exec_cmd->argv[0] == 0)
 			exit(0);
 		// fprintf(stderr, "exec not implemented\n");
-		execvp(exec_cmd->argv[0], exec_cmd->argv);
+		exec_simple_cmd(exec_cmd->argv[0], exec_cmd->argv);
 		break;
 	case '>':
 	case '<':
@@ -93,7 +93,7 @@ void run_cmd(t_cmd *cmd)
 int get_cmd(char *buf, int nbuf)
 {
 	if (isatty(fileno(stdin)))
-		fprintf(stdout, "cs3224> ");
+		fprintf(stdout, "minishell> ");
 	memset(buf, 0, nbuf);
 	fgets(buf, nbuf, stdin);
 	if (buf[0] == 0) // EOF

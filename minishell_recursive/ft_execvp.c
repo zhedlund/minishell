@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   execute_simple_command.c                           :+:      :+:    :+:   */
+/*   ft_execvp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/17 17:48:58 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/28 13:35:27 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char *find_cmd_path(const char *file)
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int exec_simple_cmd(const char *file, char *const argv[])
+int ft_execvp(const char *file, char *const argv[])
 {
 	char *full_path;
 

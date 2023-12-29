@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-int fork1(void); // Fork but exits on failure.
 t_cmd *parse_cmd(char *);
 
 void handle_exec_cmd(t_exec *exec_cmd)
@@ -98,7 +97,7 @@ void run_cmd(t_cmd *cmd)
 
 int get_cmd(char *buf, int nbuf)
 {
-	if (isatty(fileno(stdin)))
+	if (isatty(0)) // checks if connected to stdin (fd 0)
 		fprintf(stdout, "minishell> ");
 	memset(buf, 0, nbuf);
 	fgets(buf, nbuf, stdin);
@@ -124,14 +123,15 @@ int main(void)
 				fprintf(stderr, "cannot cd %s\n", buf + 3);
 			continue;
 		}
-		if (fork1() == 0)
+		if (fork_process() == 0)
 			run_cmd(parse_cmd(buf));
 		wait(&r);
 	}
 	exit(0);
 }
 
-int fork1(void)
+// Fork but perror on failure
+int fork_process(void)
 {
 	int pid;
 

@@ -57,6 +57,13 @@ void  handle_parent_process(t_cmd *cmd, int fd_pipe[], int p_id);
 void  handle_pipe_cmd(t_pipe *pipe_cmd);
 void  run_cmd(t_cmd *cmd);
 int   get_cmd(char *buf, int nbuf);
+int   fork_process(void);
+
+/* constructors */
+t_cmd *exec_cmd(void);
+t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type);
+t_cmd *pipe_cmd(t_cmd *left, t_cmd *right);
+
 
 
 

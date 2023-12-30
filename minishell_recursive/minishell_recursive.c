@@ -1,7 +1,16 @@
-#include "minishell.h"
+#include "minishell_tree.h"
+
+// compile MacOS: cc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline
+// compile Linux: gcc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline -lhistory
 
 t_cmd *parse_cmd(char *);
 
+/* Execution */
+
+/* exec_cmd: pointer to the command struct
+	return: void
+	note: the function is called by: run_cmd()
+ */
 void handle_exec_cmd(t_exec *exec_cmd)
 {
     if (exec_cmd->argv[0] == 0)
@@ -9,6 +18,10 @@ void handle_exec_cmd(t_exec *exec_cmd)
     ft_execvp(exec_cmd->argv[0], exec_cmd->argv);
 }
 
+/* redir_cmd: pointer to the command struct
+	return: void
+	note: the function is called by: run_cmd()
+ */
 void handle_redir_cmd(t_redir *redir_cmd)
 {
     int fd_redirect;
@@ -17,7 +30,9 @@ void handle_redir_cmd(t_redir *redir_cmd)
 	{
         if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0)
 		{
-            fprintf(stderr, "open %s has failed\n", redir_cmd->file);
+            //fprintf(stderr, "open %s has failed\n", redir_cmd->file);
+			//ft_putstr_fd("open %s has failed\n", 2);
+			perror("open");
             exit(0);
         }
     }
@@ -25,18 +40,25 @@ void handle_redir_cmd(t_redir *redir_cmd)
 	{
         if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode)) < 0)
 		{
-            fprintf(stderr, "open %s has failed\n", redir_cmd->file);
+            //fprintf(stderr, "open %s has failed\n", redir_cmd->file);
+			//ft_putstr_fd("open %s has failed\n", 2);
+			perror("open");
             exit(0);
         }
     }
     if (dup2(fd_redirect, redir_cmd->fd) < 0)
 	{
-        fprintf(stderr, "dup2 has failed\n");
+        ft_putstr_fd("dup2 has failed\n", 2);
         exit(0);
     }
     run_cmd(redir_cmd->cmd);
 }
 
+/* cmd: pointer to the command struct
+	fd_pipe: file descriptor array
+	return: void
+	note: the function is called by: handle_pipe_cmd()
+ */
 void handle_child_process(t_cmd *cmd, int fd_pipe[])
 {
     close(fd_pipe[1]);
@@ -45,37 +67,51 @@ void handle_child_process(t_cmd *cmd, int fd_pipe[])
     close(fd_pipe[0]);
 }
 
-void handle_parent_process(t_cmd *cmd, int fd_pipe[], int p_id)
+/* cmd: pointer to the command struct
+	fd_pipe: file descriptor array
+	pid: process id
+	return: void
+	note: the function is called by: handle_pipe_cmd()
+ */
+void handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid)
 {
     close(fd_pipe[0]);
     dup2(fd_pipe[1], STDOUT_FILENO);
     run_cmd(((t_pipe *)cmd)->left);
     close(fd_pipe[1]);
-    wait(&p_id);
+    wait(&pid);
 }
 
+/* pipe_cmd: pointer to the command struct
+	return: void
+	note: the function is called by: run_cmd()
+ */
 void handle_pipe_cmd(t_pipe *pipe_cmd)
 {
     int fd_pipe[2];
-    int p_id;
+    int pid;
 
     if (pipe(fd_pipe) < 0)
 	{
-        fprintf(stderr, "pipe has failed\n");
+        ft_putstr_fd("pipe has failed\n", 2);
         exit(0);
     }
-    p_id = fork();
-    if (p_id < 0)
+    pid = fork();
+    if (pid < 0)
 	{
-        fprintf(stderr, "fork has failed\n");
+        ft_putstr_fd("fork has failed\n", 2);
         exit(0);
     }
-    if (p_id == 0)
+    if (pid == 0)
         handle_child_process((t_cmd *)pipe_cmd, fd_pipe);
     else
-        handle_parent_process((t_cmd *)pipe_cmd, fd_pipe, p_id);
+        handle_parent_process((t_cmd *)pipe_cmd, fd_pipe, pid);
 }
 
+/* cmd: pointer to the command struct
+	return: void
+	note: the function is called by: main()
+ */
 // Execute cmd.  Never returns.
 void run_cmd(t_cmd *cmd)
 {
@@ -89,47 +125,41 @@ void run_cmd(t_cmd *cmd)
         handle_pipe_cmd((t_pipe *)cmd);
     else
 	{
-        fprintf(stderr, "unknown run_cmd\n");
+        ft_putstr_fd("unknown run_cmd\n", 2);
         exit(-1);
     }
     exit(0);
 }
 
+/* buf: pointer to the buffer to store the input
+	nbuf: size of the buffer
+	return: 0 if input is not empty, -1 otherwise
+	note: the function is called by: main()
+ */
 int get_cmd(char *buf, int nbuf)
 {
+	char	*input;
+
 	if (isatty(0)) // checks if connected to stdin (fd 0)
-		fprintf(stdout, "minishell> ");
-	memset(buf, 0, nbuf);
-	fgets(buf, nbuf, stdin);
-	if (buf[0] == 0) // EOF
-		return (-1);
-	return 0;
-}
-
-int main(void)
-{
-	static char buf[100];
-	int fd, r;
-	// Read and run input commands.
-	while (get_cmd(buf, sizeof(buf)) >= 0)
+		input = readline("minishell> "); // read input w promt - interactive mode
+	else
+		input = readline(""); // read input w/o promt - non-interactive mode
+	if (input == NULL || ft_strlen(input) == 0) // Handle EOF or empty input
 	{
-		// cd is just an example, will call builtin functions here
-		// if (is_builtin()) or similar
-		if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') 
-		{
-			// Chdir have to be run in the parent, has no effect if run in the child.
-			buf[strlen(buf) - 1] = 0; // chop \n
-			if (chdir(buf + 3) < 0)
-				fprintf(stderr, "cannot cd %s\n", buf + 3);
-			continue;
-		}
-		if (fork_process() == 0)
-			run_cmd(parse_cmd(buf));
-		wait(&r);
+		if (input != NULL)
+			free(input); // free memory allocated by readline()
+		return (-1);
 	}
-	exit(0);
+	ft_strlcpy(buf, input, nbuf); // copy input to buf
+	buf[nbuf - 1] = '\0'; // null-terminated string
+    add_history(buf); // Add input to history
+    free(input); // Free memory allocated by readline()
+	return (0);
 }
 
+/* 	return: pid of the child process
+	note: the function is called by: run_cmd()
+ */
 // Fork but perror on failure
 int fork_process(void)
 {
@@ -141,22 +171,33 @@ int fork_process(void)
 	return (pid);
 }
 
+/* Constructors */
+
+/* return: pointer to the command struct
+	note: the function is called by: parse_exec()
+ */
 t_cmd *exec_cmd(void)
 {
 	t_exec *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = ' ';
 	return ((t_cmd *)cmd);
 }
 
+/* sub_cmd: pointer to the command struct
+	file: pointer to the file name
+	type: redirection type
+	return: pointer to the command struct
+	note: the function is called by: parse_redir()
+ */
 t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
 {
 	t_redir *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = type;
 	cmd->cmd = sub_cmd;
 	cmd->file = file;
@@ -165,148 +206,192 @@ t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
 	return ((t_cmd *)cmd);
 }
 
+/* left: pointer to the left command struct
+	right: pointer to the right command struct
+	return: pointer to the command struct
+	note: the function is called by: parse_pipe()
+ */
 t_cmd *pipe_cmd(t_cmd *left, t_cmd *right)
 {
 	t_pipe *cmd;
 
 	cmd = malloc(sizeof(*cmd));
-	memset(cmd, 0, sizeof(*cmd));
+	ft_memset(cmd, 0, sizeof(*cmd));
 	cmd->type = '|';
 	cmd->left = left;
 	cmd->right = right;
 	return ((t_cmd *)cmd);
 }
 
-// Parsing
+/* Parsing */ 
 
-//char whitespace[] = " \t\r\n\v";
-//char symbols[] = "<|>";
-
+/* input_ptr: pointer to the pointer to the first character of the string to be parsed
+	end_str: pointer to the last character of the string to be parsed
+	token_start: pointer to the pointer to the first character of the token
+	token_end: pointer to the pointer to the last character of the token
+	return: token type
+	note: the function is called by: parse_redir(), parse_pipe(), parse_exec()
+ */
+// function too long, needs to be split
 int get_token(char **input_ptr, char *end_str, char **token_start, char **token_end)
 {
-  char *current_pos;
-  int token_type;
-  
-  current_pos = *input_ptr;
-  while (current_pos < end_str && strchr(WHITESPACE, *current_pos))
-    current_pos++;
-  if (token_start)
-    *token_start = current_pos;
-  token_type = *current_pos;
-  switch (*current_pos)
-  {
-    case 0:
-      break;
-    case '|':
-    case '<':
-      current_pos++;
-      break;
-    case '>':
-      current_pos++;
-      break;
-    default:
-      token_type = 'a';
-      while (current_pos < end_str && !strchr(WHITESPACE, *current_pos) && !strchr(SYMBOLS, *current_pos))
+    char *current_pos;
+    int token_type;
+
+    current_pos = *input_ptr;
+    while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
         current_pos++;
-      break;
-  }
-  if (token_end)
-    *token_end = current_pos;
-  while (current_pos < end_str && strchr(WHITESPACE, *current_pos))
-    current_pos++;
-  *input_ptr = current_pos;
-  return token_type;
+    if (token_start != NULL)
+        *token_start = current_pos;
+    if (*current_pos == 0)
+        token_type = 0; // Null terminator
+	else if (*current_pos == '|' || *current_pos == '<' || *current_pos == '>')
+	{
+        token_type = *current_pos;
+        current_pos++;
+    }
+	else
+	{
+        token_type = 'a'; // Default alphanumeric token type
+        while (current_pos < end_str && !ft_strchr(WHITESPACE, *current_pos) && !ft_strchr(SYMBOLS, *current_pos))
+            current_pos++;
+    }
+    if (token_end != NULL)
+        *token_end = current_pos;
+    while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
+        current_pos++;
+    *input_ptr = current_pos;
+    return token_type;
 }
 
-int peek(char **ps, char *es, char *toks)
+/* position_ptr: pointer to the pointer to the first character of the string to be parsed
+	end_str: pointer to the last character of the string to be parsed
+	token_char: pointer to the string of token characters
+	return: 1 if the next token is a token character, 0 otherwise
+	note: the function is called by: parse_redir(), parse_pipe(), parse_exec(), parse_cmd()
+ */
+int check_next_token(char **position_ptr, char *end_str, char *token_char)
 {
-	char *s;
+	char *current_pos;
 
-	s = *ps;
-	while (s < es && strchr(WHITESPACE, *s))
-		s++;
-	*ps = s;
-	return *s && strchr(toks, *s);
+	current_pos = *position_ptr;
+	while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
+		current_pos++;
+	*position_ptr = current_pos;
+	return (*current_pos && ft_strchr(token_char, *current_pos));
 }
 
 t_cmd *parse_line(char **, char *);
 t_cmd *parse_pipe(char **, char *);
 t_cmd *parse_exec(char **, char *);
 
-// make a copy of the characters in the input buffer, starting from s through es.
-// null-terminate the copy to make it a string.
-char *make_copy(char *s, char *es)
+/* 	start_ptr: pointer to the first character of the string to be copied
+	end_ptr: pointer to the last character of the string to be copied
+	return: pointer to the copy of the string
+	note: the copy is allocated on the heap and must be freed by the caller */
+char *make_copy(char *start_ptr, char *end_ptr)
 {
-	int n = es - s;
-	char *c = malloc(n + 1);
-	//assert(c);
-	strncpy(c, s, n);
-	c[n] = 0;
-	return c;
+	size_t len;
+	char *copy;
+
+	len = end_ptr - start_ptr;
+	copy = malloc(len + 1);
+	if (copy != NULL)
+		ft_strlcpy(copy, start_ptr, len + 1); //copy n characters from s to c and ensure null-termination
+	return (copy);
 }
 
+/* s: pointer to the first character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is called by: main()
+ */
 t_cmd	*parse_cmd(char *s)
 {
 	char *es;
 	t_cmd *cmd;
 
-	es = s + strlen(s);
+	es = s + ft_strlen(s);
 	cmd = parse_line(&s, es);
-	peek(&s, es, "");
+	check_next_token(&s, es, "");
 	if (s != es)
 	{
-		fprintf(stderr, "leftovers: %s\n", s);
+		ft_putstr_fd("leftovers: %s\n", 2);
 		exit(-1);
 	}
-	return cmd;
+	return (cmd);
 }
 
+/* ps: pointer to the pointer to the first character of the string to be parsed
+	es: pointer to the last character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is called by: parse_cmd(), run_cmd(), main(), get_cmd()
+ */
 t_cmd	*parse_line(char **ps, char *es)
 {
 	t_cmd *cmd;
 	cmd = parse_pipe(ps, es);
-	return cmd;
+	return (cmd);
 }
 
+/* ps: pointer to the pointer to the first character of the string to be parsed
+	es: pointer to the last character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is recursive
+	note: the function is called by: parse_line(), parse_cmd(), run_cmd(), main(), get_cmd()
+ */
 t_cmd	*parse_pipe(char **ps, char *es)
 {
 	t_cmd *cmd;
 
 	cmd = parse_exec(ps, es);
-	if (peek(ps, es, "|"))
+	if (check_next_token(ps, es, "|"))
 	{
 		get_token(ps, es, 0, 0);
 		cmd = pipe_cmd(cmd, parse_pipe(ps, es));
 	}
-	return cmd;
+	return (cmd);
 }
 
-t_cmd*	parse_redir(t_cmd *cmd, char **ps, char *es)
+
+/* cmd: pointer to the command struct
+	position_ptr: pointer to the pointer to the first character of the string to be parsed
+	end_str: pointer to the last character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is called by: parse_exec(), parse_redir(), parse_pipe(), parse_cmd(),
+	run_cmd(), main(), get_cmd(), parse_line()
+ */
+t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 {
-	int tok;
-	char *q, *eq;
+    int		redir_type;
+    char	*file_start;
+	char	*file_end;
 
-	while (peek(ps, es, "<>"))
+    while (check_next_token(position_ptr, end_str, "<>"))
 	{
-		tok = get_token(ps, es, 0, 0);
-		if (get_token(ps, es, &q, &eq) != 'a')
+        redir_type = get_token(position_ptr, end_str, 0, 0);
+        if (get_token(position_ptr, end_str, &file_start, &file_end) != 'a')
 		{
-			fprintf(stderr, "missing file for redirection\n");
-			exit(-1);
-		}
-		switch (tok)
-		{
-		case '<':
-			cmd = redir_cmd(cmd, make_copy(q, eq), '<');
-			break;
-		case '>':
-			cmd = redir_cmd(cmd, make_copy(q, eq), '>');
-			break;
-		}
-	}
-	return cmd;
+            ft_putstr_fd("missing file for redirection\n", 2);
+            exit(-1);
+        }
+        if (redir_type == '<')
+			cmd = redir_cmd(cmd, make_copy(file_start, file_end), '<');
+		else if (redir_type == '>')
+            cmd = redir_cmd(cmd, make_copy(file_start, file_end), '>');
+        //else - handle unexpected token here if needed / print an error message)
+    }
+    return (cmd);
 }
 
+/* 	ps: pointer to the pointer to the first character of the string to be parsed
+	es: pointer to the last character of the string to be parsed
+	return: pointer to the command struct
+	note: the copy is allocated on the heap and must be freed by the caller
+	note: the function is recursive
+	note: the function is called by: parse_line(), parse_pipe(), parse_redir(), parse_exec()
+	parse_cmd(), run_cmd(), main(), get_cmd()
+ */
+// too long, needs to be split
 t_cmd *parse_exec(char **ps, char *es)
 {
 	char *q, *eq;
@@ -319,24 +404,50 @@ t_cmd *parse_exec(char **ps, char *es)
 
 	argc = 0;
 	ret = parse_redir(ret, ps, es);
-	while (!peek(ps, es, "|"))
+	while (!check_next_token(ps, es, "|"))
 	{
 		if ((tok = get_token(ps, es, &q, &eq)) == 0)
 			break;
 		if (tok != 'a')
 		{
-			fprintf(stderr, "syntax error\n");
+			ft_putstr_fd("syntax error\n", 2);
 			exit(-1);
 		}
 		cmd->argv[argc] = make_copy(q, eq);
 		argc++;
 		if (argc >= MAXARGS)
 		{
-			fprintf(stderr, "too many args\n");
+			ft_putstr_fd("too many args\n", 2);
 			exit(-1);
 		}
 		ret = parse_redir(ret, ps, es);
 	}
 	cmd->argv[argc] = 0;
-	return ret;
+	return (ret);
+}
+
+/* Main */
+
+int main(void)
+{
+	static char	buf[100];
+	int			status; // variable to store exit status of child process
+	// Read and run input commands.
+	while (get_cmd(buf, sizeof(buf)) >= 0)
+	{
+		// cd is just an example, will call builtin functions here
+		// if (is_builtin()) or similar
+		if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') 
+		{
+			// Chdir have to be run in the parent, has no effect if run in the child.
+			buf[ft_strlen(buf) - 1] = 0; // chop \n
+			if (chdir(buf + 3) < 0)
+				ft_putstr_fd("cannot cd %s\n", 2);
+			continue;
+		}
+		if (fork_process() == 0)
+			run_cmd(parse_cmd(buf));
+		wait(&status);
+	}
+	exit(0);
 }

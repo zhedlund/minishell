@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/28 13:35:27 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/30 14:37:56 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_tree.h"
 
 /* Function to allocate memory for the full path of a command
  * @param token: path to command

@@ -6,11 +6,26 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/12 22:35:44 by zhedlund         ###   ########.fr       */
+/*   Updated: 2023/12/30 15:09:55 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_tree.h"
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	char	*ps;
+	char	uc;
+
+	ps = (char *)s;
+	uc = (char)c;
+	while (n > 0)
+	{
+		ps[n - 1] = uc;
+		n--;
+	}
+	return (ps);
+}
 
 size_t	ft_strlen(const char *str)
 {
@@ -20,6 +35,11 @@ size_t	ft_strlen(const char *str)
 	while (str[len])
 		len++;
 	return (len);
+}
+
+void	ft_putstr_fd(char *s, int fd)
+{
+	write(fd, s, ft_strlen(s));
 }
 
 char	*ft_strpbrk(const char *s1, const char *s2)
@@ -134,4 +154,43 @@ int	ft_strcmp(const char *s1, const char *s2)
 	while (s1[i] && s1[i] == s2[i])
 		i++;
 	return (s1[i] - s2[i]);
+}
+
+size_t	ft_strlcpy(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	srclen;
+
+	srclen = ft_strlen(src);
+	if (size == 0)
+		return (srclen);
+	i = 0;
+	while (i < size - 1 && src[i] != '\0')
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = '\0';
+	return (srclen);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	int				i;
+	unsigned char	ch;
+
+	ch = c;
+	if (ch == '\0')
+	{
+		i = ft_strlen(s);
+		return ((char *)s + i++);
+	}
+	i = 0;
+	while (s[i])
+	{
+		if (s[i] == ch)
+			return ((char *)s + i);
+		i++;
+	}
+	return (NULL);
 }

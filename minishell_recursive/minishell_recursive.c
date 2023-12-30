@@ -1,7 +1,7 @@
 #include "minishell_tree.h"
 
 // compile MacOS: cc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline
-// compile Linux: gcc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline -lhistory
+// compile Linux: cc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline -lhistory
 
 t_cmd *parse_cmd(char *);
 

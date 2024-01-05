@@ -49,7 +49,7 @@ typedef struct s_pipe
 }		t_pipe;
 
 
-/* recursive version */
+/* execution */
 void  handle_exec_cmd(t_exec *exec_cmd);
 void  handle_redir_cmd(t_redir *redir_cmd);
 void  handle_child_process(t_cmd *cmd, int fd_pipe[]);
@@ -57,6 +57,8 @@ void  handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid);
 void  handle_pipe_cmd(t_pipe *pipe_cmd);
 int   get_cmd(char *buf, int nbuf);
 int   fork_process(void);
+void  run_cmd(t_cmd *cmd);
+int		ft_execvp(const char *file, char *const argv[]);
 
 /* constructors */
 t_cmd *exec_cmd(void);
@@ -72,10 +74,6 @@ int   get_token(char **input_ptr, char *end_str, char **token_start, char **toke
 int   check_next_token(char **position_ptr, char *end_str, char *token_char);
 char  *make_copy(char *start_ptr, char *end_ptr);
 
-/* execution */
-int		ft_execvp(const char *file, char *const argv[]);
-void  run_cmd(t_cmd *cmd);
-
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
 size_t  ft_strlen(const char *str);
@@ -88,14 +86,6 @@ void	ft_putstr_fd(char *s, int fd);
 void	*ft_memset(void *s, int c, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strchr(const char *s, int c);
-
-
-
-/* old version */
-int		is_builtin(char *command);
-char	**tokenizer(char *input, const char *delimiters);
-int		parse_cmd_type(char **tokens);
-void	expand_variables(char **tokens);
 
 
 #endif

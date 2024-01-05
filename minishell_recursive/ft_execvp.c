@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/30 14:37:56 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/05 20:42:22 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
  * @param file: command to execute
  * @return: full path of command
  */
-char *allocate_full_path(const char *token, const char *file)
+static char	*allocate_full_path(const char *token, const char *file)
 {
 	size_t	path_len;
 	size_t file_len;
@@ -43,7 +43,7 @@ char *allocate_full_path(const char *token, const char *file)
  * @param file: command to execute
  * @return: full path of command
  */
-char *find_cmd_path(const char *file)
+static char	*find_cmd_path(const char *file)
 {
     char *path = getenv("PATH");
     char *path_copy = ft_strdup(path);

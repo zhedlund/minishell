@@ -55,7 +55,6 @@ void  handle_redir_cmd(t_redir *redir_cmd);
 void  handle_child_process(t_cmd *cmd, int fd_pipe[]);
 void  handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid);
 void  handle_pipe_cmd(t_pipe *pipe_cmd);
-void  run_cmd(t_cmd *cmd);
 int   get_cmd(char *buf, int nbuf);
 int   fork_process(void);
 
@@ -65,18 +64,13 @@ t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type);
 t_cmd *pipe_cmd(t_cmd *left, t_cmd *right);
 
 /* parsing */
+t_cmd	*parse_cmd(char *str);
+t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str);
+t_cmd *parse_exec(char **position_ptr, char *end_str);
+t_cmd *parse_line(char **position_ptr, char *end_str);
 int   get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int   check_next_token(char **position_ptr, char *end_str, char *token_char);
-t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str);
-
-
-/* lexing & parsing */
-int		is_builtin(char *command);
-char	**tokenizer(char *input, const char *delimiters);
-int		parse_cmd_type(char **tokens);
-char	*allocate_full_path(const char *token, const char *file);
-char	*find_cmd_path(const char *file);
-void	expand_variables(char **tokens);
+char  *make_copy(char *start_ptr, char *end_ptr);
 
 /* execution */
 int		ft_execvp(const char *file, char *const argv[]);
@@ -84,7 +78,7 @@ void  run_cmd(t_cmd *cmd);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
-size_t	ft_strlen(const char *str);
+size_t  ft_strlen(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strcat(char *dest, const char *src);
 char	*ft_strcpy(char *dest, const char *src);
@@ -94,5 +88,14 @@ void	ft_putstr_fd(char *s, int fd);
 void	*ft_memset(void *s, int c, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strchr(const char *s, int c);
+
+
+
+/* old version */
+int		is_builtin(char *command);
+char	**tokenizer(char *input, const char *delimiters);
+int		parse_cmd_type(char **tokens);
+void	expand_variables(char **tokens);
+
 
 #endif

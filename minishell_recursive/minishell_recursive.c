@@ -2,8 +2,7 @@
 
 // compile MacOS: cc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline
 // compile Linux: cc minishell_recursive.c minishell_utils.c ft_execvp.c -lreadline -lhistory
-
-t_cmd *parse_cmd(char *);
+// run: ./a.out
 
 /* Execution */
 
@@ -191,6 +190,7 @@ t_cmd *exec_cmd(void)
 	type: redirection type
 	return: pointer to the command struct
 	note: the function is called by: parse_redir()
+	note: memory allocated by malloc() must be freed by the caller
  */
 t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
 {
@@ -201,8 +201,16 @@ t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
 	cmd->type = type;
 	cmd->cmd = sub_cmd;
 	cmd->file = file;
-	cmd->mode = (type == '<') ? O_RDONLY : O_WRONLY | O_CREAT | O_TRUNC;
-	cmd->fd = (type == '<') ? 0 : 1;
+	if (type == '<')
+	{
+		cmd->mode = O_RDONLY;
+		cmd->fd = 0;
+	}
+	else
+	{
+		cmd->mode = O_WRONLY | O_CREAT | O_TRUNC;
+		cmd->fd = 1;
+	}
 	return ((t_cmd *)cmd);
 }
 
@@ -252,7 +260,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
     }
 	else
 	{
-        token_type = 'a'; // Default alphanumeric token type
+        token_type = 'a'; // Default token type
         while (current_pos < end_str && !ft_strchr(WHITESPACE, *current_pos) && !ft_strchr(SYMBOLS, *current_pos))
             current_pos++;
     }
@@ -261,7 +269,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
     while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
         current_pos++;
     *input_ptr = current_pos;
-    return token_type;
+    return (token_type);
 }
 
 /* position_ptr: pointer to the pointer to the first character of the string to be parsed
@@ -281,10 +289,6 @@ int check_next_token(char **position_ptr, char *end_str, char *token_char)
 	return (*current_pos && ft_strchr(token_char, *current_pos));
 }
 
-t_cmd *parse_line(char **, char *);
-t_cmd *parse_pipe(char **, char *);
-t_cmd *parse_exec(char **, char *);
-
 /* 	start_ptr: pointer to the first character of the string to be copied
 	end_ptr: pointer to the last character of the string to be copied
 	return: pointer to the copy of the string
@@ -301,64 +305,12 @@ char *make_copy(char *start_ptr, char *end_ptr)
 	return (copy);
 }
 
-/* s: pointer to the first character of the string to be parsed
-	return: pointer to the command struct
-	note: the function is called by: main()
- */
-t_cmd	*parse_cmd(char *s)
-{
-	char *es;
-	t_cmd *cmd;
-
-	es = s + ft_strlen(s);
-	cmd = parse_line(&s, es);
-	check_next_token(&s, es, "");
-	if (s != es)
-	{
-		ft_putstr_fd("leftovers: %s\n", 2);
-		exit(-1);
-	}
-	return (cmd);
-}
-
-/* ps: pointer to the pointer to the first character of the string to be parsed
-	es: pointer to the last character of the string to be parsed
-	return: pointer to the command struct
-	note: the function is called by: parse_cmd(), run_cmd(), main(), get_cmd()
- */
-t_cmd	*parse_line(char **ps, char *es)
-{
-	t_cmd *cmd;
-	cmd = parse_pipe(ps, es);
-	return (cmd);
-}
-
-/* ps: pointer to the pointer to the first character of the string to be parsed
-	es: pointer to the last character of the string to be parsed
-	return: pointer to the command struct
-	note: the function is recursive
-	note: the function is called by: parse_line(), parse_cmd(), run_cmd(), main(), get_cmd()
- */
-t_cmd	*parse_pipe(char **ps, char *es)
-{
-	t_cmd *cmd;
-
-	cmd = parse_exec(ps, es);
-	if (check_next_token(ps, es, "|"))
-	{
-		get_token(ps, es, 0, 0);
-		cmd = pipe_cmd(cmd, parse_pipe(ps, es));
-	}
-	return (cmd);
-}
-
-
 /* cmd: pointer to the command struct
 	position_ptr: pointer to the pointer to the first character of the string to be parsed
 	end_str: pointer to the last character of the string to be parsed
 	return: pointer to the command struct
 	note: the function is called by: parse_exec(), parse_redir(), parse_pipe(), parse_cmd(),
-	run_cmd(), main(), get_cmd(), parse_line()
+	run_cmd(), main(), get_cmd()
  */
 t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 {
@@ -383,47 +335,113 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
     return (cmd);
 }
 
-/* 	ps: pointer to the pointer to the first character of the string to be parsed
+/* Function to handle token parsing and filling arguments
+	exec_cmd: pointer to the command struct
+	cmd: pointer to the pointer to the command struct
+	position_ptr: pointer to the pointer to the first character of the string to be parsed
+	end_str: pointer to the last character of the string to be parsed
+	note: the function is called by: parse_exec()
+*/
+void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)
+{
+    int args;
+
+	args = 0;
+    while (!check_next_token(position_ptr, end_str, "|"))
+	{
+        char *token_start;
+        char *token_end;
+        int token_type;
+
+		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
+        if (token_type == 0)
+			break;
+		/*if (token_type != 'a') // not sure if necessary check? commented out for now
+		{
+            ft_putstr_fd("syntax error\n", 2);
+            exit(-1);
+        }*/
+        exec_cmd->argv[args] = make_copy(token_start, token_end);
+        args++;
+        if (args >= MAXARGS)
+		{
+            ft_putstr_fd("too many args\n", 2);
+            exit(-1);
+        }
+        *cmd = parse_redir(*cmd, position_ptr, end_str);
+    }
+    exec_cmd->argv[args] = 0;
+}
+
+/* 	
+	Function to parse execution commands
+	position_ptr: pointer to the pointer to the first character of the string to be parsed
+	end_str: pointer to the last character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is called by: parse_pipe()
+*/
+t_cmd *parse_exec(char **position_ptr, char *end_str)
+{
+    t_cmd *cmd;
+    t_exec *exec_command;
+
+	cmd = exec_cmd();
+	exec_command = (t_exec *)cmd;
+    cmd = parse_redir(cmd, position_ptr, end_str);
+    parse_tokens(exec_command, &cmd, position_ptr, end_str);
+    return (cmd);
+}
+
+/* ps: pointer to the pointer to the first character of the string to be parsed
 	es: pointer to the last character of the string to be parsed
 	return: pointer to the command struct
-	note: the copy is allocated on the heap and must be freed by the caller
 	note: the function is recursive
-	note: the function is called by: parse_line(), parse_pipe(), parse_redir(), parse_exec()
-	parse_cmd(), run_cmd(), main(), get_cmd()
+	note: the function is called by: parse_line(), parse_cmd(), run_cmd(), main(), get_cmd()
  */
-// too long, needs to be split
-t_cmd *parse_exec(char **ps, char *es)
+t_cmd	*parse_pipe(char **position_ptr, char *end_str)
 {
-	char *q, *eq;
-	int tok, argc;
-	t_exec *cmd;
-	t_cmd *ret;
+	t_cmd *cmd;
 
-	ret = exec_cmd();
-	cmd = (t_exec *)ret;
-
-	argc = 0;
-	ret = parse_redir(ret, ps, es);
-	while (!check_next_token(ps, es, "|"))
+	cmd = parse_exec(position_ptr, end_str);
+	if (check_next_token(position_ptr, end_str, "|"))
 	{
-		if ((tok = get_token(ps, es, &q, &eq)) == 0)
-			break;
-		if (tok != 'a')
-		{
-			ft_putstr_fd("syntax error\n", 2);
-			exit(-1);
-		}
-		cmd->argv[argc] = make_copy(q, eq);
-		argc++;
-		if (argc >= MAXARGS)
-		{
-			ft_putstr_fd("too many args\n", 2);
-			exit(-1);
-		}
-		ret = parse_redir(ret, ps, es);
+		get_token(position_ptr, end_str, 0, 0);
+		cmd = pipe_cmd(cmd, parse_pipe(position_ptr, end_str));
 	}
-	cmd->argv[argc] = 0;
-	return (ret);
+	return (cmd);
+}
+
+/* position_ptr: pointer to the pointer to the first character of the string to be parsed
+	end_str: pointer to the last character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is called by: parse_cmd()
+ */
+t_cmd	*parse_line(char **position_ptr, char *end_str)
+{
+	t_cmd *cmd;
+
+	cmd = parse_pipe(position_ptr, end_str);
+	return (cmd);
+}
+
+/* str: pointer to the first character of the string to be parsed
+	return: pointer to the command struct
+	note: the function is called by: main()
+ */
+t_cmd	*parse_cmd(char *str)
+{
+	char *end_str;
+	t_cmd *cmd;
+
+	end_str = str + ft_strlen(str);
+	cmd = parse_line(&str, end_str);
+	check_next_token(&str, end_str, "");
+	if (str != end_str)
+	{
+		ft_putstr_fd("leftovers: %s\n", 2);
+		exit(-1);
+	}
+	return (cmd);
 }
 
 /* Main */

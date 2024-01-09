@@ -23,7 +23,7 @@
 
 typedef struct s_cmd 
 {
-  int	type;          // ' ' (exec), | (pipe), '<' or '>' for redirection
+  int	type;          // ' ' (exec), | (pipe), '<','>', 'x' (append/">>")
 }		t_cmd;
 
 typedef struct s_exec
@@ -34,7 +34,7 @@ typedef struct s_exec
 
 typedef struct s_redir
 {
-  int	type;          // < or > 
+  int	type;          // <, >, x (append/>>)
   t_cmd	*cmd;   // the command to be run (e.g., an execcmd)
   char	*file;        // the input/output file
   int	mode;          // the mode to open the file with
@@ -50,33 +50,33 @@ typedef struct s_pipe
 
 
 /* execution */
-void  handle_exec_cmd(t_exec *exec_cmd);
-void  handle_redir_cmd(t_redir *redir_cmd);
-void  handle_child_process(t_cmd *cmd, int fd_pipe[]);
-void  handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid);
-void  handle_pipe_cmd(t_pipe *pipe_cmd);
-int   get_cmd(char *buf, int nbuf);
-int   fork_process(void);
-void  run_cmd(t_cmd *cmd);
+void	handle_exec_cmd(t_exec *exec_cmd);
+void	handle_redir_cmd(t_redir *redir_cmd);
+void	handle_child_process(t_cmd *cmd, int fd_pipe[]);
+void	handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid);
+void	handle_pipe_cmd(t_pipe *pipe_cmd);
+int		get_cmd(char *buf, int nbuf);
+int		fork_process(void);
+void 	run_cmd(t_cmd *cmd);
 int		ft_execvp(const char *file, char *const argv[]);
 
 /* constructors */
-t_cmd *exec_cmd(void);
-t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type);
-t_cmd *pipe_cmd(t_cmd *left, t_cmd *right);
+t_cmd	*exec_cmd(void);
+t_cmd	*redir_cmd(t_cmd *sub_cmd, char *file, int type);
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 
 /* parsing */
 t_cmd	*parse_cmd(char *str);
-t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str);
-t_cmd *parse_exec(char **position_ptr, char *end_str);
-t_cmd *parse_line(char **position_ptr, char *end_str);
-int   get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
-int   check_next_token(char **position_ptr, char *end_str, char *token_char);
-char  *make_copy(char *start_ptr, char *end_ptr);
+t_cmd	*parse_redir(t_cmd *cmd, char **position_ptr, char *end_str);
+t_cmd	*parse_exec(char **position_ptr, char *end_str);
+t_cmd	*parse_line(char **position_ptr, char *end_str);
+int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
+int		check_next_token(char **position_ptr, char *end_str, char *token_char);
+char	*make_copy(char *start_ptr, char *end_ptr);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
-size_t  ft_strlen(const char *str);
+size_t	ft_strlen(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
 char	*ft_strcat(char *dest, const char *src);
 char	*ft_strcpy(char *dest, const char *src);

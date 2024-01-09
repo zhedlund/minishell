@@ -27,28 +27,32 @@ void handle_redir_cmd(t_redir *redir_cmd)
 
     if (redir_cmd->type == '>')
 	{
-        if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0)
+        if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0) // 0666 - read and write permissions for user, group, and others. no execution permissions
 		{
-            //fprintf(stderr, "open %s has failed\n", redir_cmd->file);
-			//ft_putstr_fd("open %s has failed\n", 2);
 			perror("open");
-            exit(0);
+            exit(1);
         }
     }
+	else if (redir_cmd->type == 'x')
+	{
+		if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0)
+		{
+			perror("open");
+			exit(1);
+		}
+	}
 	else if (redir_cmd->type == '<')
 	{
         if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode)) < 0)
 		{
-            //fprintf(stderr, "open %s has failed\n", redir_cmd->file);
-			//ft_putstr_fd("open %s has failed\n", 2);
 			perror("open");
-            exit(0);
+            exit(1);
         }
     }
     if (dup2(fd_redirect, redir_cmd->fd) < 0)
 	{
-        ft_putstr_fd("dup2 has failed\n", 2);
-        exit(0);
+        perror("dup2");
+        exit(1);
     }
     run_cmd(redir_cmd->cmd);
 }
@@ -92,14 +96,14 @@ void handle_pipe_cmd(t_pipe *pipe_cmd)
 
     if (pipe(fd_pipe) < 0)
 	{
-        ft_putstr_fd("pipe has failed\n", 2);
+        perror("pipe");
         exit(0);
     }
     pid = fork();
     if (pid < 0)
 	{
-        ft_putstr_fd("fork has failed\n", 2);
-        exit(0);
+        perror("fork");
+        exit(1);
     }
     if (pid == 0)
         handle_child_process((t_cmd *)pipe_cmd, fd_pipe);
@@ -118,7 +122,7 @@ void run_cmd(t_cmd *cmd)
         exit(0);
     if (cmd->type == ' ')
         handle_exec_cmd((t_exec *)cmd);
-    else if (cmd->type == '>' || cmd->type == '<')
+    else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x')
         handle_redir_cmd((t_redir *)cmd);
     else if (cmd->type == '|')
         handle_pipe_cmd((t_pipe *)cmd);
@@ -206,6 +210,11 @@ t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
 		cmd->mode = O_RDONLY;
 		cmd->fd = 0;
 	}
+	else if (type == 'x')
+	{
+		cmd->mode = O_WRONLY | O_CREAT | O_APPEND;
+		cmd->fd = 1;
+	}
 	else
 	{
 		cmd->mode = O_WRONLY | O_CREAT | O_TRUNC;
@@ -256,7 +265,12 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 	else if (*current_pos == '|' || *current_pos == '<' || *current_pos == '>')
 	{
         token_type = *current_pos;
-        current_pos++;
+		if (*current_pos == '>' && *(current_pos + 1) == '>') // append
+		{
+			token_type = 'x'; // append token type
+			current_pos++; // skip two characters
+		}
+		current_pos++;
     }
 	else
 	{
@@ -330,6 +344,8 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 			cmd = redir_cmd(cmd, make_copy(file_start, file_end), '<');
 		else if (redir_type == '>')
             cmd = redir_cmd(cmd, make_copy(file_start, file_end), '>');
+		else if (redir_type == 'x')
+			cmd = redir_cmd(cmd, make_copy(file_start, file_end), 'x');
         //else - handle unexpected token here if needed / print an error message)
     }
     return (cmd);
@@ -344,23 +360,17 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 */
 void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)
 {
-    int args;
+	int args;
+	char *token_start;
+	char *token_end;
+	int token_type;
 
 	args = 0;
     while (!check_next_token(position_ptr, end_str, "|"))
 	{
-        char *token_start;
-        char *token_end;
-        int token_type;
-
 		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
         if (token_type == 0)
 			break;
-		/*if (token_type != 'a') // not sure if necessary check? commented out for now
-		{
-            ft_putstr_fd("syntax error\n", 2);
-            exit(-1);
-        }*/
         exec_cmd->argv[args] = make_copy(token_start, token_end);
         args++;
         if (args >= MAXARGS)
@@ -438,7 +448,7 @@ t_cmd	*parse_cmd(char *str)
 	check_next_token(&str, end_str, "");
 	if (str != end_str)
 	{
-		ft_putstr_fd("leftovers: %s\n", 2);
+		ft_putstr_fd("leftovers in str\n", 2);
 		exit(-1);
 	}
 	return (cmd);
@@ -460,12 +470,12 @@ int main(void)
 			// Chdir have to be run in the parent, has no effect if run in the child.
 			buf[ft_strlen(buf) - 1] = 0; // chop \n
 			if (chdir(buf + 3) < 0)
-				ft_putstr_fd("cannot cd %s\n", 2);
+				ft_putstr_fd("cannot cd\n", 2);
 			continue;
 		}
 		if (fork_process() == 0)
 			run_cmd(parse_cmd(buf));
 		wait(&status);
 	}
-	exit(0);
+	return(0);
 }

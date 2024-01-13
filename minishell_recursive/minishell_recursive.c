@@ -24,7 +24,7 @@ void handle_exec_cmd(t_exec *exec_cmd)
 void handle_redir_cmd(t_redir *redir_cmd)
 {
     int fd_redirect;
-echo $USER | wc -c
+
     if (redir_cmd->type == '>')
 	{
         if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0) // 0666 - read and write permissions for user, group, and others. no execution permissions
@@ -358,31 +358,6 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 	end_str: pointer to the last character of the string to be parsed
 	note: the function is called by: parse_exec()
 */
-/*void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)
-{
-	int args;
-	char *token_start;
-	char *token_end;
-	int token_type;
-
-	args = 0;
-    while (!check_next_token(position_ptr, end_str, "|"))
-	{
-		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
-        if (token_type == 0)
-			break;
-        exec_cmd->argv[args] = make_copy(token_start, token_end);
-        args++;
-        if (args >= MAXARGS)
-		{
-            ft_putstr_fd("too many args\n", 2);
-            exit(-1);
-        }
-        //exec_cmd->argv = expand_env(exec_cmd->argv); // Expand variables before redirection parsing
-        *cmd = parse_redir(*cmd, position_ptr, end_str);
-    }
-    exec_cmd->argv[args] = 0;
-}*/
 
 /* Function to parse tokens and fill arguments with environmental variable expansion */
 void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)

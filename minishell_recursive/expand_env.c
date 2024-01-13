@@ -6,14 +6,18 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/13 19:41:36 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/13 19:46:46 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tree.h"
 
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
-	returns a new array with the expanded variables */
+	returns a new array with the expanded variables
+	note: the original array is freed
+	note: the new array must be freed by the caller
+	note: called by parse_tokens()
+	*/
 
 char **expand_env(char **argv)
 {
@@ -30,7 +34,7 @@ char **expand_env(char **argv)
             if (value != NULL)
             {
                 free(argv[i]);
-                argv[i] = strdup(value);
+                argv[i] = ft_strdup(value);
             }
         }
         i++;

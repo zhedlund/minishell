@@ -1,0 +1,131 @@
+   9583 pts/0    00:00:00 sort
+   9582 pts/0    00:00:00 ps
+   8846 ?        00:00:00 cpptools-srv
+   8028 ?        00:00:05 gedit
+   7233 ?        00:00:05 nautilus
+   7152 pts/1    00:00:00 bash
+   6985 pts/1    00:00:00 zsh
+   6955 ?        00:00:02 gnome-terminal-
+   6646 pts/0    00:00:00 a.out
+   6466 ?        00:00:00 Web Content
+   6171 ?        00:00:05 cpptools
+   6137 pts/0    00:00:00 zsh
+   6122 ?        00:00:03 code
+   6087 ?        00:00:00 code
+   6086 ?        00:00:04 code
+   6074 ?        00:00:10 code
+   6000 ?        00:00:51 code
+   5985 ?        00:00:00 code
+   5977 ?        00:00:13 code
+   5963 ?        00:00:00 chrome_crashpad
+   5949 ?        00:00:00 code
+   5947 ?        00:00:00 code
+   5946 ?        00:00:00 code
+   5941 ?        00:00:08 code
+   5914 ?        00:00:00 slack
+   5856 ?        00:01:33 slack
+   5831 ?        00:00:00 p11-kit-remote
+   5807 ?        00:00:03 slack
+   5803 ?        00:00:16 slack
+   5787 ?        00:00:00 chrome_crashpad
+   5768 ?        00:00:00 slack
+   5767 ?        00:00:00 bwrap
+   5759 ?        00:00:00 bwrap
+   5756 ?        00:00:00 zypak-sandbox <defunct>
+   5754 ?        00:00:00 slack
+   5749 ?        00:00:00 cat
+   5748 ?        00:00:00 cat
+   5745 ?        00:00:10 slack
+   5744 ?        00:00:00 bwrap
+   5742 ?        00:00:00 xdg-dbus-proxy
+   5741 ?        00:00:00 bwrap
+   5732 ?        00:00:00 bwrap
+   5697 ?        00:00:00 Web Content
+   5604 ?        00:00:00 Web Content
+   5601 ?        00:00:29 Isolated Web Co
+   5448 ?        00:00:00 gjs
+   5286 ?        00:00:04 Isolated Web Co
+   5148 ?        00:00:36 Isolated Web Co
+   4825 ?        00:00:03 Isolated Web Co
+   4705 ?        00:00:03 Isolated Web Co
+   4651 ?        00:00:02 Isolated Web Co
+   4642 ?        00:00:00 Utility Process
+   4593 ?        00:00:06 WebExtensions
+   4492 ?        00:00:01 Privileged Cont
+   4449 ?        00:00:00 Socket Process
+   4305 ?        00:00:55 firefox
+   4163 ?        00:00:00 flatpak-portal
+   4145 ?        00:00:00 p11-kit-server
+   4141 ?        00:00:00 flatpak-session
+   3866 ?        00:00:00 gvfsd-metadata
+   3697 ?        00:00:00 xdg-desktop-por
+   3696 ?        00:00:00 tracker-miner-f
+   3694 ?        00:00:00 gsd-printer
+   3689 ?        00:00:00 ibus-engine-sim
+   3591 ?        00:00:00 ibus-portal
+   3588 ?        00:00:00 ibus-x11
+   3586 ?        00:00:01 ibus-extension-
+   3585 ?        00:00:00 ibus-dconf
+   3553 ?        00:00:00 gjs
+   3518 ?        00:00:00 gsd-xsettings
+   3517 ?        00:00:00 gsd-wacom
+   3515 ?        00:00:00 gsd-usb-protect
+   3514 ?        00:00:00 gsd-sound
+   3513 ?        00:00:04 gnome-software
+   3512 ?        00:00:00 gsd-smartcard
+   3510 ?        00:00:00 gsd-sharing
+   3509 ?        00:00:00 gsd-screensaver
+   3508 ?        00:00:00 evolution-alarm
+   3507 ?        00:00:00 gsd-rfkill
+   3505 ?        00:00:00 gsd-disk-utilit
+   3504 ?        00:00:00 gsd-print-notif
+   3503 ?        00:00:00 gsd-power
+   3498 ?        00:00:00 gsd-media-keys
+   3496 ?        00:00:00 gsd-keyboard
+   3495 ?        00:00:00 gsd-housekeepin
+   3493 ?        00:00:00 gsd-datetime
+   3491 ?        00:00:00 gsd-color
+   3490 ?        00:00:02 ibus-daemon
+   3488 ?        00:00:00 gsd-a11y-settin
+   3487 ?        00:00:00 sh
+   3469 ?        00:00:00 at-spi2-registr
+   3467 ?        00:00:00 gjs
+   3432 ?        00:00:00 xdg-desktop-por
+   3423 ?        00:00:00 xdg-document-po
+   3419 ?        00:00:00 xdg-desktop-por
+   3410 ?        00:00:00 gvfsd-trash
+   3391 ?        00:00:00 gvfs-mtp-volume
+   3384 ?        00:00:00 gvfs-afc-volume
+   3377 ?        00:00:00 evolution-addre
+   3376 ?        00:00:00 gvfs-gphoto2-vo
+   3366 ?        00:00:00 gvfs-goa-volume
+   3359 ?        00:00:00 gvfs-udisks2-vo
+   3351 ?        00:00:00 goa-identity-se
+   3344 ?        00:00:00 evolution-calen
+   3341 ?        00:00:00 goa-daemon
+   3333 ?        00:00:00 evolution-sourc
+   3324 ?        00:00:00 gnome-shell-cal
+   3322 ?        00:00:00 xdg-permission-
+   3272 ?        00:00:50 gnome-shell
+   3251 ?        00:00:00 gnome-session-b
+   3239 ?        00:00:00 gnome-session-c
+   3216 ?        00:00:00 dbus-daemon
+   3210 ?        00:00:00 at-spi-bus-laun
+   3152 ?        00:00:00 ft_lock
+   3023 ?        00:00:00 dconf-service
+   2789 ?        00:00:12 containerd
+   2728 ?        00:00:00 dockerd
+   2721 ?        00:00:00 slirp4netns
+   2694 ?        00:00:00 exe
+   2692 ?        00:00:00 gvfsd-fuse
+   2686 ?        00:00:00 gnome-session-b
+   2684 ?        00:00:00 gvfsd
+   2678 ?        00:00:00 gnome-keyring-d
+   2673 ?        00:00:00 dbus-daemon
+   2664 ?        00:00:00 pulseaudio
+   2663 ?        00:00:00 pipewire-media-
+   2662 ?        00:00:00 pipewire
+   2661 ?        00:00:00 rootlesskit
+   2654 ?        00:00:00 (sd-pam)
+   2653 ?        00:00:00 systemd
+    PID TTY          TIME CMD

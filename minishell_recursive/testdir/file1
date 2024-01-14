@@ -1,0 +1,8 @@
+total 24
+drwxr-xr-x 2 zhedlund 2023_berlin  106 Jan 14 15:57 .
+drwxr-xr-x 3 zhedlund 2023_berlin  151 Jan 14 15:04 ..
+-rw-r--r-- 1 zhedlund 2023_berlin    0 Jan 14 16:00 file1
+-rw-r--r-- 1 zhedlund 2023_berlin   57 Jan 14 15:34 file2
+-rw-r--r-- 1 zhedlund 2023_berlin   15 Jan 14 15:57 homefile
+-rw-r--r-- 1 zhedlund 2023_berlin 4885 Jan 14 15:38 sorted_processes02.txt
+-rw-r--r-- 1 zhedlund 2023_berlin 4885 Jan 14 15:38 sorted_processes.txt

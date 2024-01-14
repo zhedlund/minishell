@@ -17,7 +17,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-#define MAXARGS 10
+#define MAXARGS 50
 #define WHITESPACE " \t\r\n\v"
 #define SYMBOLS "<|>"
 

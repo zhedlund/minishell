@@ -459,6 +459,8 @@ t_cmd	*parse_cmd(char *str)
 
 /* Main */
 
+int g_signal = 0;
+
 int main(void)
 {
 	static char	buf[100];

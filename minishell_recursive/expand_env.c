@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/13 19:46:46 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/14 15:53:29 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,11 @@
 
 char **expand_env(char **argv)
 {
-    int i = 0;
+    int i;
 	char *name;
 	char *value;
 	
+	i = 0;
     while (argv[i] != NULL)
     {
         if (argv[i][0] == '$' && argv[i][1] != '\0')

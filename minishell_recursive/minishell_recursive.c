@@ -260,8 +260,19 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
         current_pos++;
     if (token_start != NULL)
         *token_start = current_pos;
-    if (*current_pos == 0)
+	if (*current_pos == 0)
         token_type = 0; // Null terminator
+	// Check for single-quoted string
+    else if (*current_pos == '\'')
+    {
+		token_type = 'q'; // Single-quoted string
+        current_pos++;
+        *token_start = current_pos; // Exclude the single quotes in the argument
+        while (current_pos < end_str && *current_pos != '\'')
+           	current_pos++;
+        *token_end = current_pos;
+        current_pos++;
+    }
 	else if (*current_pos == '|' || *current_pos == '<' || *current_pos == '>')
 	{
         token_type = *current_pos;
@@ -302,6 +313,28 @@ int check_next_token(char **position_ptr, char *end_str, char *token_char)
 	*position_ptr = current_pos;
 	return (*current_pos && ft_strchr(token_char, *current_pos));
 }
+
+/*int check_next_token(char **position_ptr, char *end_str, char *token_char)
+{
+    char *current_pos;
+
+    current_pos = *position_ptr;
+    while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
+        current_pos++;
+    *position_ptr = current_pos;
+    if (*current_pos == '\'' || *current_pos == '\"')
+	{
+        char quote_char = *current_pos;
+        current_pos++;  // Move past the opening quote
+        while (current_pos < end_str && *current_pos != quote_char)
+            current_pos++;
+        if (current_pos == end_str) {
+            ft_putstr_fd("unmatched quote\n", 2);
+            exit(-1);
+        }
+    }
+    return (*current_pos && ft_strchr(token_char, *current_pos));
+}*/
 
 /* 	start_ptr: pointer to the first character of the string to be copied
 	end_ptr: pointer to the last character of the string to be copied
@@ -351,7 +384,7 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
     return (cmd);
 }
 
-/* Function to handle token parsing and filling arguments
+/* Function to handle token parsing and env expansion
 	exec_cmd: pointer to the command struct
 	cmd: pointer to the pointer to the command struct
 	position_ptr: pointer to the pointer to the first character of the string to be parsed
@@ -359,14 +392,12 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 	note: the function is called by: parse_exec()
 */
 
-/* Function to parse tokens and fill arguments with environmental variable expansion */
 void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)
 {
     int args = 0;
     char *token_start;
     char *token_end;
     int token_type;
-	char **expanded_arg;
 
     while (!check_next_token(position_ptr, end_str, "|"))
     {
@@ -383,8 +414,10 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
         *cmd = parse_redir(*cmd, position_ptr, end_str);
     }
     exec_cmd->argv[args] = NULL;
-    expanded_arg = expand_env(exec_cmd->argv);
+    if (token_type != 'q')
+		expand_env(exec_cmd->argv);
 }
+
 
 /* 	
 	Function to parse execution commands
@@ -458,8 +491,6 @@ t_cmd	*parse_cmd(char *str)
 }
 
 /* Main */
-
-int g_signal = 0;
 
 int main(void)
 {

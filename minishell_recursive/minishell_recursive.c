@@ -262,8 +262,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
         *token_start = current_pos;
 	if (*current_pos == 0)
         token_type = 0; // Null terminator
-	// Check for single-quoted string
-    else if (*current_pos == '\'')
+    else if (*current_pos == '\'') // Check for single-quoted string
     {
 		token_type = 'q'; // Single-quoted string
         current_pos++;
@@ -328,7 +327,8 @@ int check_next_token(char **position_ptr, char *end_str, char *token_char)
         current_pos++;  // Move past the opening quote
         while (current_pos < end_str && *current_pos != quote_char)
             current_pos++;
-        if (current_pos == end_str) {
+        if (current_pos == end_str)
+		{
             ft_putstr_fd("unmatched quote\n", 2);
             exit(-1);
         }
@@ -404,7 +404,10 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
         token_type = get_token(position_ptr, end_str, &token_start, &token_end);
         if (token_type == 0)
             break;
-        exec_cmd->argv[args] = make_copy(token_start, token_end);
+		if (token_type == 'q')
+			exec_cmd->argv[args] = make_copy(token_start, token_end - 1);
+		else
+        	exec_cmd->argv[args] = make_copy(token_start, token_end);
         args++;
         if (args >= MAXARGS)
         {

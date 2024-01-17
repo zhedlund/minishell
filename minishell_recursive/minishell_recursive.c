@@ -269,7 +269,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
            	current_pos++;
         *token_end = current_pos;
 		if (*current_pos == '\'')
-        	current_pos++;
+        current_pos++;
     }
 	else if (*current_pos == 0)
         token_type = 0; // Null terminator
@@ -362,25 +362,6 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
     return (cmd);
 }
 
-// Function to count the number of quotes in a string
-int count_quotes(char *argv[])
-{
-    int count;
-	
-	count = 0;
-    for (int i = 0; argv[i] != NULL; i++)
-    {
-        const char *str = argv[i];
-        while (*str)
-        {
-            if (*str == '\'')
-                count++;
-            str++;
-        }
-    }
-    return (count);
-}
-
 /* Function to handle token parsing and env expansion
 	exec_cmd: pointer to the command struct
 	cmd: pointer to the pointer to the command struct
@@ -419,12 +400,6 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
         *cmd = parse_redir(*cmd, position_ptr, end_str);
     }
     exec_cmd->argv[args] = NULL;
-	// Check for unmatched quotes in the entire command line
-    if (count_quotes(exec_cmd->argv) % 2 != 0)
-    {
-        ft_putstr_fd("unmatched quote\n", 2);
-        exit(-1);
-    }
 }
 
 /* 	
@@ -498,15 +473,46 @@ t_cmd	*parse_cmd(char *str)
 	return (cmd);
 }
 
+int has_unmatched_quotes(char *argv[])
+{
+	char	*str;
+    int		count;
+	int		i;
+
+	count = 0;
+	i = 0;
+    while (argv[i] != NULL)
+    {
+        str = argv[i];
+        while (*str)
+        {
+            if (*str == '\'')
+                count++;
+            str++;
+        }
+		i++;
+    }
+	if (count % 2 != 0)
+    	return (1);
+	return (0);
+}
+
+
 /* Main */
 
 int main(void)
 {
 	static char	buf[100];
 	int			status; // variable to store exit status of child process
-	// Read and run input commands.
+	
 	while (get_cmd(buf, sizeof(buf)) >= 0)
-	{
+	{	
+        // Check for unmatched quotes before proceeding
+		if (has_unmatched_quotes((char *[]){buf, NULL}))
+		{
+			ft_putstr_fd("unmatched quote\n", 2);
+			continue; // Skip processing this command and move to the next one
+		}
 		// cd is just an example, will call builtin functions here
 		// if (is_builtin()) or similar
 		if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') 

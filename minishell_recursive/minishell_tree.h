@@ -72,7 +72,7 @@ t_cmd	*parse_line(char **position_ptr, char *end_str);
 int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
-char		**expand_env(char **argv);
+char	**expand_env(char **argv);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);

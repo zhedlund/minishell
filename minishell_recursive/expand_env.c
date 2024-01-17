@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/15 16:13:07 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/16 12:58:27 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,14 @@
 
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
 	returns a new array with the expanded variables
-	note: the original array is freed
-	note: the new array must be freed by the caller
 	note: called by parse_tokens()
 	*/
 
 char **expand_env(char **argv)
 {
-    int i;
-	char *name;
-	char *value;
+    int     i;
+	char    *name;
+	char    *value;
 	
 	i = 0;
     while (argv[i] != NULL)

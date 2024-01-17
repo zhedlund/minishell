@@ -260,18 +260,19 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
         current_pos++;
     if (token_start != NULL)
         *token_start = current_pos;
-	if (*current_pos == 0)
-        token_type = 0; // Null terminator
-    else if (*current_pos == '\'') // Check for single-quoted string
+    if (*current_pos == '\'') // Check for single-quoted string
     {
 		token_type = 'q'; // Single-quoted string
-        current_pos++;
-        *token_start = current_pos; // Exclude the single quotes in the argument
+		current_pos++;
+        *token_start = current_pos;
         while (current_pos < end_str && *current_pos != '\'')
            	current_pos++;
         *token_end = current_pos;
-        current_pos++;
+		if (*current_pos == '\'')
+        	current_pos++;
     }
+	else if (*current_pos == 0)
+        token_type = 0; // Null terminator
 	else if (*current_pos == '|' || *current_pos == '<' || *current_pos == '>')
 	{
         token_type = *current_pos;
@@ -289,7 +290,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
             current_pos++;
     }
     if (token_end != NULL)
-        *token_end = current_pos;
+		*token_end = current_pos;
     while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
         current_pos++;
     *input_ptr = current_pos;
@@ -312,29 +313,6 @@ int check_next_token(char **position_ptr, char *end_str, char *token_char)
 	*position_ptr = current_pos;
 	return (*current_pos && ft_strchr(token_char, *current_pos));
 }
-
-/*int check_next_token(char **position_ptr, char *end_str, char *token_char)
-{
-    char *current_pos;
-
-    current_pos = *position_ptr;
-    while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
-        current_pos++;
-    *position_ptr = current_pos;
-    if (*current_pos == '\'' || *current_pos == '\"')
-	{
-        char quote_char = *current_pos;
-        current_pos++;  // Move past the opening quote
-        while (current_pos < end_str && *current_pos != quote_char)
-            current_pos++;
-        if (current_pos == end_str)
-		{
-            ft_putstr_fd("unmatched quote\n", 2);
-            exit(-1);
-        }
-    }
-    return (*current_pos && ft_strchr(token_char, *current_pos));
-}*/
 
 /* 	start_ptr: pointer to the first character of the string to be copied
 	end_ptr: pointer to the last character of the string to be copied
@@ -384,6 +362,25 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
     return (cmd);
 }
 
+// Function to count the number of quotes in a string
+int count_quotes(char *argv[])
+{
+    int count;
+	
+	count = 0;
+    for (int i = 0; argv[i] != NULL; i++)
+    {
+        const char *str = argv[i];
+        while (*str)
+        {
+            if (*str == '\'')
+                count++;
+            str++;
+        }
+    }
+    return (count);
+}
+
 /* Function to handle token parsing and env expansion
 	exec_cmd: pointer to the command struct
 	cmd: pointer to the pointer to the command struct
@@ -398,16 +395,21 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
     char *token_start;
     char *token_end;
     int token_type;
+	int	quote_count;
 
+	quote_count = 0;
     while (!check_next_token(position_ptr, end_str, "|"))
     {
         token_type = get_token(position_ptr, end_str, &token_start, &token_end);
         if (token_type == 0)
             break;
-		if (token_type == 'q')
-			exec_cmd->argv[args] = make_copy(token_start, token_end - 1);
-		else
-        	exec_cmd->argv[args] = make_copy(token_start, token_end);
+        if (token_type == 'q')
+            exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the single quote
+        else
+        {
+            exec_cmd->argv[args] = make_copy(token_start, token_end);
+			expand_env(&exec_cmd->argv[args]);
+        }
         args++;
         if (args >= MAXARGS)
         {
@@ -417,10 +419,13 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
         *cmd = parse_redir(*cmd, position_ptr, end_str);
     }
     exec_cmd->argv[args] = NULL;
-    if (token_type != 'q')
-		expand_env(exec_cmd->argv);
+	// Check for unmatched quotes in the entire command line
+    if (count_quotes(exec_cmd->argv) % 2 != 0)
+    {
+        ft_putstr_fd("unmatched quote\n", 2);
+        exit(-1);
+    }
 }
-
 
 /* 	
 	Function to parse execution commands

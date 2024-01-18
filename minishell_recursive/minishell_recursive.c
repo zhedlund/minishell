@@ -526,6 +526,7 @@ int main(void)
 		if (fork_process() == 0)
 			run_cmd(parse_cmd(buf));
 		wait(&status);
+    	printf("Child exit status: %d\n",WEXITSTATUS(status));
 	}
 	return(0);
 }

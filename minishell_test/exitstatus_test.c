@@ -4,36 +4,26 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
+#include <stdlib.h>
 
-int main() 
+
+int main(int ac, char **av, char **env)
 {
+    char    *str[3];
+    int		stt;
+    pid_t   pid_fork;
+	int		exit_status;
 
-    pid_t child_pid = fork();
-	pid_t rc_pid;
-	int   chld_state;
-	rc_pid = wait(&chld_state);
-
-    if (rc_pid > 0)
-{
-  if (WIFEXITED(chld_state)) {
-    printf("Child exited with RC=%d\n",WEXITSTATUS(chld_state));
-  }
-  //if (WISIGNALED(chld_state)) {
-    //printf("Child exited via signal %d\n",WTERMSIG(chld_state));
-
-else
-/* if no PID returned, then an error */
-{
-  if (errno == ECHILD) {
-     printf("No children exist.\n");
-  }
-  else {
-     printf("Unexpected error.\n");
-     //abort();
-  }
+    str[0] = "/bin/cat";
+    str[1] = "non_existing_file.txt";
+    str[2] = NULL;
+    if ((pid_fork = fork()) == 0)
+        execve("/bin/cat", str, env);
+    else
+        waitpid(pid_fork, &stt, 0);
+		if (WIFEXITED(stt))
+			exit_status = WEXITSTATUS(stt);
+	printf("exit status: %d\n", exit_status);
+    return (0);
 }
 
-    return 0;
-}
-}

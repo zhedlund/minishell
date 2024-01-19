@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/05 20:42:22 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/19 17:26:42 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 static char	*allocate_full_path(const char *token, const char *file)
 {
 	size_t	path_len;
-	size_t file_len;
-	char *full_path;
+	size_t	file_len;
+	char	*full_path;
 
 	path_len = ft_strlen(token);
 	file_len = ft_strlen(file);
@@ -32,7 +32,7 @@ static char	*allocate_full_path(const char *token, const char *file)
 	}
 	full_path = malloc((path_len + file_len + 2) * sizeof(char));
 	if (!full_path)
-		return NULL;
+		return (NULL);
     ft_strcpy(full_path, token);
     ft_strcat(full_path, "/");
     ft_strcat(full_path, file);
@@ -45,24 +45,28 @@ static char	*allocate_full_path(const char *token, const char *file)
  */
 static char	*find_cmd_path(const char *file)
 {
-    char *path = getenv("PATH");
-    char *path_copy = ft_strdup(path);
-    char *token = ft_strtok(path_copy, ":");
-    char *full_path = NULL;
+    char	*path;
+    char	*path_copy;
+    char	*token;
+    char	*full_path;
 
-    while (token != NULL)
+	path = getenv("PATH");
+	path_copy = ft_strdup(path);
+	token = ft_strtok(path_copy, ":");
+	full_path = NULL;
+	while (token != NULL)
 	{
-        full_path = allocate_full_path(token, file);
-        if (full_path != NULL && access(full_path, X_OK) == 0)
+		full_path = allocate_full_path(token, file);
+		if (full_path != NULL && access(full_path, X_OK) == 0)
 		{
-            free(path_copy);
-            return full_path;
-        }
-        free(full_path); // Freeing if access fails or allocation fails
-        token = ft_strtok(NULL, ":");
-    }
-    free(path_copy);
-    return (NULL);
+			free(path_copy);
+			return full_path;
+		}
+		free(full_path); // Freeing if access fails or allocation fails
+		token = ft_strtok(NULL, ":");
+	}
+	free(path_copy);
+	return (NULL);
 }
 
 /* Function to execute a simple command w options. Works similar to execvp
@@ -72,25 +76,34 @@ static char	*find_cmd_path(const char *file)
  */
 int ft_execvp(const char *file, char *const argv[])
 {
-	char *full_path;
+	char	*full_path;
 
 	if (!file || !argv)
 	{
 		printf("Invalid arguments.\n");
 		return (-1);
 	}
-	full_path = find_cmd_path(file);
+	if (file[0] == '.' && file[1] == '/')
+		full_path = ft_strdup(file);
+	else
+		full_path = find_cmd_path(file);
 	if (full_path == NULL)
-		printf("Command not found: %s\n", file);
+	{
+		perror(file); // Prints "cmd: No such file or directory"
+		exit(127);
+	}
 	else if (access(full_path, X_OK) != 0)
-		printf("Permission denied: %s\n", full_path);
+	{
+		perror(full_path); // Prints "./path: Permission denied"
+		exit(126);
+	}
 	else if (execve(full_path, argv, NULL) == -1)
 		perror("execve");
 	free(full_path); // Free memory allocated by find_command_path
 	return (-1);
 }
 
-/* simple main to test one comand + option.
+/* simple main to test one command + option.
 The parser will probably return an array with commands similar to args[] here.*/
 
 /*int main()
@@ -128,9 +141,9 @@ but won't work in minishell */
 		i++;
 	}
     exec_args[argc - 1] = NULL; // Set the last element to NULL as required by execve
-    result = execute_simple_command(file, exec_args); // Execute the command with options
+    result = ft_execvp(file, exec_args); // Execute the command with options
     if (result != 0)
         printf("Failed to execute command: %s\n", file);
     free(exec_args); // Free allocated memory
-    return 0;
+    return (0);
 }*/

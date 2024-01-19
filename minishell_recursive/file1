@@ -1,0 +1,10 @@
+total 60
+drwxr-xr-x 2 zhedlund 2023_berlin   149 Jan 19 18:45 .
+drwxr-xr-x 7 zhedlund 2023_berlin   165 Jan 14 20:25 ..
+-rwxr-xr-x 1 zhedlund 2023_berlin 22424 Jan 19 18:42 a.out
+-rw-r--r-- 1 zhedlund 2023_berlin  1514 Jan 18 13:52 expand_env.c
+-rw-r--r-- 1 zhedlund 2023_berlin     0 Jan 19 18:45 file1
+-rw-r--r-- 1 zhedlund 2023_berlin  4421 Jan 19 17:26 ft_execvp.c
+-rw-r--r-- 1 zhedlund 2023_berlin 14192 Jan 19 18:40 minishell_recursive.c
+-rw-r--r-- 1 zhedlund 2023_berlin  2669 Jan 18 13:52 minishell_tree.h
+-rw-r--r-- 1 zhedlund 2023_berlin  3261 Jan  9 14:51 minishell_utils.c

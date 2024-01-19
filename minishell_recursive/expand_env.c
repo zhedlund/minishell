@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/16 12:58:27 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/19 20:22:32 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 char **expand_env(char **argv)
 {
     int     i;
+	int		j;
 	char    *name;
 	char    *value;
 	

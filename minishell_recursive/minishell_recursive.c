@@ -25,28 +25,20 @@ void handle_redir_cmd(t_redir *redir_cmd)
 {
     int fd_redirect;
 
-    if (redir_cmd->type == '>')
+    if (redir_cmd->type == '>' || redir_cmd->type == 'x')
 	{
         if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0) // 0666 - read and write permissions for user, group, and others. no execution permissions
 		{
-			perror("open");
-            exit(1);
+			perror(redir_cmd->file);
+            exit(2);
         }
     }
-	else if (redir_cmd->type == 'x')
-	{
-		if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode, 0666)) < 0)
-		{
-			perror("open");
-			exit(1);
-		}
-	}
 	else if (redir_cmd->type == '<')
 	{
         if ((fd_redirect = open(redir_cmd->file, redir_cmd->mode)) < 0)
 		{
-			perror("open");
-            exit(1);
+			perror(redir_cmd->file);
+            exit(2);
         }
     }
     if (dup2(fd_redirect, redir_cmd->fd) < 0)
@@ -76,7 +68,7 @@ void handle_child_process(t_cmd *cmd, int fd_pipe[])
 	return: void
 	note: the function is called by: handle_pipe_cmd()
  */
-void handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid)
+void handle_parent_process(t_cmd *cmd, int fd_pipe[], pid_t pid)
 {
     close(fd_pipe[0]);
     dup2(fd_pipe[1], STDOUT_FILENO);
@@ -91,13 +83,13 @@ void handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid)
  */
 void handle_pipe_cmd(t_pipe *pipe_cmd)
 {
-    int fd_pipe[2];
-    int pid;
+    int		fd_pipe[2];
+    pid_t	pid;
 
     if (pipe(fd_pipe) < 0)
 	{
         perror("pipe");
-        exit(0);
+        exit(1);
     }
     pid = fork();
     if (pid < 0)
@@ -135,11 +127,11 @@ void run_cmd(t_cmd *cmd)
 }
 
 /* buf: pointer to the buffer to store the input
-	nbuf: size of the buffer
+	buf_size: size of the buffer
 	return: 0 if input is not empty, -1 otherwise
 	note: the function is called by: main()
  */
-int get_cmd(char *buf, int nbuf)
+int	get_cmd(char *buf, int buf_size)
 {
 	char	*input;
 
@@ -153,8 +145,8 @@ int get_cmd(char *buf, int nbuf)
 			free(input); // free memory allocated by readline()
 		return (-1);
 	}
-	ft_strlcpy(buf, input, nbuf); // copy input to buf
-	buf[nbuf - 1] = '\0'; // null-terminated string
+	ft_strlcpy(buf, input, buf_size); // copy input to buf
+	buf[buf_size - 1] = '\0'; // null-terminated string
     add_history(buf); // Add input to history
     free(input); // Free memory allocated by readline()
 	return (0);
@@ -164,9 +156,9 @@ int get_cmd(char *buf, int nbuf)
 	note: the function is called by: run_cmd()
  */
 // Fork but perror on failure
-int fork_process(void)
+int	fork_process(void)
 {
-	int pid;
+	pid_t	pid;
 
 	pid = fork();
 	if (pid == -1)
@@ -179,7 +171,7 @@ int fork_process(void)
 /* return: pointer to the command struct
 	note: the function is called by: parse_exec()
  */
-t_cmd *exec_cmd(void)
+t_cmd	*exec_cmd(void)
 {
 	t_exec *cmd;
 
@@ -196,7 +188,7 @@ t_cmd *exec_cmd(void)
 	note: the function is called by: parse_redir()
 	note: memory allocated by malloc() must be freed by the caller
  */
-t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
+t_cmd	*redir_cmd(t_cmd *sub_cmd, char *file, int type)
 {
 	t_redir *cmd;
 
@@ -228,7 +220,7 @@ t_cmd *redir_cmd(t_cmd *sub_cmd, char *file, int type)
 	return: pointer to the command struct
 	note: the function is called by: parse_pipe()
  */
-t_cmd *pipe_cmd(t_cmd *left, t_cmd *right)
+t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right)
 {
 	t_pipe *cmd;
 
@@ -250,10 +242,11 @@ t_cmd *pipe_cmd(t_cmd *left, t_cmd *right)
 	note: the function is called by: parse_redir(), parse_pipe(), parse_exec()
  */
 // function too long, needs to be split
-int get_token(char **input_ptr, char *end_str, char **token_start, char **token_end)
+int	get_token(char **input_ptr, char *end_str, char **token_start, char **token_end)
 {
-    char *current_pos;
-    int token_type;
+    char	*current_pos;
+    int		token_type;
+	t_exec	*cmd;
 
     current_pos = *input_ptr;
     while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
@@ -271,6 +264,17 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 		if (*current_pos == '\'')
         current_pos++;
     }
+	else if (*current_pos == '\"') // Check for double-quoted string
+	{
+		token_type = 'd'; // Double-quoted string
+		current_pos++;
+		*token_start = current_pos;
+		while (current_pos < end_str && *current_pos != '\"')
+			current_pos++;
+		*token_end = current_pos;
+		if (*current_pos == '\"')
+			current_pos++;
+	}
 	else if (*current_pos == 0)
         token_type = 0; // Null terminator
 	else if (*current_pos == '|' || *current_pos == '<' || *current_pos == '>')
@@ -303,7 +307,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 	return: 1 if the next token is a token character, 0 otherwise
 	note: the function is called by: parse_redir(), parse_pipe(), parse_exec(), parse_cmd()
  */
-int check_next_token(char **position_ptr, char *end_str, char *token_char)
+int	check_next_token(char **position_ptr, char *end_str, char *token_char)
 {
 	char *current_pos;
 
@@ -318,7 +322,7 @@ int check_next_token(char **position_ptr, char *end_str, char *token_char)
 	end_ptr: pointer to the last character of the string to be copied
 	return: pointer to the copy of the string
 	note: the copy is allocated on the heap and must be freed by the caller */
-char *make_copy(char *start_ptr, char *end_ptr)
+char	*make_copy(char *start_ptr, char *end_ptr)
 {
 	size_t len;
 	char *copy;
@@ -331,13 +335,13 @@ char *make_copy(char *start_ptr, char *end_ptr)
 }
 
 /* cmd: pointer to the command struct
-	position_ptr: pointer to the pointer to the first character of the string to be parsed
+	position_ptr: pointer to the pointer to the first character of 			expand_env(&exec_cmd->argv[args]);the string to be parsed
 	end_str: pointer to the last character of the string to be parsed
 	return: pointer to the command struct
 	note: the function is called by: parse_exec(), parse_redir(), parse_pipe(), parse_cmd(),
 	run_cmd(), main(), get_cmd()
  */
-t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
+t_cmd	*parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 {
     int		redir_type;
     char	*file_start;
@@ -349,7 +353,7 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
         if (get_token(position_ptr, end_str, &file_start, &file_end) != 'a')
 		{
             ft_putstr_fd("missing file for redirection\n", 2);
-            exit(-1);
+            exit(EXIT_FAILURE);
         }
         if (redir_type == '<')
 			cmd = redir_cmd(cmd, make_copy(file_start, file_end), '<');
@@ -370,36 +374,37 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str)
 	note: the function is called by: parse_exec()
 */
 
-void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)
+void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str)
 {
-    int args = 0;
-    char *token_start;
-    char *token_end;
-    int token_type;
-	int	quote_count;
+    int		args;
+    char	*token_start;
+    char	*token_end;
+    int		token_type;
 
-	quote_count = 0;
-    while (!check_next_token(position_ptr, end_str, "|"))
-    {
-        token_type = get_token(position_ptr, end_str, &token_start, &token_end);
-        if (token_type == 0)
-            break;
-        if (token_type == 'q')
-            exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the single quote
-        else
-        {
-            exec_cmd->argv[args] = make_copy(token_start, token_end);
+	args = 0;
+	while (!check_next_token(position_ptr, end_str, "|"))
+	{
+		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
+		if (token_type == 0)
+			break;
+		if (token_type == 'q')
+			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
+		else if (token_type == 'd')
+		{
+			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
+			expand_env(&exec_cmd->argv[args]); // doesn't work, token needs to be split to expand env
+		}
+		else
+		{
+			exec_cmd->argv[args] = make_copy(token_start, token_end);
 			expand_env(&exec_cmd->argv[args]);
-        }
-        args++;
-        if (args >= MAXARGS)
-        {
-            ft_putstr_fd("too many args\n", 2);
-            exit(-1);
-        }
-        *cmd = parse_redir(*cmd, position_ptr, end_str);
-    }
-    exec_cmd->argv[args] = NULL;
+		}
+		args++;
+		if (args >= MAXARGS)
+			ft_putstr_fd("Too many arguments\n", 2);
+		*cmd = parse_redir(*cmd, position_ptr, end_str);
+	}
+	exec_cmd->argv[args] = NULL;
 }
 
 /* 	
@@ -459,8 +464,8 @@ t_cmd	*parse_line(char **position_ptr, char *end_str)
  */
 t_cmd	*parse_cmd(char *str)
 {
-	char *end_str;
-	t_cmd *cmd;
+	char	*end_str;
+	t_cmd	*cmd;
 
 	end_str = str + ft_strlen(str);
 	cmd = parse_line(&str, end_str);
@@ -468,7 +473,7 @@ t_cmd	*parse_cmd(char *str)
 	if (str != end_str)
 	{
 		ft_putstr_fd("leftovers in str\n", 2);
-		exit(-1);
+		exit(EXIT_FAILURE);
 	}
 	return (cmd);
 }
@@ -504,6 +509,7 @@ int main(void)
 {
 	static char	buf[100];
 	int			status; // variable to store exit status of child process
+	int			exit_status;
 	
 	while (get_cmd(buf, sizeof(buf)) >= 0)
 	{	
@@ -526,7 +532,10 @@ int main(void)
 		if (fork_process() == 0)
 			run_cmd(parse_cmd(buf));
 		wait(&status);
-    	printf("Child exit status: %d\n",WEXITSTATUS(status));
+		//waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+				exit_status = (WEXITSTATUS(status)); // WEXITSTATUS returns the exit status of the child
+    	printf("Child exit status: %d\n", exit_status); // just prints status for now
 	}
 	return(0);
 }

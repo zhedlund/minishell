@@ -1,7 +1,6 @@
 #include "minishell_tree.h"
 
-// compile MacOS: cc minishell_recursive.c minishell_utils.c ft_execvp.c expand_env.c -lreadline
-// compile Linux: cc minishell_recursive.c minishell_utils.c ft_execvp.c expand_env.c -lreadline -lhistory
+// compile: cc minishell_recursive.c minishell_utils.c ft_execvp.c expand_env.c -lreadline
 // run: ./a.out
 
 /* Execution */
@@ -270,7 +269,7 @@ int	get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 		current_pos++;
 		*token_start = current_pos;
 		while (current_pos < end_str && *current_pos != '\"')
-			current_pos++;
+            current_pos++;
 		*token_end = current_pos;
 		if (*current_pos == '\"')
 			current_pos++;
@@ -392,7 +391,7 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 		else if (token_type == 'd')
 		{
 			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
-			expand_env(&exec_cmd->argv[args]); // doesn't work, token needs to be split to expand env
+			expand_env_in_quotes(exec_cmd->argv[args]); // doesn't work, token needs to be split to expand env
 		}
 		else
 		{
@@ -481,23 +480,27 @@ t_cmd	*parse_cmd(char *str)
 int has_unmatched_quotes(char *argv[])
 {
 	char	*str;
-    int		count;
+    int		single_quotes;
+	int		double_quotes;
 	int		i;
 
-	count = 0;
+	single_quotes = 0;
+	double_quotes = 0;
 	i = 0;
     while (argv[i] != NULL)
     {
         str = argv[i];
         while (*str)
         {
-            if (*str == '\'')
-                count++;
+			if (*str == '\"')
+				double_quotes++;
+			if (*str == '\'')
+                single_quotes++;
             str++;
         }
 		i++;
     }
-	if (count % 2 != 0)
+	if ((single_quotes % 2 != 0) || (double_quotes % 2 != 0))
     	return (1);
 	return (0);
 }

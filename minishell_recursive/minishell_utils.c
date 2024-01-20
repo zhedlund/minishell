@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2023/12/30 15:09:55 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/20 17:02:57 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,4 +193,40 @@ char	*ft_strchr(const char *s, int c)
 		i++;
 	}
 	return (NULL);
+}
+
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
+{
+	size_t	i;
+	size_t	j;
+	size_t	dsize;
+	size_t	ssize;
+
+	dsize = ft_strlen(dst);
+	ssize = ft_strlen(src);
+	if (size <= dsize)
+		return (size + ssize);
+	i = dsize;
+	j = 0;
+	while ((i + j) < (size - 1) && src[j] != '\0')
+	{
+		dst[i + j] = src[j];
+		j++;
+	}
+	dst[i + j] = '\0';
+	return (dsize + ssize);
+}
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	size_t	len;
+	char	*newstr;
+
+	len = (ft_strlen(s1) + ft_strlen(s2) + 1);
+	newstr = malloc(sizeof(char) * len);
+	if (!newstr)
+		return (NULL);
+	ft_strlcpy(newstr, s1, len);
+	ft_strlcat(newstr, s2, len);
+	return (newstr);
 }

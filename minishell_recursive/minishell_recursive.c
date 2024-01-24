@@ -119,8 +119,9 @@ void run_cmd(t_cmd *cmd)
         handle_pipe_cmd((t_pipe *)cmd);
     else
 	{
-        ft_putstr_fd("unknown run_cmd\n", 2);
-        exit(-1);
+        //ft_putstr_fd("unknown run_cmd\n", 2);
+		perror("run_cmd");
+        exit(1);
     }
     exit(0);
 }
@@ -386,17 +387,17 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
 		if (token_type == 0)
 			break;
-		if (token_type == 'q')
+		if (token_type == 'q' )
 			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
 		else if (token_type == 'd')
 		{
 			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
-			expand_env_in_quotes(exec_cmd->argv[args]); // doesn't work, token needs to be split to expand env
+			expand_env_in_quotes(exec_cmd->argv[args]); // Expand environment variables within double-quoted strings
 		}
 		else
 		{
 			exec_cmd->argv[args] = make_copy(token_start, token_end);
-			expand_env(&exec_cmd->argv[args]);
+			expand_env_in_quotes(exec_cmd->argv[args]);
 		}
 		args++;
 		if (args >= MAXARGS)
@@ -540,5 +541,5 @@ int main(void)
 				exit_status = (WEXITSTATUS(status)); // WEXITSTATUS returns the exit status of the child
     	printf("Child exit status: %d\n", exit_status); // just prints status for now
 	}
-	return(0);
+	return (0);
 }

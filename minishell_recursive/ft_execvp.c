@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/19 17:26:42 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/24 22:18:56 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*find_cmd_path(const char *file)
 		if (full_path != NULL && access(full_path, X_OK) == 0)
 		{
 			free(path_copy);
-			return full_path;
+			return (full_path);
 		}
 		free(full_path); // Freeing if access fails or allocation fails
 		token = ft_strtok(NULL, ":");

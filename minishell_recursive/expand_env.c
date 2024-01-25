@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/20 17:59:22 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/25 20:30:13 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 	note: called by parse_tokens()
 	*/
 
-char **expand_env(char **argv)
+/*char **expand_env(char **argv)
 {
     int		i;
 	char	*name;
@@ -39,54 +39,70 @@ char **expand_env(char **argv)
         i++;
     }
     return (argv);
-}
+}*/
 
-// Function to expand environment variables within double-quoted strings
-void expand_env_in_quotes(char *str)
+
+// I think it's working! 25.01
+// needs to be norminetted big time
+// Function to expand environment variables in a string / withon quotes
+
+char *expand_env_in_str(const char *str)
 {
-    char *start = str;
-    char *expanded = malloc(strlen(str) + 1); // Allocate memory for the expanded string
-    char *dest = expanded;
-
-    while (*str)
+    size_t len = strlen(str);
+    char *expanded = malloc(len + 1);  // Allocate memory for the expanded string
+    if (expanded == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    size_t index = 0;
+    for (size_t i = 0; i < len; ++i)
     {
-        if (*str == '$' && *(str + 1) != '\0') // Check for $VAR format
+        if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != '?') 
         {
-            char *env_start = str + 1; // Point to the beginning of the environment variable name
-            // Find the end of the environment variable name
-            char *env_end = env_start;
-            while (*env_end && (*env_end == '_' || (*env_end >= 'A' && *env_end <= 'Z') || (*env_end >= 'a' && *env_end <= 'z') || (*env_end >= '0' && *env_end <= '9')))
-                env_end++;
-            // Extract the environment variable name
+            const char *env_start = str + i + 1;
+            const char *env_end = env_start;
+
+            while (*env_end && (*env_end == '_' || ft_isalnum(*env_end)))
+                ++env_end;
             size_t env_name_len = env_end - env_start;
             char env_name[env_name_len + 1];
-            ft_strlcpy(env_name, env_start, sizeof(env_name)); // Use strlcpy
+            strncpy(env_name, env_start, env_name_len);
             env_name[env_name_len] = '\0';
-            // Lookup the environment variable value
-            char *env_value = getenv(env_name);
-            if (env_value != NULL)
-            {
-                // Append the environment variable value to the expanded string
-                while (*env_value)
-                    *dest++ = *env_value++;
-                str = env_end; // Move to the character after the environment variable name
+            const char *env_value = getenv(env_name);
+            if (env_value != NULL) {
+                size_t new_len = index + strlen(env_value) + 1;  // Calculate the new length
+                expanded = realloc(expanded, new_len);  // Resize the memory
+                if (expanded == NULL) {
+                    perror("realloc");
+                    exit(EXIT_FAILURE);
+                }
+                ft_strcat(expanded, env_value);
+                index += strlen(env_value);
+                i = env_end - str - 1;  // Move to the character after the environment variable name
                 continue;
             }
+            else {
+                // Handle the case where the environment variable doesn't exist
+            i = env_end - str;  // Move to the character after the environment variable name
+            continue;
+            }
         }
-        // Copy the character as is
-        *dest++ = *str++;
+        expanded[index++] = str[i];
     }
-    *dest = '\0'; // Null-terminate the expanded string
-    ft_strcpy(start, expanded); // Update the original string with the expanded version
-    free(expanded); // Free the dynamically allocated memory
+    expanded[index] = '\0';  // Null-terminate the expanded string
+    return expanded;
 }
 
 
-/*int main(void)
-{
-    char str[] = "hello $USER, welcome to $HOME/minishell";
-    printf("Before: %s\n", str);
-    expand_env_in_quotes(str);
-    printf("After: %s\n", str);
+
+/*int main() {
+    const char test_string[] = "Hello $USER, welcome to $HOME/minishell, here is my $INVALID_VAR hello";
+    printf("Before: %s\n", test_string);
+    
+    char *expanded_string = expand_env_in_str(test_string);
+
+    printf("After: %s\n", expanded_string);
+
+    free(expanded_string);  // Free the dynamically allocated memory
     return 0;
 }*/

@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <ctype.h>
 
 #define MAXARGS 50
 #define WHITESPACE " \t\r\n\v"
@@ -48,6 +49,12 @@ typedef struct s_pipe
   t_cmd	*right;     // right side of pipe
 }		t_pipe;
 
+typedef struct s_exit
+{
+  int value;
+}   t_exit;
+
+
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd);
 void	handle_redir_cmd(t_redir *redir_cmd);
@@ -73,7 +80,7 @@ int		get_token(char **input_ptr, char *end_str, char **token_start, char **token
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv);
-void expand_env_in_quotes(char *str);
+char *expand_env_in_str(const char *str);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
@@ -88,6 +95,8 @@ void	*ft_memset(void *s, int c, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
+int   ft_isalnum(int c);
+char	*ft_itoa(int n);
 
 
 #endif

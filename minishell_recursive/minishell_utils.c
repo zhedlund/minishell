@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/20 17:02:57 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/25 18:21:29 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,4 +229,62 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(newstr, s1, len);
 	ft_strlcat(newstr, s2, len);
 	return (newstr);
+}
+
+int	ft_isalnum(int c)
+{
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')
+		|| (c >= '0' && c <= '9'))
+		return (1);
+	else
+		return (0);
+}
+
+static char	*num_to_array(char *arr, unsigned int number, long int len)
+{
+	while (number > 0)
+	{
+		arr[len--] = 48 + (number % 10);
+		number = number / 10;
+	}
+	return (arr);
+}
+
+static long int	num_len(int n)
+{
+	int	len;
+
+	len = 0;
+	if (n <= 0)
+		len = 1;
+	while (n != 0)
+	{
+		len++;
+		n = n / 10;
+	}
+	return (len);
+}
+
+char	*ft_itoa(int n)
+{
+	char			*str;
+	long int		len;
+	unsigned int	num;
+
+	len = num_len(n);
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!(str))
+		return (NULL);
+	str[len--] = '\0';
+	if (n == 0)
+		str[0] = '0';
+	if (n < 0)
+	{
+		num = n * -1;
+		str[0] = '-';
+	}
+	else
+		num = n;
+	str = num_to_array(str, num, len);
+	return (str);
 }

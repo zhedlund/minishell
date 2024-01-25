@@ -246,7 +246,7 @@ int	get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 {
     char	*current_pos;
     int		token_type;
-	t_exec	*cmd;
+	//t_exec	*cmd;
 
     current_pos = *input_ptr;
     while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
@@ -387,17 +387,20 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
 		if (token_type == 0)
 			break;
-		if (token_type == 'q' )
-			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
-		else if (token_type == 'd')
+		if (token_type == 'q' || token_type == 'd')
 		{
 			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
-			expand_env_in_quotes(exec_cmd->argv[args]); // Expand environment variables within double-quoted strings
+			printf("token qd: %s\n", exec_cmd->argv[args]); //debug statement
 		}
 		else
-		{
 			exec_cmd->argv[args] = make_copy(token_start, token_end);
-			expand_env_in_quotes(exec_cmd->argv[args]);
+		if (token_type != 'q')
+		{
+    		printf("token ad1: %s\n", exec_cmd->argv[args]); //debug statement
+    		char *expanded_token = expand_env_in_str(exec_cmd->argv[args]); // Expand environment variables within double-quoted strings
+    		printf("token ad2: %s\n", expanded_token); // debug statement
+    		free(exec_cmd->argv[args]); // Free the original token
+    		exec_cmd->argv[args] = expanded_token; // Assign the expanded token
 		}
 		args++;
 		if (args >= MAXARGS)
@@ -513,8 +516,8 @@ int main(void)
 {
 	static char	buf[100];
 	int			status; // variable to store exit status of child process
-	int			exit_status;
-	
+	t_exit		exit_status; // variable to store exit status of child process
+
 	while (get_cmd(buf, sizeof(buf)) >= 0)
 	{	
         // Check for unmatched quotes before proceeding
@@ -538,8 +541,8 @@ int main(void)
 		wait(&status);
 		//waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
-				exit_status = (WEXITSTATUS(status)); // WEXITSTATUS returns the exit status of the child
-    	printf("Child exit status: %d\n", exit_status); // just prints status for now
+				exit_status.value = (WEXITSTATUS(status)); // WEXITSTATUS returns the exit status of the child
+    	printf("Child exit status: %d\n", exit_status.value); // just prints status for now
 	}
 	return (0);
 }

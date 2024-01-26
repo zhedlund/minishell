@@ -1,0 +1,47 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    todo.txt                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/01/16 14:03:15 by jelliott          #+#    #+#              #
+#    Updated: 2024/01/16 14:03:17 by jelliott         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+SOLVED?/Improve
+
+there must be a neater way of solving the simple commands issue
+
+where to place cd functions...I think should also be in the child so have no effect - but it seems to be working...
+now everything is inside the child and working better
+
+1. cat doesn't exit properly with ctrlc...double minishell> [SOLVED??]
+using global variable so far isn't helping - it's value seems to reset
+
+ls | pwd is waiting like cat | cat | ls and shouldn't be
+
+temporary solution to put the execution function within its own process
+although this solves the problem, cat | cat | ls no longer works...and ctrlc is even more annoying than before
+
+4.related problem - cat filename | grep ft - the grep prints with the minishell> commandline, but it should happen after this
+this seems to be a huge problem and realted to processes and waiting
+I can solve this by swapping the order of the parent and child process in pipes.c, but this ruins cat | cat | ls and related commands
+changing the location of the wait also seems to affect - but suspect that fd not being closed properly - look at original code for inspiration
+clearly pipes need to be revisited 
+SOLVED - just needed to wait for the whole pipe execution (not just within that)
+
+//problem with malloc and unset
+//grep and env not working - we seem to print env and not grep the results
+----------------------------------
+
+LEFT
+2. error messages
+3. builtins - export, exit (all others done - echo and pwd seem to work with execve, so I'm wondering if they really
+need something special)
+5. malloc with cd when go all the way back
+6. the temporary heredoc appears if an 'ls' is used later in the command line - need to change this - tried unlinking before an ls call, but this is a problem
+is ls appears in a longer command line e.g. cat << here | grep e | ls | cat << here | grep U, should only do it if ls is going to be displayed i.e. the final element
+7. relatedly, heredoc followed by a simple command ends in a wait that not expecting unless it is used with cat...
+8. env | ls | cat - we seem to be waiting for cat to finish like with cat | cat | ls - we shouldn't be

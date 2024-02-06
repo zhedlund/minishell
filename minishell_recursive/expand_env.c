@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/25 20:30:13 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:14:04 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@
 
 // I think it's working! 25.01
 // needs to be norminetted big time
-// Function to expand environment variables in a string / withon quotes
+// Function to expand environment variables in a string / within quotes
 
 char *expand_env_in_str(const char *str)
 {
-    size_t len = strlen(str);
+    size_t len = ft_strlen(str);
     char *expanded = malloc(len + 1);  // Allocate memory for the expanded string
     if (expanded == NULL) {
         perror("malloc");
@@ -77,7 +77,7 @@ char *expand_env_in_str(const char *str)
                     exit(EXIT_FAILURE);
                 }
                 ft_strcat(expanded, env_value);
-                index += strlen(env_value);
+                index += ft_strlen(env_value);
                 i = env_end - str - 1;  // Move to the character after the environment variable name
                 continue;
             }
@@ -90,7 +90,7 @@ char *expand_env_in_str(const char *str)
         expanded[index++] = str[i];
     }
     expanded[index] = '\0';  // Null-terminate the expanded string
-    return expanded;
+    return (expanded);
 }
 
 

@@ -512,11 +512,51 @@ int has_unmatched_quotes(char *argv[])
 
 /* Main */
 
+
 int main(void)
+{
+    static char buf[100];
+    int status; // variable to store exit status of child process
+    t_exit exit_status; // store exit status of child process
+    t_exit prev_exit_status; // store the previous exit status
+    int first_iteration = 1; // flag to detect the first iteration
+
+    while (get_cmd(buf, sizeof(buf)) >= 0)
+	{
+        // Check for unmatched quotes before proceeding
+        if (has_unmatched_quotes((char *[]) {buf, NULL})) {
+            ft_putstr_fd("unmatched quote\n", 2);
+            continue; // Skip processing this command and move to the next one
+        }
+        // cd is just an example, will call builtin functions here
+        // if (is_builtin()) or similar
+        if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
+            // Chdir have to be run in the parent, has no effect if run in the child.
+            buf[ft_strlen(buf) - 1] = 0; // chop \n
+            if (chdir(buf + 3) < 0)
+                ft_putstr_fd("cannot cd\n", 2);
+            continue;
+        }
+        if (fork_process() == 0)
+            run_cmd(parse_cmd(buf));
+        wait(&status);
+		if (first_iteration)
+			prev_exit_status.value = 0; // Update exit status
+        else
+            prev_exit_status.value = exit_status.value;
+        exit_status.value = WEXITSTATUS(status); // WEXITSTATUS returns the exit status of the child
+        printf("Last exit status: %d\n", exit_status.value);
+        printf("Second to last exit status: %d\n", prev_exit_status.value);
+        first_iteration = 0; // Update flag after the first iteration
+    }
+    return (0);
+}
+
+/*int main(void)
 {
 	static char	buf[100];
 	int			status; // variable to store exit status of child process
-	t_exit		exit_status; // variable to store exit status of child process
+	t_exit		exit_status; // store exit status of child process
 
 	while (get_cmd(buf, sizeof(buf)) >= 0)
 	{	
@@ -545,4 +585,4 @@ int main(void)
     	printf("Child exit status: %d\n", exit_status.value); // just prints status for now
 	}
 	return (0);
-}
+}*/

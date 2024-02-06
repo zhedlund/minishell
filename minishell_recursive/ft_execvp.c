@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/24 22:18:56 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/06 11:29:15 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,10 @@ int ft_execvp(const char *file, char *const argv[])
 		exit(126);
 	}
 	else if (execve(full_path, argv, NULL) == -1)
-		perror("execve");
+	{
+		perror("Error");
+		exit(126);
+	}
 	free(full_path); // Free memory allocated by find_command_path
 	return (-1);
 }

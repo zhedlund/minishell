@@ -6,10 +6,9 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/07 18:51:32 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/14 15:53:29 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "minishell_tree.h"
 
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
@@ -17,7 +16,7 @@
 	note: called by parse_tokens()
 	*/
 
-char **expand_env(char **argv)
+/*char **expand_env(char **argv)
 {
     int		i;
 	char	*name;
@@ -39,16 +38,16 @@ char **expand_env(char **argv)
         i++;
     }
     return (argv);
-}
+}*/
 
 
 // I think it's working! 25.01
 // needs to be norminetted big time
-// Function to expand environment variables in a string / within quotes
+// Function to expand environment variables in a string / withon quotes
 
 char *expand_env_in_str(const char *str)
 {
-    size_t len = ft_strlen(str);
+    size_t len = strlen(str);
     char *expanded = malloc(len + 1);  // Allocate memory for the expanded string
     if (expanded == NULL) {
         perror("malloc");
@@ -77,7 +76,7 @@ char *expand_env_in_str(const char *str)
                     exit(EXIT_FAILURE);
                 }
                 ft_strcat(expanded, env_value);
-                index += ft_strlen(env_value);
+                index += strlen(env_value);
                 i = env_end - str - 1;  // Move to the character after the environment variable name
                 continue;
             }
@@ -90,19 +89,5 @@ char *expand_env_in_str(const char *str)
         expanded[index++] = str[i];
     }
     expanded[index] = '\0';  // Null-terminate the expanded string
-    return (expanded);
+    return expanded;
 }
-
-
-
-/*int main() {
-    const char test_string[] = "Hello $USER, welcome to $HOME/minishell, here is my $INVALID_VAR hello";
-    printf("Before: %s\n", test_string);
-    
-    char *expanded_string = expand_env_in_str(test_string);
-
-    printf("After: %s\n", expanded_string);
-
-    free(expanded_string);  // Free the dynamically allocated memory
-    return 0;
-}*/

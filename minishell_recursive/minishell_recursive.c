@@ -139,12 +139,12 @@ int	get_cmd(char *buf, int buf_size)
 		input = readline("minishell> "); // read input w promt - interactive mode
 	else
 		input = readline(""); // read input w/o promt - non-interactive mode
-	if (input == NULL || ft_strlen(input) == 0) // Handle EOF or empty input
+	/*if (input == NULL) //|| ft_strlen(input) == 0) // Handle EOF or empty input
 	{
 		if (input != NULL)
 			free(input); // free memory allocated by readline()
 		return (-1);
-	}
+	}*/
 	ft_strlcpy(buf, input, buf_size); // copy input to buf
 	buf[buf_size - 1] = '\0'; // null-terminated string
     add_history(buf); // Add input to history
@@ -380,6 +380,7 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
     char	*token_start;
     char	*token_end;
     int		token_type;
+	char	*expanded_token;
 
 	args = 0;
 	while (!check_next_token(position_ptr, end_str, "|"))
@@ -397,7 +398,8 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 		if (token_type != 'q')
 		{
     		printf("token ad1: %s\n", exec_cmd->argv[args]); //debug statement
-    		char *expanded_token = expand_env_in_str(exec_cmd->argv[args]); // Expand environment variables within double-quoted strings
+			expand_env(&exec_cmd->argv[args]); // Expand environment variables
+    		expanded_token = expand_env_in_str(exec_cmd->argv[args]); // Expand environment variables within double-quoted strings
     		printf("token ad2: %s\n", expanded_token); // debug statement
     		free(exec_cmd->argv[args]); // Free the original token
     		exec_cmd->argv[args] = expanded_token; // Assign the expanded token
@@ -515,16 +517,18 @@ int has_unmatched_quotes(char *argv[])
 
 int main(void)
 {
-    static char buf[100];
-    int status; // variable to store exit status of child process
-    t_exit exit_status; // store exit status of child process
-    t_exit prev_exit_status; // store the previous exit status
-    int first_iteration = 1; // flag to detect the first iteration
+    static char	buf[100];
+    int			status; // variable to store exit status of child process
+    t_exit		exit_status; // store exit status of child process
+    t_exit		prev_exit_status; // store the previous exit status
+    int			first_iteration; // flag to detect the first iteration
 
+	first_iteration = 1; // Set flag to detect the first iteration
     while (get_cmd(buf, sizeof(buf)) >= 0)
 	{
         // Check for unmatched quotes before proceeding
-        if (has_unmatched_quotes((char *[]) {buf, NULL})) {
+        if (has_unmatched_quotes((char *[]) {buf, NULL}))
+		{
             ft_putstr_fd("unmatched quote\n", 2);
             continue; // Skip processing this command and move to the next one
         }

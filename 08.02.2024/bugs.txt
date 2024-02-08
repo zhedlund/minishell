@@ -1,0 +1,99 @@
+FINDINGS & BUGS:
+
+- handle_parent_process and parse_tokens now has 5 parameters, only 4 allowed (what does t_env **head and t_info **info do?)
+
+- ft_builtinsmenu: 
+	- numbers not consistent w number of letters in call to ft_strncmp
+	- ft_builtinsmenu gets called in both main and ft_execvp
+
+- both ft_execvp and ft_whichsignalfunction have separate hardcoded sections for some simple commands
+
+- the new ft_execvp are missing exit calls and codes
+
+- run_cmd: a lot of additional child processes are created
+
+- handle_parent_process calls wait(&pid), not sure if necessary?
+
+- g_signal: 
+	- doesn't seem to be used?
+	- g_signal declared in header as extern int (global system variable?)
+	- g_signal gets declared again as a global variable in main file above ft_whichsignalfunction and initialized with 0.
+
+- exit:
+	- when exiting via Ctrl+D, exit status (echo $?) should be 130, but get 0. doesn't print exit. 
+	- exit never goes into ft_builtinsmenu, since it's exiting from get_cmd = never enters main loop.
+	- In bash, if you write "exit 77", 77 will be the exit code of the program (parent process). Not sure if we have to handle it? (probably) but exit doesn't have to work in pipes (it doesn't work in bash, but in zsh).
+
+- missing exit() calls after perror in most functions and some exit codes are incorrect
+
+- inconsistent types for pid, should be pid_t, not int. 
+
+- heredoc:
+	- doesn't get assigned a token type in get_token, but 'h' is used as a token type in run_cmd and handle_redir_cmd. where does it get assigned?
+	- heredoc gives error: " missing file for redirection" after execution:
+	
+	minishell> << end
+	heredoc<< test
+	heredoc<< end
+	missing file for redirection
+	
+- some nonsense command combos work with more than 4 commands:
+	ls -la | cat | grep xr | cat | pwd | cat | env 
+
+- works in my program, but waits in the put together version:
+	ls -la | cat | grep xr | cat | pwd | echo hey | cat
+
+It's not common practice to pipe builtins in bash. I can only really think of use for env (to grep something) and echo to put something in a file. Test the same combos in several shells (bash, zsh, fish) and compare behaviour. 
+
+QUESTIONS:
+
+Makefile:
+	- why DEPS for headerfile? if there's a *.h in root dir, program finds it
+	-  %.o: %.c $(DEPS) what does DEPS do here? 
+	- what does this do?
+		ifeq ($(shell uname -s), Linux)
+    		CFLAGS += -D LINUX -Wno-unused-result
+    		
+Signals:
+	- How do the signal handler catch and store the signals? 
+
+
+THOUGHTS:
+
+- the waiting issue after some commands, can it be related to signals? since it gets interrupted by pressing enter, what process does enter interrupt or what signal is blocked/ignored? 
+
+- alternative builtin-logic could be to check for builtin commands after tokenizing and compare the tokens
+
+- main: after calling builtinsmenu, use continue to restart the loop without going further, instead of if/else run_cmd
+
+- ft_execvp is an implementation of execvp. Instead of changing the logic in the function, maybe better to make a separate function that calls it. Now the function does a lot of different things, which makes it hard to trouble shoot. 
+
+- run_cmd is part of the main loop, it gets called by handle_child_process, handle_parent_process, handle_redir_cmd. It's part of the recursive logic. It never returns and only exits on error or when a command is finished executing. Forking is done in main in every iteration of the loop (for each command). Creating more forks in run_cmd might cause undefined behaviour and zombie kids.
+
+- it's adviced against using signal() in general, since it's an unstable function and specially when running parallell processes, such as piping. If problems with waiting etc persists, we might wanna consider switching to sigaction.
+https://stackoverflow.com/questions/231912/what-is-the-difference-between-sigaction-and-signal
+
+
+CHANGES MADE:
+	- ft_isalnum added to header
+	- #include <sys/ioctl.h> moved to header
+	- unquoted expand_env
+	- added call to expand_env in parse_tokens
+
+TODO:
+
+expand_env_in_str:
+	- malloc size of PATH_MAX + 1 instead of realloc
+	- strncpy -> strlcpy or add ft_strncpy
+	
+exit status:
+	- fix exit codes in functions
+	- assign WEXITSTATUS(status) to struct
+	- parse $? -> expand to exit code
+	- check expr $? + $? -> expand to second to last + last exit code
+
+- divide long functions	
+- fix main
+- norminette everything 
+ 
+    

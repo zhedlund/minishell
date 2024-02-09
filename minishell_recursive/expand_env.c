@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/07 18:51:32 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/09 12:51:05 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,26 +19,35 @@
 
 char **expand_env(char **argv)
 {
-    int		i;
+	int		i;
 	char	*name;
 	char	*value;
+	t_exit	*exit_status;
 	
 	i = 0;
-    while (argv[i] != NULL)
-    {
-        if (argv[i][0] == '$' && argv[i][1] != '\0')
-        {
-            name = argv[i] + 1;
-            value = getenv(name);
-            if (value != NULL)
-            {
-                free(argv[i]);
-                argv[i] = ft_strdup(value);
-            }
-        }
-        i++;
-    }
-    return (argv);
+	while (argv[i] != NULL)
+	{
+		if (argv[i][0] == '$' && argv[i][1] != '\0' && argv[i][1] != '?')
+		{
+			name = argv[i] + 1;
+			value = getenv(name);
+			if (value != NULL)
+			{
+				free(argv[i]);
+				argv[i] = ft_strdup(value);
+			}
+		}
+		else if (argv[i][0] == '$' && argv[i][1] == '?')
+		{
+    		int status;
+    		wait(&status); // Wait for the last child process
+    		char *exit_status_str = ft_itoa(WEXITSTATUS(status));
+    	free(argv[i]);
+    	argv[i] = exit_status_str;
+		}
+		i++;
+	}
+	return (argv);
 }
 
 

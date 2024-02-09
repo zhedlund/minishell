@@ -76,11 +76,12 @@ t_cmd	*parse_cmd(char *str);
 t_cmd	*parse_redir(t_cmd *cmd, char **position_ptr, char *end_str);
 t_cmd	*parse_exec(char **position_ptr, char *end_str);
 t_cmd	*parse_line(char **position_ptr, char *end_str);
+void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str);
 int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv);
-char *expand_env_in_str(const char *str);
+char	*expand_env_in_str(const char *str);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
@@ -97,6 +98,5 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 int   ft_isalnum(int c);
 char	*ft_itoa(int n);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/08 12:55:44 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/10 15:02:25 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,58 @@ char **expand_env(char **argv)
     return (argv);
 }
 
+char *expand_env_in_str(const char *str)
+{
+    size_t len = strlen(str);
+    char *expanded = malloc(sizeof(PATH_MAX)); // Allocate memory for the expanded string
+    if (expanded == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    size_t index = 0;
+    for (size_t i = 0; i < len; ++i) {
+        if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != '?') {
+            const char *env_start = str + i + 1;
+            const char *env_end = env_start;
+            while (*env_end && (*env_end == '_' || isalnum(*env_end)))
+                ++env_end;
+            size_t env_name_len = env_end - env_start;
+            char env_name[env_name_len + 1];
+            strncpy(env_name, env_start, env_name_len);
+            env_name[env_name_len] = '\0';
+            const char *env_value = getenv(env_name);
+            if (env_value != NULL) {
+                size_t env_value_len = strlen(env_value);
+                if (index + env_value_len >= PATH_MAX) {
+                    fprintf(stderr, "Expanded string exceeds maximum size\n");
+                    exit(EXIT_FAILURE);
+                }
+                strncpy(expanded + index, env_value, env_value_len);
+                index += env_value_len;
+                i = env_end - str - 1; // Move to the character after the environment variable name
+                continue;
+            } else {
+                // Handle the case where the environment variable doesn't exist
+                i = env_end - str; // Move to the character after the environment variable name
+                continue;
+            }
+        }
+        expanded[index++] = str[i];
+        if (index >= PATH_MAX) {
+            fprintf(stderr, "Expanded string exceeds maximum size\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    expanded[index] = '\0'; // Null-terminate the expanded string
+    return expanded;
+}
+
 
 // I think it's working! 25.01
 // needs to be norminetted big time
 // Function to expand environment variables in a string / withon quotes
 
-char *expand_env_in_str(const char *str)
+/*char *expand_env_in_str(const char *str)
 {
     size_t len = strlen(str);
     char *expanded = malloc(len + 1);  // Allocate memory for the expanded string
@@ -91,4 +137,4 @@ char *expand_env_in_str(const char *str)
     }
     expanded[index] = '\0';  // Null-terminate the expanded string
     return expanded;
-}
+}*/

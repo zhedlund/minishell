@@ -49,10 +49,10 @@ typedef struct s_pipe
   t_cmd	*right;     // right side of pipe
 }		t_pipe;
 
-typedef struct s_exit
-{
-  int value;
-}   t_exit;
+typedef struct s_exit {
+    int last_exit_status;
+    int prev_exit_status;
+} t_exit;
 
 
 /* execution */
@@ -96,7 +96,7 @@ void	*ft_memset(void *s, int c, size_t n);
 size_t	ft_strlcpy(char *dst, const char *src, size_t size);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
-int   ft_isalnum(int c);
+int		ft_isalnum(int c);
 char	*ft_itoa(int n);
 
 #endif

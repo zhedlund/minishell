@@ -1,0 +1,45 @@
+Currently not working:
+
+- Use "make -n" to see if compilation use "-Wall -Wextra -Werror"
+	result: cc -D LINUX -Wno-unused-result -c
+	
+- Execute a simple command with an absolute path like /bin/ls, or any other command without any options.
+
+- How many global variables are used? Why? Ask the evaluated student to give you a concrete example of why it feels mandatory or logical.
+
+- Check the global variable. This global variable cannot provide any other information or data access than the number of a received signal.
+	
+- Execute a simple command with an absolute path like /bin/ls, or any other command with arguments but without any quotes or double quotes. Repeat multiple times with different commands and arguments.
+
+- Execute exit command with or without arguments. Repeat multiple times with different arguments.
+
+- Execute a simple command with an absolute path like /bin/ls, or any other command with arguments but without any quotes and double quotes. Then execute echo $?
+Check the printed value. You can do the same in bash in order to compare the results.
+
+Repeat multiple times with different commands and arguments. Try some wrong commands like '/bin/ls filethatdoesntexist
+
+Try anything like expr $? + $?
+
+- Try ctrl-\ after running a blocking command like cat without arguments or grep “something“.
+
+result:
+minishell> cat
+^\minishell> catminishell>
+
+bash:
+zhedlund@c4b4c2:~$ cat
+^\Quit (core dumped)
+
+- Unset the $PATH and ensure commands are not working anymore.
+
+result: PATH disappears from env list, but commands still work
+
+- Set the $PATH to a multiple directory value (directory1:directory2) and ensure that directories are checked in order from left to right.
+
+- heredoc gives error: " missing file for redirection" after execution:
+	
+	minishell> << end
+	heredoc<< test
+	heredoc<< end
+	missing file for redirection
+

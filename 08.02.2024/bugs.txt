@@ -37,6 +37,28 @@ FINDINGS & BUGS:
 	heredoc<< end
 	missing file for redirection
 	
+- cd prints current dir when going back with cd ..
+
+- malloc issue:
+minishell> echo " hi '$PWD' you"
+token ad1: echo
+token ad2: echo
+token qd:  hi '$PWD' you
+token ad1:  hi '$PWD' you
+token ad2:  hi '/home/zhedlund/zhedlund/CC-Projects/minishell_github/08.02.2024' you
+minishell: malloc.c:2617: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+
+
+- this should give permission denied, but we also get a double free, which is ofc wrong
+minishell> ""
+token qd: 
+token ad1: 
+token ad2: 
+execve: Permission denied
+free(): double free detected in tcache 2
+
+- fix unmatched quotes
+	
 - some nonsense command combos work with more than 4 commands:
 	ls -la | cat | grep xr | cat | pwd | cat | env 
 

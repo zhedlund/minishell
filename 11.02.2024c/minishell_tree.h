@@ -16,6 +16,7 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <sys/ioctl.h>
 
 #define MAXARGS 50
 #define WHITESPACE " \t\r\n\v"
@@ -61,7 +62,7 @@ typedef struct s_env
 
 typedef struct s_exit
 {
-  int value;
+  int exit_status;
 }   t_exit;
 
 typedef struct s_info
@@ -106,6 +107,7 @@ int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv);
 char *expand_env_in_str(const char *str);
+void get_exit_status(t_exit *code);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);

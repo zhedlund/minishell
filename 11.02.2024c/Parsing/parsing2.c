@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parsing2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:08:49 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/11 19:38:44 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* cmd: pointer to the command struct
@@ -56,28 +57,40 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str, t_info **info
 /* Function to parse tokens and fill arguments with environmental variable expansion */
 void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str, t_info **info)
 {
-    int args = 0;
-    char *token_start;
-    char *token_end;
-    int token_type;
-	char **expanded_arg;
+    int		args;
+    char	*token_start;
+    char	*token_end;
+    int		token_type;
+	char	*expanded_token;
 
-    while (!check_next_token(position_ptr, end_str, "|"))
-    {
-        token_type = get_token(position_ptr, end_str, &token_start, &token_end);
-        if (token_type == 0)
-            break;
-        exec_cmd->argv[args] = make_copy(token_start, token_end);
-        args++;
-        if (args >= MAXARGS)
-        {
-            ft_putstr_fd("too many args\n", 2);
-            exit(-1);
-        }
-        *cmd = parse_redir(*cmd, position_ptr, end_str, info);
-    }
-    exec_cmd->argv[args] = NULL;
-    expanded_arg = expand_env(exec_cmd->argv);
+	args = 0;
+	while (!check_next_token(position_ptr, end_str, "|"))
+	{
+		token_type = get_token(position_ptr, end_str, &token_start, &token_end);
+		if (token_type == 0)
+			break;
+		if (token_type == 'q' || token_type == 'd')
+		{
+			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
+			printf("token qd: %s\n", exec_cmd->argv[args]); //debug statement
+		}
+		else
+			exec_cmd->argv[args] = make_copy(token_start, token_end);
+		if (token_type != 'q')
+		{
+    		printf("token ad1: %s\n", exec_cmd->argv[args]); //debug statement
+			expand_env(&exec_cmd->argv[args]); // Expand environment variables
+    		expanded_token = expand_env_in_str(exec_cmd->argv[args]); // Expand environment variables within double-quoted strings
+    		printf("token ad2: %s\n", expanded_token); // debug statement
+    		free(exec_cmd->argv[args]); // Free the original token
+    		exec_cmd->argv[args] = expanded_token; // Assign the expanded token
+		}
+		args++;
+		if (args >= MAXARGS)
+			ft_putstr_fd("Too many arguments\n", 2);
+		*cmd = parse_redir(*cmd, position_ptr, end_str, info);
+	}
+	exec_cmd->argv[args] = NULL;
 }
 
 /* 	

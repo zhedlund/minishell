@@ -1,14 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   run_cmd.c                                          :+:      :+:    :+:   */
+/*   cmdsinitial.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:14:25 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/11 20:58:47 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* cmd: pointer to the command struct
@@ -34,8 +35,8 @@ bool ft_forkornottofork(t_exec *exec_cmd)
 
 void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 {
-	int	pid;
-	bool tofork;
+	pid_t	pid;
+	bool	tofork;
 	
 	tofork = ft_forkornottofork((t_exec *)cmd);
     if (cmd == 0)
@@ -49,6 +50,8 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
     		if ((pid = fork()) == 0)
         		handle_exec_cmd((t_exec *)cmd, head, info);
     		wait(&pid);
+			if (WIFEXITED(pid))
+				printf("Exit status RUN_CMD1: %d\n", WEXITSTATUS(pid));
     	}
 	}
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x' || cmd->type == 'h') //this will have to be altered
@@ -58,6 +61,8 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
     	if ((pid = fork()) == 0)
         	handle_pipe_cmd((t_pipe *)cmd, head, info);
     	wait(&pid);
+		if (WIFEXITED(pid))
+			printf("Exit status RUN_CMD2: %d\n", WEXITSTATUS(pid));
     }
     else
 	{

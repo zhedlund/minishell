@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   pipes.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:18:00 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:18:02 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/11 20:13:59 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* cmd: pointer to the command struct
@@ -37,6 +38,8 @@ void handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid, int status, t_env
     run_cmd(((t_pipe *)cmd)->left, head, info);
     close(fd_pipe[1]);
     wait(&pid);
+	if (WIFEXITED(pid))
+		printf("Exit status handle_parent_process: %d\n", WEXITSTATUS(status));
 }
 
 /* pipe_cmd: pointer to the command struct
@@ -51,7 +54,7 @@ void handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info)
     if (pipe(fd_pipe) < 0)
 	{
         perror("pipe");
-        exit(0);
+        exit(1);
     }
     pid = fork();
     if (pid < 0)

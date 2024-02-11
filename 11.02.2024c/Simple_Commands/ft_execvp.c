@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/05 20:42:22 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/11 19:25:42 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
-#include <sys/ioctl.h>
 
 /* Function to allocate memory for the full path of a command
  * @param token: path to command
@@ -72,21 +72,30 @@ static char	*find_cmd_path(const char *file)
  */
 int ft_execvp(const char *file, char *const argv[], t_env **head)
 {
-	char *full_path;
-	int	pid;
-	int	status;
+	char	*full_path;
+	pid_t	pid;
+	int		status;
 
 	if (!file || !argv)
 	{
 		printf("Invalid arguments.\n");
 		return (-1);
 	}
-	full_path = find_cmd_path(file);
+	if (file[0] == '.' && file[1] == '/')
+		full_path = ft_strdup(file);
+	else
+		full_path = find_cmd_path(file);
 	if (full_path == NULL)
-		printf("Command not found: %s\n", file);
+	{
+		perror(file); // Prints "cmd: No such file or directory"
+		exit(127);
+	}
 	else if (access(full_path, X_OK) != 0)
-		printf("Permission denied: %s\n", full_path);
-	else if ((ft_strncmp(file, "cat", ft_strlen(file)) == 0)
+	{
+		perror(full_path); // Prints "./path: Permission denied"
+		exit(126);
+	}
+	/*else if ((ft_strncmp(file, "cat", ft_strlen(file)) == 0)
 			|| (ft_strncmp(file, "grep", ft_strlen(file)) == 0)
 				|| (ft_strncmp(file, "wc", ft_strlen(file)) == 0))
 	{
@@ -104,6 +113,11 @@ int ft_execvp(const char *file, char *const argv[], t_env **head)
 			free(full_path);
 		}
 		wait(&status);
+	}*/
+	else if (execve(full_path, argv, NULL) == -1)
+	{
+		perror("Error");
+		exit(126);
 	}
 	free(full_path); // Free memory allocated by find_command_path
 	return (-1);

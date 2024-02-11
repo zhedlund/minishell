@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:14:48 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/11 21:11:09 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
-#include <sys/ioctl.h>
+
 /* Main */
 
 int g_signal = 0;
@@ -203,6 +204,8 @@ int main(void)
 			if (fork_process() == 0)
 				run_cmd(parse_cmd(buf, &info), &head, &info);
 			wait(&status);
+			if (WIFEXITED(status))
+				printf("Exit status main: %d\n", WEXITSTATUS(status));
 		}
 		unlink("hdtemp");
 	}

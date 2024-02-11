@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parsing3.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:09:43 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:09:45 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/11 19:39:09 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* Parsing */ 
@@ -31,7 +32,29 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
         current_pos++;
     if (token_start != NULL)
         *token_start = current_pos;
-    if (*current_pos == 0)
+	if (*current_pos == '\'') // Check for single-quoted string
+	{
+		token_type = 'q'; // Single-quoted string
+		current_pos++;
+		*token_start = current_pos;
+		while (current_pos < end_str && *current_pos != '\'')
+			current_pos++;
+		*token_end = current_pos;
+		if (*current_pos == '\'')
+		current_pos++;
+	}
+	else if (*current_pos == '\"') // Check for double-quoted string
+	{
+		token_type = 'd'; // Double-quoted string
+		current_pos++;
+		*token_start = current_pos;
+		while (current_pos < end_str && *current_pos != '\"')
+            current_pos++;
+		*token_end = current_pos;
+		if (*current_pos == '\"')
+			current_pos++;
+	}
+    else if (*current_pos == 0)
         token_type = 0; // Null terminator
 	else if (*current_pos == '|' || *current_pos == '<' || *current_pos == '>')
 	{

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   parsing1.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:05:32 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:05:35 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/11 19:39:01 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* ps: pointer to the pointer to the first character of the string to be parsed
@@ -58,7 +59,7 @@ t_cmd	*parse_cmd(char *str, t_info **info)
 	if (str != end_str)
 	{
 		ft_putstr_fd("leftovers in str\n", 2);
-		exit(-1);
+		exit(1);
 	}
 	return (cmd);
 }

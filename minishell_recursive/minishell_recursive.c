@@ -515,11 +515,12 @@ int has_unmatched_quotes(char *argv[])
 
 void get_exit_status(t_exit *exit_status, int status)
 {
-    exit_status->prev_exit_status = exit_status->last_exit_status; // Update second to last exit status
+    //exit_status->prev_exit_status = exit_status->last_exit_status; // Update second to last exit status
     exit_status->last_exit_status = WEXITSTATUS(status); // Update last exit status
 }
 
-int main(void) {
+int main(void)
+{
     static char buf[100];
     int status; // variable to store exit status of child process
     t_exit exit_status = {0}; // store exit status of child process
@@ -545,7 +546,7 @@ int main(void) {
         wait(&status);
         get_exit_status(&exit_status, status); // Update exit statuses
         printf("Last exit status: %d\n", exit_status.last_exit_status);
-    	printf("Second to last exit status: %d\n", exit_status.prev_exit_status);
+    	//printf("Second to last exit status: %d\n", exit_status.prev_exit_status);
     }
     return (0);
 }

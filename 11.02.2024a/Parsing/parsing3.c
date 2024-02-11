@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:09:43 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 14:48:00 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/11 15:35:35 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h" 
+#include "../minishell_tree.h"
 /* Parsing */ 
 
 /* input_ptr: pointer to the pointer to the first character of the string to be parsed
@@ -83,6 +83,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
     *input_ptr = current_pos;
     return (token_type);
 }
+
 
 /* position_ptr: pointer to the pointer to the first character of the string to be parsed
 	end_str: pointer to the last character of the string to be parsed

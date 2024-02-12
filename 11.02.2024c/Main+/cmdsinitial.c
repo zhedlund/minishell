@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 20:58:47 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/12 18:30:48 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool ft_forkornottofork(t_exec *exec_cmd)
 	tofork = true;
 	cmdcopy = ft_strdup(exec_cmd->argv[0]);
 	//printf("exec_cmd->argv[1] == %s\n", exec_cmd->argv[1]);
-	if (strncmp(cmdcopy, "cat", ft_strlen(cmdcopy)) == 0)
+	if (ft_strncmp(cmdcopy, "cat", ft_strlen(cmdcopy)) == 0)
 		tofork = false;
 	free(cmdcopy);
 	return (tofork);
@@ -37,6 +37,7 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 {
 	pid_t	pid;
 	bool	tofork;
+	t_exec	code;
 	
 	tofork = ft_forkornottofork((t_exec *)cmd);
     if (cmd == 0)
@@ -51,7 +52,12 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
         		handle_exec_cmd((t_exec *)cmd, head, info);
     		wait(&pid);
 			if (WIFEXITED(pid))
-				printf("Exit status RUN_CMD1: %d\n", WEXITSTATUS(pid));
+			{
+				code.exit_status = WEXITSTATUS(pid);
+				//get_exit_status(&code);
+				code->exit_status = WEXITSTATUS(pid);
+				printf("Exit status RUN_CMD1: %d\n", code.exit_status);
+			}
     	}
 	}
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x' || cmd->type == 'h') //this will have to be altered
@@ -62,7 +68,12 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
         	handle_pipe_cmd((t_pipe *)cmd, head, info);
     	wait(&pid);
 		if (WIFEXITED(pid))
-			printf("Exit status RUN_CMD2: %d\n", WEXITSTATUS(pid));
+			{
+				code.exit_status = WEXITSTATUS(pid);
+				get_exit_status(&code);
+				//info->exit_status = WEXITSTATUS(pid);
+				printf("Exit status RUN_CMD2: %d\n", code.exit_status);
+			}
     }
     else
 	{
@@ -117,35 +128,6 @@ void	ft_ctrlc(int sig)
 	//write(STDERR_FILENO, "\n", 1);
 }
 
-/*bool	ft_allcat(char *buf)
-{
-	char	**check;
-	int	i;
-	bool	allcat;
-
-	if (buf == NULL)
-		return (false);
-	allcat = true;
-	i = 0;
-	check = ft_split(buf, '|');
-	printf("%s\n", buf);
-	while (check[i] != NULL)
-	{
-		if(ft_strlen(check[i]) < 2)
-		{
-			printf("too short\n");	
-			allcat = false;
-		}
-		else if (ft_strncmp(check[i], "cat", 2) != 0)
-		{
-			printf("not cat\n");
-			allcat = false;
-		}
-		i++;
-	}
-	return (allcat);
-}*/
-
 /* buf: pointer to the buffer to store the input
 	nbuf: size of the buffer
 	return: 0 if input is not empty, -1 otherwise
@@ -198,3 +180,32 @@ int fork_process(void)
 		perror("fork");
 	return (pid);
 }
+
+/*bool	ft_allcat(char *buf)
+{
+	char	**check;
+	int	i;
+	bool	allcat;
+
+	if (buf == NULL)
+		return (false);
+	allcat = true;
+	i = 0;
+	check = ft_split(buf, '|');
+	printf("%s\n", buf);
+	while (check[i] != NULL)
+	{
+		if(ft_strlen(check[i]) < 2)
+		{
+			printf("too short\n");	
+			allcat = false;
+		}
+		else if (ft_strncmp(check[i], "cat", 2) != 0)
+		{
+			printf("not cat\n");
+			allcat = false;
+		}
+		i++;
+	}
+	return (allcat);
+}*/

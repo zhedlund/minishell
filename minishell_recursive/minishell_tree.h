@@ -22,6 +22,8 @@
 #define WHITESPACE " \t\r\n\v"
 #define SYMBOLS "<|>"
 
+extern int g_exit_status;
+
 typedef struct s_cmd 
 {
   int	type;          // ' ' (exec), | (pipe), '<','>', 'x' (append/">>")
@@ -48,11 +50,6 @@ typedef struct s_pipe
   t_cmd	*left;      // left side of pipe
   t_cmd	*right;     // right side of pipe
 }		t_pipe;
-
-typedef struct s_exit {
-    int last_exit_status;
-    int prev_exit_status;
-} t_exit;
 
 
 /* execution */

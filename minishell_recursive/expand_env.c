@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/10 18:00:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/12 19:21:48 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ char	**expand_env(char **argv)
 				argv[i] = ft_strdup(value);
 			}
 		}
+		else if (argv[i][0] == '$' && argv[i][1] == '?')
+			argv[i] = ft_itoa(g_exit_status);
 		i++;
 	}
 	return (argv);

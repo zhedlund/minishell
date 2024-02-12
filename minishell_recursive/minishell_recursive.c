@@ -513,17 +513,12 @@ int has_unmatched_quotes(char *argv[])
 
 /* Main */
 
-void get_exit_status(t_exit *exit_status, int status)
-{
-    //exit_status->prev_exit_status = exit_status->last_exit_status; // Update second to last exit status
-    exit_status->last_exit_status = WEXITSTATUS(status); // Update last exit status
-}
+int g_exit_status = 0;
 
 int main(void)
 {
     static char buf[100];
     int status; // variable to store exit status of child process
-    t_exit exit_status = {0}; // store exit status of child process
     int first_iteration = 1; // flag to detect the first iteration
 
     while (get_cmd(buf, sizeof(buf)) >= 0) {
@@ -544,53 +539,9 @@ int main(void)
         if (fork_process() == 0)
             run_cmd(parse_cmd(buf));
         wait(&status);
-        get_exit_status(&exit_status, status); // Update exit statuses
-        printf("Last exit status: %d\n", exit_status.last_exit_status);
-    	//printf("Second to last exit status: %d\n", exit_status.prev_exit_status);
+		if (WIFEXITED(status))
+			g_exit_status = WEXITSTATUS(status);
+        printf("Last exit status: %d\n", g_exit_status);
     }
     return (0);
 }
-
-
-
-/*int main(void)
-{
-    static char	buf[100];
-    int			status; // variable to store exit status of child process
-    t_exit		exit_status; // store exit status of child process
-    t_exit		prev_exit_status; // store the previous exit status
-    int			first_iteration; // flag to detect the first iteration
-
-	first_iteration = 1; // Set flag to detect the first iteration
-    while (get_cmd(buf, sizeof(buf)) >= 0)
-	{
-        // Check for unmatched quotes before proceeding
-        if (has_unmatched_quotes((char *[]) {buf, NULL}))
-		{
-            ft_putstr_fd("unmatched quote\n", 2);
-            continue; // Skip processing this command and move to the next one
-        }
-        // cd is just an example, will call builtin functions here
-        // if (is_builtin()) or similar
-        if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
-            // Chdir have to be run in the parent, has no effect if run in the child.
-            buf[ft_strlen(buf) - 1] = 0; // chop \n
-            if (chdir(buf + 3) < 0)
-                ft_putstr_fd("cannot cd\n", 2);
-            continue;
-        }
-        if (fork_process() == 0)
-            run_cmd(parse_cmd(buf));
-        wait(&status);
-		if (first_iteration)
-			prev_exit_status.value = 0; // Update exit status
-        else
-            prev_exit_status.value = exit_status.value;
-        exit_status.value = WEXITSTATUS(status); // WEXITSTATUS returns the exit status of the child
-        printf("Last exit status: %d\n", exit_status.value);
-        printf("Second to last exit status: %d\n", prev_exit_status.value);
-        first_iteration = 0; // Update flag after the first iteration
-    }
-    return (0);
-}*/
-

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   exec_simple.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:20:04 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:20:07 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/12 17:35:18 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* Execution */
@@ -122,7 +123,7 @@ void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
     else if ((*info)->unsetpath == true && (*info)->stillexecute != true)
 	{
 		printf("Minishell: %s: No such file or directory\n", exec_cmd->argv[0]);
-		exit(0);
+		exit(127);
 	}
 	else    
 		ft_execvp(exec_cmd->argv[0], exec_cmd->argv, head);

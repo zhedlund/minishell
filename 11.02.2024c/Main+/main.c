@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 21:11:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/12 18:14:17 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,12 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 	return (false);
 }
 
+int	get_exit_status(t_exec *status)
+{
+	printf("get_exit_status: %d\n", status->exit_status);
+	return (status->exit_status);
+}
+
 int main(void)
 {
 	static char	buf[100];
@@ -177,10 +183,12 @@ int main(void)
 	t_info	*info;
 	char	*input;
 	t_env	*head;
+	//t_exec	code;
 
 	head = NULL;
 	info = ft_calloc(sizeof(t_info), 1);
 	get_env(&head);
+	//code.exit_status = 0;
 	while (get_cmd(buf, sizeof(buf), &head) >= 0)
 	{
 		ft_heredocmain(buf, &info);
@@ -204,8 +212,12 @@ int main(void)
 			if (fork_process() == 0)
 				run_cmd(parse_cmd(buf, &info), &head, &info);
 			wait(&status);
-			if (WIFEXITED(status))
-				printf("Exit status main: %d\n", WEXITSTATUS(status));
+			/*if (WIFEXITED(status))
+			{
+				code.exit_status = WEXITSTATUS(status);
+				get_exit_status(&code);
+				printf("Exit status main: %d\n", code.exit_status);
+			}*/
 		}
 		unlink("hdtemp");
 	}

@@ -3,13 +3,13 @@ Currently not working:
 - Use "make -n" to see if compilation use "-Wall -Wextra -Werror"
 	result: cc -D LINUX -Wno-unused-result -c
 	
-- Execute a simple command with an absolute path like /bin/ls, or any other command without any options.
+FIXED - Execute a simple command with an absolute path like /bin/ls, or any other command without any options.
 
 - How many global variables are used? Why? Ask the evaluated student to give you a concrete example of why it feels mandatory or logical.
 
 - Check the global variable. This global variable cannot provide any other information or data access than the number of a received signal.
 	
-- Execute a simple command with an absolute path like /bin/ls, or any other command with arguments but without any quotes or double quotes. Repeat multiple times with different commands and arguments.
+FIXED - Execute a simple command with an absolute path like /bin/ls, or any other command with arguments but without any quotes or double quotes. Repeat multiple times with different commands and arguments.
 
 - Execute exit command with or without arguments. Repeat multiple times with different arguments.
 
@@ -36,7 +36,7 @@ result: PATH disappears from env list, but commands still work
 
 - Set the $PATH to a multiple directory value (directory1:directory2) and ensure that directories are checked in order from left to right.
 
-- heredoc gives error: " missing file for redirection" after execution:
+FIXED - heredoc gives error: " missing file for redirection" after execution:
 	
 	minishell> << end
 	heredoc<< test

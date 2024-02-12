@@ -77,7 +77,7 @@ typedef struct s_info
 	bool	first;
   bool  unsetpath;
   bool  stillexecute;
-  int exitstatus;
+  int exit_status;
 	//t_env	*env;
 }		t_info;
 
@@ -105,9 +105,8 @@ t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info);
 int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
-char	**expand_env(char **argv);
+char	**expand_env(char **argv, t_info **info);
 char *expand_env_in_str(const char *str);
-void get_exit_status(t_exit *code);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
@@ -127,9 +126,9 @@ char	*ft_strtrim(char const *s1, char const *set);
 void	ft_freearray(char **tofree);
 int	ft_isalnum(int c);
 int	ft_atoi(const char *nptr);
+char	*ft_itoa(int n);
 
 int main(void);
-char **expand_env(char **argv);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head);
 void   ft_cd(char *arraystring, char **cmdarray, t_env **head);
 void  ft_env(char *arraystring, t_env **head);

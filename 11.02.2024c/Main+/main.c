@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 21:11:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/12 22:34:01 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,7 +205,10 @@ int main(void)
 				run_cmd(parse_cmd(buf, &info), &head, &info);
 			wait(&status);
 			if (WIFEXITED(status))
-				printf("Exit status main: %d\n", WEXITSTATUS(status));
+			{
+				info->exit_status = WEXITSTATUS(status);
+				printf("Exit status main: %d\n", info->exit_status);
+			}
 		}
 		unlink("hdtemp");
 	}

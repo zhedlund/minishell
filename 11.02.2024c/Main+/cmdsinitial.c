@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 20:58:47 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/12 22:49:19 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
         		handle_exec_cmd((t_exec *)cmd, head, info);
     		wait(&pid);
 			if (WIFEXITED(pid))
-				printf("Exit status RUN_CMD1: %d\n", WEXITSTATUS(pid));
+			{
+				(*info)->exit_status = WEXITSTATUS(pid);
+				printf("Exit status RUN_CMD2: %d\n", (*info)->exit_status);
+			}
     	}
 	}
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x' || cmd->type == 'h') //this will have to be altered
@@ -62,7 +65,10 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
         	handle_pipe_cmd((t_pipe *)cmd, head, info);
     	wait(&pid);
 		if (WIFEXITED(pid))
-			printf("Exit status RUN_CMD2: %d\n", WEXITSTATUS(pid));
+		{
+			(*info)->exit_status = WEXITSTATUS(pid);
+			printf("Exit status RUN_CMD2: %d\n", (*info)->exit_status);
+		}
     }
     else
 	{

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/10 18:00:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/12 22:32:10 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 	returns a new array with the expanded variables
 	note: called by parse_tokens()
 	*/
-char	**expand_env(char **argv)
+char	**expand_env(char **argv, t_info **info)
 {
 	int		i;
 	char	*name;
@@ -34,6 +34,11 @@ char	**expand_env(char **argv)
 				free(argv[i]);
 				argv[i] = ft_strdup(value);
 			}
+		}
+		if (argv[i][0] == '$' && argv[i][1] == '?')
+		{
+			free(argv[i]);
+			argv[i] = ft_itoa((*info)->exit_status);
 		}
 		i++;
 	}

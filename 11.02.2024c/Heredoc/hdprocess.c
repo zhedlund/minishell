@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hdprocess.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:17 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/20 10:18:20 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/12 22:47:03 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
-#include <sys/ioctl.h>
 
 int	global = 0;
 

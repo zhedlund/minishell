@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/12 22:49:19 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/13 21:53:16 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool ft_forkornottofork(t_exec *exec_cmd)
 	tofork = true;
 	cmdcopy = ft_strdup(exec_cmd->argv[0]);
 	//printf("exec_cmd->argv[1] == %s\n", exec_cmd->argv[1]);
-	if (strncmp(cmdcopy, "cat", ft_strlen(cmdcopy)) == 0)
+	if (ft_strncmp(cmdcopy, "cat", ft_strlen(cmdcopy)) == 0)
 		tofork = false;
 	free(cmdcopy);
 	return (tofork);
@@ -50,11 +50,6 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
     		if ((pid = fork()) == 0)
         		handle_exec_cmd((t_exec *)cmd, head, info);
     		wait(&pid);
-			if (WIFEXITED(pid))
-			{
-				(*info)->exit_status = WEXITSTATUS(pid);
-				printf("Exit status RUN_CMD2: %d\n", (*info)->exit_status);
-			}
     	}
 	}
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x' || cmd->type == 'h') //this will have to be altered
@@ -64,11 +59,6 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
     	if ((pid = fork()) == 0)
         	handle_pipe_cmd((t_pipe *)cmd, head, info);
     	wait(&pid);
-		if (WIFEXITED(pid))
-		{
-			(*info)->exit_status = WEXITSTATUS(pid);
-			printf("Exit status RUN_CMD2: %d\n", (*info)->exit_status);
-		}
     }
     else
 	{
@@ -158,7 +148,7 @@ void	ft_ctrlc(int sig)
 	note: the function is called by: main()
  */
  // ctrl\ ctrlc now taken care of
-int get_cmd(char *buf, int nbuf, t_env **head)
+int get_cmd(char *buf, int nbuf, t_env **head, int status)
 {
 	char	*input;
 	//bool	allcat;
@@ -184,10 +174,23 @@ int get_cmd(char *buf, int nbuf, t_env **head)
 		printf("exit\n");
 		exit(0);
 	}
-		ft_strlcpy(buf, input, nbuf); // copy input to buf
+		/*ft_strlcpy(buf, input, nbuf); // copy input to buf
 		buf[nbuf - 1] = '\0'; // null-terminated string
     		add_history(buf); // Add input to history
-    		free(input); // Free memory allocated by readline()
+    		free(input); // Free memory allocated by readline()*/
+	 // Expand $? to the value of status
+    char *expanded_input = expand_exit_status(input, status);
+
+    // Copy the expanded input to the buffer
+    strncpy(buf, expanded_input, nbuf);
+    buf[nbuf - 1] = '\0'; // Null-terminate the string
+
+    // Add the command to history
+    add_history(buf);
+
+    // Free memory allocated by readline and expanded_input
+    free(input);
+    free(expanded_input);
 	return (0);
 }
 

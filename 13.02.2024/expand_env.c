@@ -6,11 +6,28 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/12 22:32:10 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/13 21:47:52 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tree.h"
+
+char *expand_exit_status(char *input, int status)
+{
+    char *expanded_input = strdup(input); // Duplicate the input string
+
+    // Find all occurrences of "$?" and replace them with the value of status
+    char *ptr = expanded_input;
+    while ((ptr = strstr(ptr, "$?")) != NULL) {
+        // Replace "$?" with the value of status
+        char *status_str = ft_itoa(status); // Convert status to string
+        strcpy(ptr, status_str); // Copy the status string over "$?"
+        ptr += strlen(status_str); // Move the pointer to the end of the replaced string
+        free(status_str); // Free the memory allocated by ft_itoa
+    }
+
+    return expanded_input;
+}
 
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
 	returns a new array with the expanded variables
@@ -35,11 +52,11 @@ char	**expand_env(char **argv, t_info **info)
 				argv[i] = ft_strdup(value);
 			}
 		}
-		if (argv[i][0] == '$' && argv[i][1] == '?')
+		/*if (argv[i][0] == '$' && argv[i][1] == '?')
 		{
 			free(argv[i]);
 			argv[i] = ft_itoa((*info)->exit_status);
-		}
+		}*/
 		i++;
 	}
 	return (argv);
@@ -81,7 +98,7 @@ static int	handle_env_var(const char *str, size_t i,
 		return (env_end - str); // Move to char after env name (if not found)
 }
 
-static void	copy_char_to_expanded(char *expanded, size_t *index, char c)
+static void	copy_to_expanded(char *expanded, size_t *index, char c)
 {
 	expanded[*index] = c;
 	(*index)++;
@@ -114,7 +131,7 @@ char	*expand_env_in_str(const char *str)
 		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != '?')
 			i = handle_env_var(str, i, expanded, &index);
 		else
-			copy_char_to_expanded(expanded, &index, str[i]);
+			copy_to_expanded(expanded, &index, str[i]);
 		i++;
 	}
 	expanded[index] = '\0';

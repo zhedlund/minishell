@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:18:00 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 20:13:59 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/13 15:53:23 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,9 @@ void handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid, int status, t_env
     dup2(fd_pipe[1], STDOUT_FILENO);
     run_cmd(((t_pipe *)cmd)->left, head, info);
     close(fd_pipe[1]);
-    wait(&pid);
-	if (WIFEXITED(pid))
-		printf("Exit status handle_parent_process: %d\n", WEXITSTATUS(status));
+    //wait(&pid);
+	//if (WIFEXITED(pid))
+		//printf("Exit status handle_parent_process: %d\n", WEXITSTATUS(status));
 }
 
 /* pipe_cmd: pointer to the command struct

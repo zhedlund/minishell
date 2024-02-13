@@ -58,7 +58,8 @@ void	handle_redir_cmd(t_redir *redir_cmd);
 void	handle_child_process(t_cmd *cmd, int fd_pipe[]);
 void	handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid);
 void	handle_pipe_cmd(t_pipe *pipe_cmd);
-int		get_cmd(char *buf, int nbuf);
+//int		get_cmd(char *buf, int nbuf);
+int get_cmd(char *buf, int buf_size, int status);
 int		fork_process(void);
 void 	run_cmd(t_cmd *cmd);
 int		ft_execvp(const char *file, char *const argv[]);
@@ -79,6 +80,7 @@ int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv);
 char	*expand_env_in_str(const char *str);
+char *expand_exit_status(char *input, int status);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);

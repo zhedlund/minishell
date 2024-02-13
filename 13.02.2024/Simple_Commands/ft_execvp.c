@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/11 19:25:42 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/13 19:39:12 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static char	*find_cmd_path(const char *file)
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int ft_execvp(const char *file, char *const argv[], t_env **head)
+int ft_execvp(const char *file, char *const argv[], t_env **head, t_info **info)
 {
 	char	*full_path;
 	pid_t	pid;
@@ -88,14 +88,56 @@ int ft_execvp(const char *file, char *const argv[], t_env **head)
 	if (full_path == NULL)
 	{
 		perror(file); // Prints "cmd: No such file or directory"
+		(*info)->exit_status = 127;
+		printf("exit_status execvp 127: %d\n", (*info)->exit_status);
 		exit(127);
 	}
 	else if (access(full_path, X_OK) != 0)
 	{
 		perror(full_path); // Prints "./path: Permission denied"
+		(*info)->exit_status = 126;
+		printf("exit_status execvp 126: %d\n", (*info)->exit_status);
 		exit(126);
 	}
-	/*else if ((ft_strncmp(file, "cat", ft_strlen(file)) == 0)
+	else if (execve(full_path, argv, NULL) == -1)
+	{
+		perror("Error");
+		(*info)->exit_status = 126;
+		printf("exit_status execvp 126: %d\n", (*info)->exit_status);
+		exit(126);
+	}
+	free(full_path); // Free memory allocated by find_command_path
+	return (-1);
+}
+
+/*
+{
+	char	*full_path;
+	pid_t	pid;
+	int		status;
+
+	if (!file || !argv)
+	{
+		printf("Invalid arguments.\n");
+		return (-1);
+	}
+	if (file[0] == '.' && file[1] == '/')
+		full_path = ft_strdup(file);
+	else
+		full_path = find_cmd_path(file);
+	if (full_path == NULL)
+	{
+		perror(file); // Prints "cmd: No such file or directory"
+		(*info)->exit_status = 127;
+		exit(127);
+	}
+	else if (access(full_path, X_OK) != 0)
+	{
+		perror(full_path); // Prints "./path: Permission denied"
+		(*info)->exit_status = 126;
+		exit(126);
+	}
+	else if ((ft_strncmp(file, "cat", ft_strlen(file)) == 0)
 			|| (ft_strncmp(file, "grep", ft_strlen(file)) == 0)
 				|| (ft_strncmp(file, "wc", ft_strlen(file)) == 0))
 	{
@@ -113,15 +155,16 @@ int ft_execvp(const char *file, char *const argv[], t_env **head)
 			free(full_path);
 		}
 		wait(&status);
-	}*/
+	}
 	else if (execve(full_path, argv, NULL) == -1)
 	{
 		perror("Error");
+		(*info)->exit_status = 126;
 		exit(126);
 	}
 	free(full_path); // Free memory allocated by find_command_path
 	return (-1);
-}
+}*/
 
 /* simple main to test one comand + option.
 The parser will probably return an array with commands similar to args[] here.*/

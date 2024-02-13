@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/12 22:34:01 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/13 21:49:36 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,7 @@ int has_unmatched_quotes(char *argv[])
 	return (0);
 }
 
+
 //this function decides whether to block or unblock non-builtin simple functions
 //on the basis of whether or not PATH has been unset, or reset properly
 //alter bool in info array that is checked by later functions
@@ -178,10 +179,11 @@ int main(void)
 	char	*input;
 	t_env	*head;
 
+	status = 0;
 	head = NULL;
 	info = ft_calloc(sizeof(t_info), 1);
 	get_env(&head);
-	while (get_cmd(buf, sizeof(buf), &head) >= 0)
+	while (get_cmd(buf, sizeof(buf), &head, status) >= 0)
 	{
 		ft_heredocmain(buf, &info);
 		signal(SIGQUIT, ft_ctrlc);
@@ -205,10 +207,8 @@ int main(void)
 				run_cmd(parse_cmd(buf, &info), &head, &info);
 			wait(&status);
 			if (WIFEXITED(status))
-			{
-				info->exit_status = WEXITSTATUS(status);
-				printf("Exit status main: %d\n", info->exit_status);
-			}
+			status = WEXITSTATUS(status);
+        	printf("Last exit status: %d\n", status);
 		}
 		unlink("hdtemp");
 	}

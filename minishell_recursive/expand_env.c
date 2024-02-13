@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/12 19:21:48 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/13 22:01:55 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,44 @@
 	returns a new array with the expanded variables
 	note: called by parse_tokens()
 	*/
+
+char *expand_exit_status(char *input, int status) 
+{
+    char *expanded_input = ft_strdup(input); // Duplicate the input string
+
+    // Find all occurrences of "$?" and replace them with the value of status
+    char *ptr = expanded_input;
+    while ((ptr = strstr(ptr, "$?")) != NULL)
+	{
+        // Replace "$?" with the value of status
+        char *status_str = ft_itoa(status); 
+        ft_strcpy(ptr, status_str);
+        ptr += ft_strlen(status_str); // Move the pointer to the end of the replaced string
+        free(status_str);
+    }
+
+    return expanded_input;
+}
+
+
+// Function to expand "$?" to the value of status
+/*char	**expand_exit_status(char **argv, int status)
+{
+	int		i;
+	char	*value;
+
+	i = 0;
+	while (argv[i] != NULL)
+	{
+		if (argv[i][0] == '$' && argv[i][1] == '?')
+		{
+			argv[i] = ft_itoa(status);
+		}
+		i++;
+	}
+	return (argv);
+}*/
+
 char	**expand_env(char **argv)
 {
 	int		i;
@@ -35,8 +73,8 @@ char	**expand_env(char **argv)
 				argv[i] = ft_strdup(value);
 			}
 		}
-		else if (argv[i][0] == '$' && argv[i][1] == '?')
-			argv[i] = ft_itoa(g_exit_status);
+		/*else if (argv[i][0] == '$' && argv[i][1] == '?')
+			argv[i] = ft_itoa(g_exit_status);*/
 		i++;
 	}
 	return (argv);

@@ -131,26 +131,48 @@ void run_cmd(t_cmd *cmd)
 	return: 0 if input is not empty, -1 otherwise
 	note: the function is called by: main()
  */
-int	get_cmd(char *buf, int buf_size)
+/*int	get_cmd(char *buf, int buf_size)
 {
 	char	*input;
 
 	if (isatty(0)) // checks if connected to stdin (fd 0)
 		input = readline("minishell> "); // read input w promt - interactive mode
 	else
-		input = readline(""); // read input w/o promt - non-interactive mode
+		input = readline(""); // read input w/o promt - non-interactive mode*/
 	/*if (input == NULL) //|| ft_strlen(input) == 0) // Handle EOF or empty input
 	{
 		if (input != NULL)
 			free(input); // free memory allocated by readline()
 		return (-1);
 	}*/
-	ft_strlcpy(buf, input, buf_size); // copy input to buf
+
+	/*ft_strlcpy(buf, input, buf_size); // copy input to buf
 	buf[buf_size - 1] = '\0'; // null-terminated string
     add_history(buf); // Add input to history
     free(input); // Free memory allocated by readline()
 	return (0);
+}*/
+
+int get_cmd(char *buf, int buf_size, int status)
+{
+    char *input;
+    char *ptr;
+
+    if (isatty(0))
+        input = readline("minishell> ");
+    else
+        input = readline("");
+    // Expand $? to the value of status
+    char *expanded_input = expand_exit_status(input, status);
+    // Copy the expanded input to the buffer
+    strncpy(buf, expanded_input, buf_size);
+    buf[buf_size - 1] = '\0';
+    add_history(buf);
+    free(input);
+    free(expanded_input);
+    return 0;
 }
+
 
 /* 	return: pid of the child process
 	note: the function is called by: run_cmd()
@@ -513,7 +535,7 @@ int has_unmatched_quotes(char *argv[])
 
 /* Main */
 
-int g_exit_status = 0;
+//int g_exit_status = 0;
 
 int main(void)
 {
@@ -521,9 +543,12 @@ int main(void)
     int status; // variable to store exit status of child process
     int first_iteration = 1; // flag to detect the first iteration
 
-    while (get_cmd(buf, sizeof(buf)) >= 0) {
+	status = 0; // initialize to 0, for the first iteration
+    while (get_cmd(buf, sizeof(buf), status) >= 0)
+	{
         // Check for unmatched quotes before proceeding
-        if (has_unmatched_quotes((char *[]) {buf, NULL})) {
+        if (has_unmatched_quotes((char *[]) {buf, NULL}))
+		{
             ft_putstr_fd("unmatched quote\n", 2);
             continue; // Skip processing this command and move to the next one
         }
@@ -540,8 +565,7 @@ int main(void)
             run_cmd(parse_cmd(buf));
         wait(&status);
 		if (WIFEXITED(status))
-			g_exit_status = WEXITSTATUS(status);
-        printf("Last exit status: %d\n", g_exit_status);
+			status = WEXITSTATUS(status);
     }
     return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:17 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/12 22:47:03 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:38:27 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	**ft_heredocarray(int heredoc, char **inputs)
 static void	ft_hdsigint(int signal)
 {
 	(void)signal;
-	rl_replace_line("", 0);
+	//rl_replace_line("", 0); //temp removed
 	rl_on_new_line();
 	ioctl(STDOUT_FILENO, TIOCSTI, "\n");
 	global = 3;

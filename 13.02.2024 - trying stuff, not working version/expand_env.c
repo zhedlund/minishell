@@ -6,28 +6,49 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/13 21:47:52 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:49:51 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tree.h"
 
+static char **expand_env_exit(char **argv, int status) {
+    int i = 0;
+    while (argv[i] != NULL) {
+        if (ft_strcmp(argv[i], "$?") == 0) {
+            // Replace "$?" with the string representation of the exit status
+            free(argv[i]); // Free the original string
+            argv[i] = ft_itoa(status); // Allocate memory and copy the exit status string
+        }
+        i++;
+    }
+    return argv;
+}
+
 char *expand_exit_status(char *input, int status)
 {
-    char *expanded_input = strdup(input); // Duplicate the input string
-
-    // Find all occurrences of "$?" and replace them with the value of status
-    char *ptr = expanded_input;
-    while ((ptr = strstr(ptr, "$?")) != NULL) {
-        // Replace "$?" with the value of status
-        char *status_str = ft_itoa(status); // Convert status to string
-        strcpy(ptr, status_str); // Copy the status string over "$?"
-        ptr += strlen(status_str); // Move the pointer to the end of the replaced string
-        free(status_str); // Free the memory allocated by ft_itoa
+    char **argv = ft_split(input, ' '); // Split the input string into an array of strings
+    argv = expand_env_exit(argv, status);
+    size_t total_length = 0;
+	// Concatenate the array of strings into one string
+    for (int i = 0; argv[i] != NULL; i++)
+        total_length += ft_strlen(argv[i]) + 1; // Add 1 for space between words
+    char *expanded_input = malloc(total_length + 1); // Add 1 for null terminator
+    if (expanded_input == NULL) {
+        ft_putstr_fd("Memory allocation failed\n", 2);
+        exit(1);
     }
-
+    expanded_input[0] = '\0'; // Initialize the string to empty
+    for (int i = 0; argv[i] != NULL; i++)
+	{
+        ft_strcat(expanded_input, argv[i]);
+        ft_strcat(expanded_input, " "); // Add space between words
+        free(argv[i]); // Free memory allocated for each string
+    }
+    free(argv); // Free memory allocated for the array of strings
     return expanded_input;
 }
+
 
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
 	returns a new array with the expanded variables

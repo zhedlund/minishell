@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/13 21:53:16 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/14 23:57:43 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 // Execute cmd.  Never returns.
 int	globalsignum = 0;
 //this function is to solve the probelm of having env | grep ft - then everything finishes on time and cat is treated differently 
+
 bool ft_forkornottofork(t_exec *exec_cmd)
 {
 	char	*cmdcopy;
@@ -37,6 +38,7 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 {
 	pid_t	pid;
 	bool	tofork;
+	int		status;
 	
 	tofork = ft_forkornottofork((t_exec *)cmd);
     if (cmd == 0)
@@ -49,7 +51,13 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 		{
     		if ((pid = fork()) == 0)
         		handle_exec_cmd((t_exec *)cmd, head, info);
-    		wait(&pid);
+    		waitpid(pid, &status, 0);
+			if (WIFEXITED(status))
+				if (exit_callback != NULL)
+				{
+					printf("Exit status RC1: %d\n", WEXITSTATUS(status));
+        			exit_callback(WEXITSTATUS(status));
+				}
     	}
 	}
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x' || cmd->type == 'h') //this will have to be altered
@@ -58,7 +66,13 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
     {
     	if ((pid = fork()) == 0)
         	handle_pipe_cmd((t_pipe *)cmd, head, info);
-    	wait(&pid);
+    	waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+				if (exit_callback != NULL)
+				{
+					printf("Exit status RC2: %d\n", WEXITSTATUS(status));
+        			exit_callback(WEXITSTATUS(status));
+				}
     }
     else
 	{
@@ -69,13 +83,33 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
     exit(0);
 }
 
+/*void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
+{
+    if (cmd == 0)
+        exit(0);
+    if (cmd->type == ' ')
+        handle_exec_cmd((t_exec *)cmd, head, info);
+    else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x')
+        handle_redir_cmd((t_redir *)cmd, head, info);
+    else if (cmd->type == '|')
+        handle_pipe_cmd((t_pipe *)cmd, head, info);
+    else
+	{
+        //ft_putstr_fd("unknown run_cmd\n", 2);
+		perror("run_cmd");
+        exit(1);
+    }
+    exit(0);
+}*/
+
+
 void	ft_ctrlc2(int signal)
 {
 	//printf("ctrlc2\n");
 	if (signal == SIGINT)
 	{
 		(void)signal;
-		rl_replace_line("\0", 0);
+		//rl_replace_line("\0", 0); //temp removed
 		//write(STDERR_FILENO, "\n", 1);
 		//rl_redisplay();
 		globalsignum = 4;
@@ -97,7 +131,7 @@ void	ft_ctrlc(int sig)
 	{
 		(void)sig;
     		rl_on_new_line();
-        	rl_redisplay();
+        	//rl_redisplay(); //temp removed
 			//printf("ft_ctrlc\n");
         	write(1, "\033[K", 3); //"\033[K" is an escape code that means clear the line (it prevents a ghostly ^\ from appearing)
 			rl_redisplay();
@@ -105,7 +139,7 @@ void	ft_ctrlc(int sig)
 	if (sig == SIGINT)
 	{
 		(void)sig;
-		rl_replace_line("\0", 0);
+		//rl_replace_line("\0", 0); //temp removed
 		write(STDERR_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
@@ -148,7 +182,7 @@ void	ft_ctrlc(int sig)
 	note: the function is called by: main()
  */
  // ctrl\ ctrlc now taken care of
-int get_cmd(char *buf, int nbuf, t_env **head, int status)
+int get_cmd(char *buf, int nbuf, t_env **head)
 {
 	char	*input;
 	//bool	allcat;
@@ -174,23 +208,10 @@ int get_cmd(char *buf, int nbuf, t_env **head, int status)
 		printf("exit\n");
 		exit(0);
 	}
-		/*ft_strlcpy(buf, input, nbuf); // copy input to buf
-		buf[nbuf - 1] = '\0'; // null-terminated string
-    		add_history(buf); // Add input to history
-    		free(input); // Free memory allocated by readline()*/
-	 // Expand $? to the value of status
-    char *expanded_input = expand_exit_status(input, status);
-
-    // Copy the expanded input to the buffer
-    strncpy(buf, expanded_input, nbuf);
-    buf[nbuf - 1] = '\0'; // Null-terminate the string
-
-    // Add the command to history
-    add_history(buf);
-
-    // Free memory allocated by readline and expanded_input
-    free(input);
-    free(expanded_input);
+	ft_strlcpy(buf, input, nbuf); // copy input to buf
+	buf[nbuf - 1] = '\0'; // null-terminated string
+    add_history(buf); // Add input to history
+    free(input); // Free memory allocated by readline()
 	return (0);
 }
 

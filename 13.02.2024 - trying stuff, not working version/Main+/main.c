@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/13 21:49:36 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/15 00:03:26 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	get_env(t_env **head)
 	*head = node;
 	while (environ[i] != NULL)
 	{
-		
 		temp = (t_env *)malloc(sizeof(t_env));
 		if (!temp)
 			exit (1);
@@ -89,7 +88,7 @@ void	get_env(t_env **head)
 	}
 	temp = *head;
 	temp->prev = node->next;
-}
+} 
 
 int has_unmatched_quotes(char *argv[])
 {
@@ -171,19 +170,34 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 	return (false);
 }
 
+ExitCallback exit_callback = NULL;
+void handle_child_exit(int status)
+{
+    printf("Child process exited with status: %d\n", status);
+    // Add your custom logic here
+}
+void set_exit_callback(ExitCallback cb)
+{
+    exit_callback = cb;
+}
+// Function pointer to store callback function
+
 int main(void)
 {
-	static char	buf[100];
+	static char	buf[500];
 	int			status; // variable to store exit status of child process
-	t_info	*info;
-	char	*input;
-	t_env	*head;
+	t_info		*info;
+	char		*input;
+	t_env		*head;
+	char		*expanded;
+	pid_t		pid;
 
-	status = 0;
 	head = NULL;
+	status = 0;
 	info = ft_calloc(sizeof(t_info), 1);
 	get_env(&head);
-	while (get_cmd(buf, sizeof(buf), &head, status) >= 0)
+	set_exit_callback(handle_child_exit);
+	while (get_cmd(buf, sizeof(buf), &head) >= 0)
 	{
 		ft_heredocmain(buf, &info);
 		signal(SIGQUIT, ft_ctrlc);
@@ -195,6 +209,7 @@ int main(void)
 			signal(SIGINT, ft_ctrlc2);
 			signal(SIGQUIT, ft_ctrlc2);
 		}
+		expanded = expand_exit_status(buf, status);
 		if (has_unmatched_quotes((char *[]){buf, NULL}))
 		{
 			ft_putstr_fd("unmatched quote\n", 2);
@@ -203,12 +218,15 @@ int main(void)
 		if (ft_disinherit(buf, &head, &info) == false
 				&& info->panic == false)
 		{
-			if (fork_process() == 0)
+			if ((pid = fork()) == 0)
 				run_cmd(parse_cmd(buf, &info), &head, &info);
-			wait(&status);
-			if (WIFEXITED(status))
-			status = WEXITSTATUS(status);
-        	printf("Last exit status: %d\n", status);
+			waitpid(pid, &status, 0);
+			/*if (WIFEXITED(pid))
+				if (exit_callback != NULL)
+				{
+					exit_callback(WEXITSTATUS(status));
+					printf("Exit status main: %d\n", WEXITSTATUS(status));
+				}*/
 		}
 		unlink("hdtemp");
 	}

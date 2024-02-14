@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/13 19:39:12 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/14 12:53:20 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,22 +88,16 @@ int ft_execvp(const char *file, char *const argv[], t_env **head, t_info **info)
 	if (full_path == NULL)
 	{
 		perror(file); // Prints "cmd: No such file or directory"
-		(*info)->exit_status = 127;
-		printf("exit_status execvp 127: %d\n", (*info)->exit_status);
 		exit(127);
 	}
 	else if (access(full_path, X_OK) != 0)
 	{
 		perror(full_path); // Prints "./path: Permission denied"
-		(*info)->exit_status = 126;
-		printf("exit_status execvp 126: %d\n", (*info)->exit_status);
 		exit(126);
 	}
 	else if (execve(full_path, argv, NULL) == -1)
 	{
 		perror("Error");
-		(*info)->exit_status = 126;
-		printf("exit_status execvp 126: %d\n", (*info)->exit_status);
 		exit(126);
 	}
 	free(full_path); // Free memory allocated by find_command_path

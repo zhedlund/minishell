@@ -18,7 +18,7 @@
 #include <readline/history.h>
 #include <sys/ioctl.h>
 
-#define MAXARGS 50
+#define MAXARGS 100
 #define WHITESPACE " \t\r\n\v"
 #define SYMBOLS "<|>"
 
@@ -81,13 +81,21 @@ typedef struct s_info
 	//t_env	*env;
 }		t_info;
 
+// Callback function prototype
+typedef void (*ExitCallback)(int status);
+extern ExitCallback exit_callback;
+
+// Function to set the exit callback
+void set_exit_callback(ExitCallback cb);
+void handle_child_exit(int status);
+
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info);
 void	handle_child_process(t_cmd *cmd, int fd_pipe[], int pid, t_env **head, t_info **info);
 void	handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid, int status, t_env **head, t_info **info);
 void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info);
-int		get_cmd(char *buf, int nbuf, t_env **head, int status);
+int		get_cmd(char *buf, int nbuf, t_env **head);
 int		fork_process(void);
 void 	run_cmd(t_cmd *cmd, t_env **head, t_info **info);
 int		ft_execvp(const char *file, char *const argv[], t_env **head, t_info **info);
@@ -130,6 +138,7 @@ int	ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
 
 int main(void);
+void	get_env(t_env **head);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head);
 void   ft_cd(char *arraystring, char **cmdarray, t_env **head);
 void  ft_env(char *arraystring, t_env **head);

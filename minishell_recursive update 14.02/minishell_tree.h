@@ -58,8 +58,8 @@ void	handle_redir_cmd(t_redir *redir_cmd);
 void	handle_child_process(t_cmd *cmd, int fd_pipe[]);
 void	handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid);
 void	handle_pipe_cmd(t_pipe *pipe_cmd);
-//int		get_cmd(char *buf, int nbuf);
-int get_cmd(char *buf, int buf_size, int status);
+int		get_cmd(char *buf, int nbuf);
+//int get_cmd(char *buf, int buf_size, int status);
 int		fork_process(void);
 void 	run_cmd(t_cmd *cmd);
 int		ft_execvp(const char *file, char *const argv[]);
@@ -97,5 +97,6 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_isalnum(int c);
 char	*ft_itoa(int n);
+char	**ft_split(char const *s, char c);
 
 #endif

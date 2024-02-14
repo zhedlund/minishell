@@ -131,7 +131,8 @@ void run_cmd(t_cmd *cmd)
 	return: 0 if input is not empty, -1 otherwise
 	note: the function is called by: main()
  */
-/*int	get_cmd(char *buf, int buf_size)
+
+int	get_cmd(char *buf, int buf_size)
 {
 	char	*input;
 
@@ -145,15 +146,14 @@ void run_cmd(t_cmd *cmd)
 			free(input); // free memory allocated by readline()
 		return (-1);
 	}*/
-
-	/*ft_strlcpy(buf, input, buf_size); // copy input to buf
+	ft_strlcpy(buf, input, buf_size); // copy input to buf
 	buf[buf_size - 1] = '\0'; // null-terminated string
     add_history(buf); // Add input to history
     free(input); // Free memory allocated by readline()
 	return (0);
-}*/
+}
 
-int get_cmd(char *buf, int buf_size, int status)
+/*int get_cmd(char *buf, int buf_size, int status)
 {
     char *input;
     char *ptr;
@@ -171,7 +171,7 @@ int get_cmd(char *buf, int buf_size, int status)
     free(input);
     free(expanded_input);
     return 0;
-}
+}*/
 
 
 /* 	return: pid of the child process
@@ -541,10 +541,10 @@ int main(void)
 {
     static char buf[100];
     int status; // variable to store exit status of child process
-    int first_iteration = 1; // flag to detect the first iteration
+	char *expanded_input;
 
 	status = 0; // initialize to 0, for the first iteration
-    while (get_cmd(buf, sizeof(buf), status) >= 0)
+    while (get_cmd(buf, sizeof(buf)) >= 0)
 	{
         // Check for unmatched quotes before proceeding
         if (has_unmatched_quotes((char *[]) {buf, NULL}))
@@ -552,6 +552,7 @@ int main(void)
             ft_putstr_fd("unmatched quote\n", 2);
             continue; // Skip processing this command and move to the next one
         }
+		expanded_input = expand_exit_status(buf, status); 
         // cd is just an example, will call builtin functions here
         // if (is_builtin()) or similar
         if (buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' ') {
@@ -562,7 +563,7 @@ int main(void)
             continue;
         }
         if (fork_process() == 0)
-            run_cmd(parse_cmd(buf));
+            run_cmd(parse_cmd(expanded_input));
         wait(&status);
 		if (WIFEXITED(status))
 			status = WEXITSTATUS(status);

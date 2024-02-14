@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/01/25 18:21:29 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/14 01:08:36 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,4 +287,74 @@ char	*ft_itoa(int n)
 		num = n;
 	str = num_to_array(str, num, len);
 	return (str);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char			*sub;
+	char			*src;
+	size_t			sublen;
+
+	if (!s)
+		return (NULL);
+	if (ft_strlen(s) < (size_t)start)
+		return (ft_strdup(""));
+	src = (char *)s + start;
+	if (ft_strlen(src) < len)
+		sublen = ft_strlen(src) + 1;
+	else
+		sublen = len + 1;
+	sub = malloc(sublen * sizeof(char));
+	if (!sub)
+		return (NULL);
+	ft_strlcpy(sub, src, sublen);
+	return (sub);
+}
+
+static	int	wordcount(char const *s, char c)
+{
+	int	count;
+	int	i;
+
+	count = 0;
+	i = 0;
+	while (s[i])
+	{
+		while (s[i] == c)
+			i++;
+		if (s[i] && s[i] != c)
+			count++;
+		while (s[i] != c && s[i])
+			i++;
+	}
+	return (count);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**words;
+	int		index;
+	int		len;
+
+	index = 0;
+	words = malloc(sizeof(char *) * (wordcount(s, c) + 1));
+	if (!words)
+		return (NULL);
+	while (*s)
+	{
+		if (*s != c)
+		{
+			len = 0;
+			while (s[len] && s[len] != c)
+				len++;
+			words[index++] = ft_substr(s, 0, len);
+			s += len;
+		}
+		else
+		{
+			s++;
+		}
+	}
+	words[index] = NULL;
+	return (words);
 }

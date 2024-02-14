@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/13 22:01:55 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/14 01:18:08 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,43 @@
 	note: called by parse_tokens()
 	*/
 
-char *expand_exit_status(char *input, int status) 
-{
-    char *expanded_input = ft_strdup(input); // Duplicate the input string
 
-    // Find all occurrences of "$?" and replace them with the value of status
-    char *ptr = expanded_input;
-    while ((ptr = strstr(ptr, "$?")) != NULL)
-	{
-        // Replace "$?" with the value of status
-        char *status_str = ft_itoa(status); 
-        ft_strcpy(ptr, status_str);
-        ptr += ft_strlen(status_str); // Move the pointer to the end of the replaced string
-        free(status_str);
+static char **expand_env_exit(char **argv, int status) {
+    int i = 0;
+    while (argv[i] != NULL) {
+        if (ft_strcmp(argv[i], "$?") == 0) {
+            // Replace "$?" with the string representation of the exit status
+            free(argv[i]); // Free the original string
+            argv[i] = ft_itoa(status); // Allocate memory and copy the exit status string
+        }
+        i++;
     }
-
-    return expanded_input;
+    return argv;
 }
 
-
-// Function to expand "$?" to the value of status
-/*char	**expand_exit_status(char **argv, int status)
+char *expand_exit_status(char *input, int status)
 {
-	int		i;
-	char	*value;
-
-	i = 0;
-	while (argv[i] != NULL)
+    char **argv = ft_split(input, ' '); // Split the input string into an array of strings
+    argv = expand_env_exit(argv, status);
+    size_t total_length = 0;
+	// Concatenate the array of strings into one string
+    for (int i = 0; argv[i] != NULL; i++)
+        total_length += ft_strlen(argv[i]) + 1; // Add 1 for space between words
+    char *expanded_input = malloc(total_length + 1); // Add 1 for null terminator
+    if (expanded_input == NULL) {
+        ft_putstr_fd("Memory allocation failed\n", 2);
+        exit(1);
+    }
+    expanded_input[0] = '\0'; // Initialize the string to empty
+    for (int i = 0; argv[i] != NULL; i++)
 	{
-		if (argv[i][0] == '$' && argv[i][1] == '?')
-		{
-			argv[i] = ft_itoa(status);
-		}
-		i++;
-	}
-	return (argv);
-}*/
+        ft_strcat(expanded_input, argv[i]);
+        ft_strcat(expanded_input, " "); // Add space between words
+        free(argv[i]); // Free memory allocated for each string
+    }
+    free(argv); // Free memory allocated for the array of strings
+    return expanded_input;
+}
 
 char	**expand_env(char **argv)
 {
@@ -155,3 +156,71 @@ char	*expand_env_in_str(const char *str)
 	expanded[index] = '\0';
 	return (expanded);
 }
+
+/*char *expand_exit_status(char *input, int status) 
+{
+    char *expanded_input = ft_strdup(input); // Duplicate the input string
+
+    // Find all occurrences of "$?" and replace them with the value of status
+    char *ptr = expanded_input;
+    while ((ptr = strstr(ptr, "$?")) != NULL)
+	{
+        // Replace "$?" with the value of status
+        char *status_str = ft_itoa(status); 
+        ft_strcpy(ptr, status_str);
+        ptr += ft_strlen(status_str); // Move the pointer to the end of the replaced string
+        free(status_str);
+    }
+
+    return expanded_input;
+}*/
+
+/*char *expand_exit_status(char *input, int status)
+{
+    char *expanded_input = ft_strdup(input); // Duplicate the input string
+    char *ptr = expanded_input;
+    while ((ptr = strstr(ptr, "$?")) != NULL) // Replace "$?"
+	{
+        char *status_str = ft_itoa(status); 
+        ft_strcpy(ptr, status_str);
+        ptr += 2; //ft_strlen(status_str); // Move the pointer to the end of the replaced string
+        free(status_str);
+    }
+    return expanded_input;
+}*/
+
+
+/*char	**expand_env(char **argv)
+{
+	int		i;
+	char	*name;
+	char	*value;
+
+	i = 0;
+	while (argv[i] != NULL)
+	{
+		if (argv[i][0] == '$' && argv[i][1] == '?')
+			argv[i] = ft_itoa(g_exit_status);
+		i++;
+	}
+	return (argv);
+}*/
+
+
+// Function to expand "$?" to the value of status
+/*char	**expand_exit_status(char **argv, int status)
+{
+	int		i;
+	char	*value;
+
+	i = 0;
+	while (argv[i] != NULL)
+	{
+		if (argv[i][0] == '$' && argv[i][1] == '?')
+		{
+			argv[i] = ft_itoa(status);
+		}
+		i++;
+	}
+	return (argv);
+}*/

@@ -1,26 +1,21 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    make                                               :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+         #
+#    By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 16:02:43 by jelliott          #+#    #+#              #
-#    Updated: 2023/12/11 16:02:53 by jelliott         ###   ########.fr        #
+#    Updated: 2024/02/15 16:39:52 by zhedlund         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-NAME = Minishell
 
-CC = clang
-CCFLAGS = -Wall -Wextra -Werror -g
-LIB = -lXext -lX11 -lm
-LDLIBS := -lreadline -lhistory
+NAME = minishell
+CC = cc
+CFLAGS = -Wall -Wextra -g
+LFLAGS = -lreadline
 
-RM = rm -f
-
-DEPS = minishell_tree.h
-
-SRCS_Minishell = Main+/main.c \
+SRC = Main+/main.c \
 	Main+/cmdsinitial.c \
 	Parsing/constructors.c \
 	Parsing/parsing1.c \
@@ -46,26 +41,22 @@ SRCS_Minishell = Main+/main.c \
 	Simple_Commands/ft_echo.c \
 	Simple_Commands/ft_exit.c \
 
-OBJS_Minishell = $(SRCS_Minishell:.c=.o)
-
-ifeq ($(shell uname -s), Linux)
-    CFLAGS += -D LINUX -Wno-unused-result
-endif
-
-%.o: %.c $(DEPS)
-	$(CC) $(CFLAGS) -c $< -o $@
+OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS_Minishell)
-	$(CC) -o $@ $^ $(LIB) $(LDLIBS)
+$(NAME): $(OBJ)
+	$(CC) $(OBJ) $(LFLAGS) -o $(NAME)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS_Minishell)
+	rm -rf $(OBJ)
 
 fclean: clean
-	$(RM) ${NAME}
+	rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all, clean, fclean, re

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/12 22:34:01 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/15 17:03:15 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	get_env(t_env **head)
 	*head = node;
 	while (environ[i] != NULL)
 	{
-		
 		temp = (t_env *)malloc(sizeof(t_env));
 		if (!temp)
 			exit (1);
@@ -89,7 +88,7 @@ void	get_env(t_env **head)
 	}
 	temp = *head;
 	temp->prev = node->next;
-}
+} 
 
 int has_unmatched_quotes(char *argv[])
 {
@@ -118,6 +117,7 @@ int has_unmatched_quotes(char *argv[])
     	return (1);
 	return (0);
 }
+
 
 //this function decides whether to block or unblock non-builtin simple functions
 //on the basis of whether or not PATH has been unset, or reset properly
@@ -172,13 +172,14 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 
 int main(void)
 {
-	static char	buf[100];
+	static char	buf[500];
 	int			status; // variable to store exit status of child process
-	t_info	*info;
-	char	*input;
-	t_env	*head;
+	t_info		*info;
+	t_env		*head;
+	char		*expanded;
 
 	head = NULL;
+	status = 0;
 	info = ft_calloc(sizeof(t_info), 1);
 	get_env(&head);
 	while (get_cmd(buf, sizeof(buf), &head) >= 0)
@@ -198,16 +199,17 @@ int main(void)
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue; // Skip processing this command and move to the next one
 		}
+		expanded = expand_exit_status(buf, status);
 		if (ft_disinherit(buf, &head, &info) == false
 				&& info->panic == false)
 		{
-			if (fork_process() == 0)
-				run_cmd(parse_cmd(buf, &info), &head, &info);
+			if ((fork_process()) == 0)
+				run_cmd(parse_cmd(expanded, &info), &head, &info);
 			wait(&status);
 			if (WIFEXITED(status))
 			{
-				info->exit_status = WEXITSTATUS(status);
-				printf("Exit status main: %d\n", info->exit_status);
+				status = WEXITSTATUS(status);
+				printf("Exit status main: %d\n", WEXITSTATUS(status));
 			}
 		}
 		unlink("hdtemp");

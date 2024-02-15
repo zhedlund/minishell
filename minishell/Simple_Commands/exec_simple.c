@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   exec_simple.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:20:04 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:20:07 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/15 18:58:40 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 /* Execution */
 
-char	*ft_shorten(const char	*file)
+char	*ft_shorten(const char *file)
 {
 	int	count;
 	char	*new;
@@ -63,14 +64,14 @@ int	ft_choice(const char *file)
 	return(2);
 }
 
-bool	ft_checkdirectory(char	*tocheck)
+bool	ft_checkdirectory(char *tocheck)
 {
 	struct stat	fileStat;
 
 	if (stat(tocheck, &fileStat) == 0 
 		&& S_ISDIR(fileStat.st_mode))
 	{
-		printf("minishell: is a directory: %s\n", tocheck);
+		printf("%s: Is a directory\n", tocheck);
 		return (true);
 	}
 	return (false);
@@ -87,9 +88,7 @@ char	*ft_pathcheck(char *potentialpath, t_info **info)
 		return (potentialpath);
 	else if (choice == 1)
 	{
-		printf("minishell: ");
-		printf("%s", potentialpath);
-		printf( ": No such file or directory\n");
+		printf("%s: No such file or directory\n", potentialpath);
 		return (NULL);
 	}
 	(*info)->stillexecute = true;
@@ -104,7 +103,7 @@ void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	if (exec_cmd->argv[0] == 0)
         exit(0);
-    exec_cmd->argv[0] = ft_pathcheck(exec_cmd->argv[0], info);
+    //exec_cmd->argv[0] = ft_pathcheck(exec_cmd->argv[0], info);
 	if (ft_strncmp(exec_cmd->argv[0], "cd", ft_strlen(exec_cmd->argv[0])) == 0)
 		ft_cd(exec_cmd->argv[0], exec_cmd->argv, head);
 	else if (ft_strncmp(exec_cmd->argv[0], "env", ft_strlen(exec_cmd->argv[0])) == 0)
@@ -121,9 +120,9 @@ void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
 		ft_echo(exec_cmd->argv[0], exec_cmd->argv, head);
     else if ((*info)->unsetpath == true && (*info)->stillexecute != true)
 	{
-		printf("Minishell: %s: No such file or directory\n", exec_cmd->argv[0]);
-		exit(0);
+		printf("%s: No such file or directory\n", exec_cmd->argv[0]);
+		exit(127);
 	}
 	else    
-		ft_execvp(exec_cmd->argv[0], exec_cmd->argv, head);
+		ft_execvp(exec_cmd->argv[0], exec_cmd->argv);
 }

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/12 22:49:19 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/15 17:57:51 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 // Execute cmd.  Never returns.
 int	globalsignum = 0;
 //this function is to solve the probelm of having env | grep ft - then everything finishes on time and cat is treated differently 
+
 bool ft_forkornottofork(t_exec *exec_cmd)
 {
 	char	*cmdcopy;
@@ -27,7 +28,7 @@ bool ft_forkornottofork(t_exec *exec_cmd)
 	tofork = true;
 	cmdcopy = ft_strdup(exec_cmd->argv[0]);
 	//printf("exec_cmd->argv[1] == %s\n", exec_cmd->argv[1]);
-	if (strncmp(cmdcopy, "cat", ft_strlen(cmdcopy)) == 0)
+	if (ft_strncmp(cmdcopy, "cat", ft_strlen(cmdcopy)) == 0)
 		tofork = false;
 	free(cmdcopy);
 	return (tofork);
@@ -35,40 +36,31 @@ bool ft_forkornottofork(t_exec *exec_cmd)
 
 void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 {
-	pid_t	pid;
+	//pid_t	pid;
 	bool	tofork;
+	int		status;
 	
-	tofork = ft_forkornottofork((t_exec *)cmd);
+	//tofork = ft_forkornottofork((t_exec *)cmd);
     if (cmd == 0)
         exit(0);
     if (cmd->type == ' ')
     {
-		if (tofork == false)
-			handle_exec_cmd((t_exec *)cmd, head, info);
-		else
+		//if (tofork == false)
+		handle_exec_cmd((t_exec *)cmd, head, info);
+		/*else
 		{
     		if ((pid = fork()) == 0)
         		handle_exec_cmd((t_exec *)cmd, head, info);
-    		wait(&pid);
-			if (WIFEXITED(pid))
-			{
-				(*info)->exit_status = WEXITSTATUS(pid);
-				printf("Exit status RUN_CMD2: %d\n", (*info)->exit_status);
-			}
-    	}
+    		waitpid(pid, &status, 0);
+    	}*/
 	}
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x' || cmd->type == 'h') //this will have to be altered
         handle_redir_cmd((t_redir *)cmd, head, info);
     else if (cmd->type == '|')
     {
-    	if ((pid = fork()) == 0)
-        	handle_pipe_cmd((t_pipe *)cmd, head, info);
-    	wait(&pid);
-		if (WIFEXITED(pid))
-		{
-			(*info)->exit_status = WEXITSTATUS(pid);
-			printf("Exit status RUN_CMD2: %d\n", (*info)->exit_status);
-		}
+    	//if ((pid = fork()) == 0)
+        handle_pipe_cmd((t_pipe *)cmd, head, info);
+    	//waitpid(pid, &status, 0);
     }
     else
 	{
@@ -78,6 +70,26 @@ void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 	ft_freelist(head);
     exit(0);
 }
+
+/*void run_cmd(t_cmd *cmd, t_env **head, t_info **info)
+{
+    if (cmd == 0)
+        exit(0);
+    if (cmd->type == ' ')
+        handle_exec_cmd((t_exec *)cmd, head, info);
+    else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x')
+        handle_redir_cmd((t_redir *)cmd, head, info);
+    else if (cmd->type == '|')
+        handle_pipe_cmd((t_pipe *)cmd, head, info);
+    else
+	{
+        //ft_putstr_fd("unknown run_cmd\n", 2);
+		perror("run_cmd");
+        exit(1);
+    }
+    exit(0);
+}*/
+
 
 void	ft_ctrlc2(int signal)
 {
@@ -182,12 +194,12 @@ int get_cmd(char *buf, int nbuf, t_env **head)
 	if (input == NULL)
 	{
 		printf("exit\n");
-		exit(0);
+		exit(130);
 	}
-		ft_strlcpy(buf, input, nbuf); // copy input to buf
-		buf[nbuf - 1] = '\0'; // null-terminated string
-    		add_history(buf); // Add input to history
-    		free(input); // Free memory allocated by readline()
+	ft_strlcpy(buf, input, nbuf); // copy input to buf
+	buf[nbuf - 1] = '\0'; // null-terminated string
+    add_history(buf); // Add input to history
+    free(input); // Free memory allocated by readline()
 	return (0);
 }
 

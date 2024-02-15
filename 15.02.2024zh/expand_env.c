@@ -6,13 +6,14 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/14 12:49:51 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/15 14:39:43 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tree.h"
 
-static char **expand_env_exit(char **argv, int status) {
+static char **expand_env_exit(char **argv, int status)
+{
     int i = 0;
     while (argv[i] != NULL) {
         if (ft_strcmp(argv[i], "$?") == 0) {

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:20:04 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/15 18:58:40 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/16 16:16:48 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
 		ft_echo(exec_cmd->argv[0], exec_cmd->argv, head);
     else if ((*info)->unsetpath == true && (*info)->stillexecute != true)
 	{
-		printf("%s: No such file or directory\n", exec_cmd->argv[0]);
+		perror(exec_cmd->argv[0]);
 		exit(127);
 	}
 	else    

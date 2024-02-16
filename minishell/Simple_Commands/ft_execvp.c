@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/15 18:36:36 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/16 16:03:52 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int ft_execvp(const char *file, char *const argv[])
 		printf("Invalid arguments\n");
 		return (-1);
 	}
-	if (file[0] == '.' && file[1] == '/')
+	if ((file[0] == '.' && file[1] == '/') || (file[0] == '/'))
 		full_path = ft_strdup(file);
 	else
 		full_path = find_cmd_path(file);

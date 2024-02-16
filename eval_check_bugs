@@ -1,5 +1,11 @@
 EVAL CHECK 
 
+- command with only space gives segmenation fault
+
+- Set the $PATH to a multiple directory value (directory1:directory2)
+	and ensure that directories are checked in order from left to right.
+	- I have no idea how to test this?
+
 - heredoc: doesn't work when no space after <<":
 	minishell> <<end
 	minishell: syntax error near '<<'
@@ -30,7 +36,7 @@ EVAL CHECK
 	exit code should be 1
 	
 - exit: ls | exit
-	exit code: 13?? should be 0
+	exit code: 13, should be 0
 
 - echo / quotes:
 	minishell> echo ""abc""

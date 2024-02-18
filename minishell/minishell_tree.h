@@ -18,7 +18,7 @@
 #include <readline/history.h>
 #include <sys/ioctl.h>
 
-#define MAXARGS 50
+#define MAXARGS 100
 #define WHITESPACE " \t\r\n\v"
 #define SYMBOLS "<|>"
 
@@ -55,30 +55,24 @@ typedef struct s_pipe
 
 typedef struct s_env
 {
-	char  *field;
+	char			*field;
 	struct s_env	*prev;
 	struct s_env	*next;
 }	t_env;
 
-typedef struct s_exit
-{
-  int exit_status;
-}   t_exit;
-
 typedef struct s_info
 {	
-	int	catcount;
-	int	hdcount;
+	int		catcount;
+	int		hdcount;
 	bool	panic;
 	char	*collect;
 	char	*tmpfile;
 	char	**inputs;
 	char	*input;
 	bool	first;
-  bool  unsetpath;
-  bool  stillexecute;
-  int exit_status;
-	//t_env	*env;
+	bool	unsetpath;
+	bool	stillexecute;
+	int		exit_status;
 }		t_info;
 
 /* execution */
@@ -90,7 +84,7 @@ void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info);
 int		get_cmd(char *buf, int nbuf, t_env **head);
 int		fork_process(void);
 void 	run_cmd(t_cmd *cmd, t_env **head, t_info **info);
-int		ft_execvp(const char *file, char *const argv[], t_env **head);
+int		ft_execvp(const char *file, char *const argv[]);
 
 /* constructors */
 t_cmd	*exec_cmd(void);
@@ -106,7 +100,8 @@ int		get_token(char **input_ptr, char *end_str, char **token_start, char **token
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, t_info **info);
-char *expand_env_in_str(const char *str);
+char	*expand_env_in_str(const char *str);
+char	*expand_exit_status(char *input, int status);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);
@@ -124,28 +119,29 @@ void	*ft_calloc(size_t nmemb, size_t size);
 char	**ft_split(char const *s, char c);
 char	*ft_strtrim(char const *s1, char const *set);
 void	ft_freearray(char **tofree);
-int	ft_isalnum(int c);
-int	ft_atoi(const char *nptr);
+int		ft_isalnum(int c);
+int		ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
 
 int main(void);
+void	get_env(t_env **head);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head);
-void   ft_cd(char *arraystring, char **cmdarray, t_env **head);
-void  ft_env(char *arraystring, t_env **head);
+void	ft_cd(char *arraystring, char **cmdarray, t_env **head);
+void	ft_env(char *arraystring, t_env **head);
 void	ft_heredocexecute(char **hdarray, t_info **info);
 void	ft_heredocmain(char *cmdline, t_info **info);
 char	**ft_heredocarray(int heredoc, char **inputs);
 void	ft_ctrlc(int sig);
 void	ft_ctrlc2(int signal);
-int    ft_unset(char *arraystring, char **cmdinfo, t_env **head);
-void  ft_freelist(t_env **head);
-int    ft_export(char *arraystring, char **cmdarray, t_env **head);
-int ft_inititalchar(char *arraystring);
+int		ft_unset(char *arraystring, char **cmdinfo, t_env **head);
+void	ft_freelist(t_env **head);
+int		ft_export(char *arraystring, char **cmdarray, t_env **head);
+int		ft_inititalchar(char *arraystring);
 void	ft_unsetsub(char *inputi, t_env **head);
 char	*ft_strjoin(char const *s1, char const *s2);
-void    ft_pwd(char *arraystring, t_env **head);
-void    ft_exportsub(char *toexport, t_env **head);
-void    ft_echo(char *arraystring, char **cmdargs, t_env **head);
-void    ft_exit(char *arraystring, char **cmdargs, t_env **head);
+void	ft_pwd(char *arraystring, t_env **head);
+void	ft_exportsub(char *toexport, t_env **head);
+void	ft_echo(char *arraystring, char **cmdargs, t_env **head);
+void	ft_exit(char *arraystring, char **cmdargs, t_env **head);
 
 #endif

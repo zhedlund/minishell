@@ -70,23 +70,29 @@ static char	*find_cmd_path(const char *file)
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int ft_execvp(const char *file, char *const argv[])
+int ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 {
 	char	*full_path;
-
-	if (!file || !argv)
-	{
-		printf("Invalid arguments\n");
-		return (-1);
-	}
+	const char *file;
+	
+	file = exec_cmd->argv[0];
+	printf("%s\n", file);
+	//if (!file || !argv)
+	//{
+	//	printf("Invalid arguments\n");
+	//	return (-1);
+	//}
 	if ((file[0] == '.' && file[1] == '/') || (file[0] == '/'))
 		full_path = ft_strdup(file);
 	else
 		full_path = find_cmd_path(file);
 	if (full_path == NULL)
 	{
-		perror(file); // Prints "cmd: No such file or directory"
-		exit(127);
+		write(2, "Command not found: ", ft_strlen("Command not found: "));
+		write(2, file, ft_strlen(file));
+		write(2, "\n", ft_strlen("\n"));
+		ft_multifree(NULL, head, info, exec_cmd);
+		exit (127);
 	}
 	else if (access(full_path, X_OK) != 0)
 	{

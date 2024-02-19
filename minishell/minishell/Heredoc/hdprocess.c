@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hdprocess.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:17 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/15 16:50:51 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/20 10:18:20 by jelliott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell_tree.h"
-
-int	global = 0;
+#include <sys/ioctl.h>
 
 char	**ft_heredocarray(int heredoc, char **inputs)
 {
@@ -42,21 +40,21 @@ static void	ft_hdsigint(int signal)
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	ioctl(STDOUT_FILENO, TIOCSTI, "\n");
-	global = 3;
+	g_signal = 3;
 }
 
-void	ft_hdprocess(t_info **info, char **hdarray, int hdcount)
+void	ft_hdprocess(t_info **info, char **hdarray)
 {
 	int	runhere;
 	int	i;
 	char	*input;
 	int	fd;
 
-	fd = open("hdtemp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open("/tmp/hdtemp", O_WRONLY | O_CREAT, 0644);
 	i = 0;
 	runhere = 0;
-	global = 0;
-	while (global == 0 && runhere != (*info)->hdcount)
+	g_signal = 0;
+	while (g_signal == 0 && runhere != (*info)->hdcount)
 	{
 		input = (readline("heredoc<< "));
 		if (!input)
@@ -73,14 +71,14 @@ void	ft_hdprocess(t_info **info, char **hdarray, int hdcount)
 			break ;
 		write(fd, "\n", 1);	
 	}
-	global = 0;
+	g_signal = 0;
 	(*info)->hdcount = 0;
 }
 
 void	ft_heredocexecute(char **hdarray, t_info **info)
 {
 	signal(SIGINT, ft_hdsigint);
-	ft_hdprocess(info, hdarray, (*info)->hdcount);
+	ft_hdprocess(info, hdarray);
 	signal(SIGINT, ft_ctrlc);
 	ft_freearray(hdarray);
 }

@@ -10,23 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 #include "../minishell_tree.h"
-void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head)
+void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info)
 {
-	if (ft_strlen(argv) >= 2
-		&& ft_strncmp(argv, "cd", 2) == 0)
-		ft_cd(argv, cmdinfo, head);
-	else if (ft_strlen(argv) >= 3 
-		&& ft_strncmp(argv, "env", 3) == 0)
-		ft_env(argv, head);
-	else if (ft_strlen(argv) >= 4 
-		&& ft_strncmp(argv, "unset", 4) == 0)
-		ft_unset(argv, cmdinfo, head);
-	else if (ft_strlen(argv) >= 3 
-		&& ft_strncmp(argv, "exit", 3) == 0)
-		ft_exit(argv, cmdinfo, head);
-		//return (ft_exit(input));
-	else if (ft_strlen(argv) >= 5 
-		&& ft_strncmp(argv, "export", 5) == 0)
-		ft_export(argv, cmdinfo, head);
-	//add echo and pwd
+	(*info)->inchild = false;
+	if (ft_strlen("cd") == ft_strlen(argv) 
+		&& ft_strncmp(argv, "cd", ft_strlen(argv)) == 0)
+		ft_cd(cmdinfo, head, info);
+	else if (ft_strlen("unset") == ft_strlen(argv) 
+		&& ft_strncmp(argv, "unset", ft_strlen(argv)) == 0)
+		ft_unset(argv, cmdinfo, head, info);
+	else if (ft_strlen("exit") == ft_strlen(argv) 
+		&& ft_strncmp(argv, "exit", ft_strlen(argv)) == 0)
+		ft_exit(cmdinfo, head, info);
+	else if (ft_strlen("export") == ft_strlen(argv) 
+		&& ft_strncmp(argv, "export", ft_strlen(argv)) == 0)
+		ft_export(cmdinfo, head, info);
+	else if(argv != NULL)
+	{
+		write(2, "Command not found: ", ft_strlen("Command not found: ")); 
+		write(2, argv, ft_strlen(argv));
+		write(2, "\n", ft_strlen("\n"));
+		ft_freelist(head);
+		ft_freearray(cmdinfo);
+		free(*info);
+		exit(127);
+	}
 }

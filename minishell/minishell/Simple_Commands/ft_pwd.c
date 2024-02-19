@@ -13,7 +13,34 @@
 //using errno to print the error message, but need to check if we are allowed to use this
 //problem here that there is no variable to give - same with some other builtin functions
 //this function uses getcwd to store the pwd in a string and then prints the string
-void    ft_pwd(char *arraystring, t_env **head)
+void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd)
+{
+	int	check;
+	char	**cmdargs;
+
+	cmdargs = exec_cmd->argv;
+	check = 1;
+	rl_clear_history();
+	//clear_history();
+	if (arraystring == NULL)
+		check = 0;
+	while (cmdargs[check] != NULL)
+	{
+		free (cmdargs[check]);
+		check++;
+	}
+	if ((*info)->expanded != NULL)
+		free((*info)->expanded);
+	//if ((*head) != NULL)
+		ft_freelist(head);
+	//if ((*info) != NULL)
+		free((*info));
+	if (arraystring != NULL)
+		free(arraystring);
+	free(exec_cmd);
+}
+
+void    ft_pwd(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	char	store[PATH_MAX];
 	char	*path;
@@ -32,4 +59,7 @@ void    ft_pwd(char *arraystring, t_env **head)
 	else
 		printf("%s", strerror(errno));
 	write(1, "\n", 1);
+	(*info)->exitstatus = 0;
+	ft_multifree(arraystring, head, info, exec_cmd);
+	exit(0);
 }

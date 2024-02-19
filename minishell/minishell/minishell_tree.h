@@ -62,29 +62,38 @@ typedef struct s_env
 
 typedef struct s_info
 {	
-	int		catcount;
-	int		hdcount;
+	int	catcount;
+	int	hdcount;
 	bool	panic;
-	char	*collect;
-	char	*tmpfile;
+	//char	*collect;
+	//char	*tmpfile;
 	char	**inputs;
 	char	*input;
 	bool	first;
-	bool	unsetpath;
-	bool	stillexecute;
-	int		exit_status;
+  bool  unsetpath;
+  bool  stillexecute;
+  int exitstatus;
+  bool  allcat;
+  int   infopid;
+  int   infostatus;
+  bool  inchild;
+  bool  solocat;
+  bool  aout;
+  bool  cmdnf;
+  char *expanded;
+	//t_env	*env;
 }		t_info;
 
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info);
-void	handle_child_process(t_cmd *cmd, int fd_pipe[], int pid, t_env **head, t_info **info);
-void	handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid, int status, t_env **head, t_info **info);
+void handle_child_process(t_cmd *cmd, int fd_pipe[], t_env **head, t_info **info);
+void handle_parent_process(t_cmd *cmd, int fd_pipe[], t_env **head, t_info **info);
 void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info);
-int		get_cmd(char *buf, int nbuf, t_env **head);
+int		get_cmd(char *buf, int nbuf, t_env **head, t_info **info);
 int		fork_process(void);
 void 	run_cmd(t_cmd *cmd, t_env **head, t_info **info);
-int		ft_execvp(const char *file, char *const argv[]);
+int ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info);
 
 /* constructors */
 t_cmd	*exec_cmd(void);
@@ -99,7 +108,7 @@ t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info);
 int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
-char	**expand_env(char **argv, t_info **info);
+char	**expand_env(char **argv);
 char	*expand_env_in_str(const char *str);
 char	*expand_exit_status(char *input, int status);
 
@@ -125,23 +134,24 @@ char	*ft_itoa(int n);
 
 int main(void);
 void	get_env(t_env **head);
-void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head);
-void	ft_cd(char *arraystring, char **cmdarray, t_env **head);
-void	ft_env(char *arraystring, t_env **head);
+void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info);
+void	ft_cd(char **cmdarray, t_env **head, t_info **info);
+void   ft_env(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_heredocexecute(char **hdarray, t_info **info);
 void	ft_heredocmain(char *cmdline, t_info **info);
 char	**ft_heredocarray(int heredoc, char **inputs);
 void	ft_ctrlc(int sig);
 void	ft_ctrlc2(int signal);
-int		ft_unset(char *arraystring, char **cmdinfo, t_env **head);
+void		ft_unset(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_freelist(t_env **head);
-int		ft_export(char *arraystring, char **cmdarray, t_env **head);
-int		ft_inititalchar(char *arraystring);
+void		ft_export(char **cmdarray, t_env **head, t_info **info);
+int		ft_inititalchar(char *arraystring, t_info **info);
 void	ft_unsetsub(char *inputi, t_env **head);
 char	*ft_strjoin(char const *s1, char const *s2);
-void	ft_pwd(char *arraystring, t_env **head);
+void    ft_pwd(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_exportsub(char *toexport, t_env **head);
-void	ft_echo(char *arraystring, char **cmdargs, t_env **head);
-void	ft_exit(char *arraystring, char **cmdargs, t_env **head);
+void    ft_echo(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
+void    ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
+void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
 
 #endif

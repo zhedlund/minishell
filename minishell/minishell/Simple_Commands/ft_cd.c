@@ -53,7 +53,10 @@ char	*ft_gethome(t_env **head, char *locate)
 	char	**homeinfo;
 	char	*address;
 	t_env	*temp;
-	temp = *head;
+	
+	temp = (*head);
+	homeinfo = NULL;
+	address = NULL;
 	while (temp != NULL)
         {
         	if (ft_strncmp(temp->field, "HOME", strlen("HOME")) == 0)
@@ -74,19 +77,23 @@ char	*ft_gethome(t_env **head, char *locate)
 		return (address);
 }
 
-char	*ft_home(char *locate, t_env **head)
+char	*ft_home(char *locate, t_env **head, t_info **info)
 {
 	if (ft_homeset(head) == true)
 		locate = ft_gethome(head, locate);
 	else
 	{
-			printf("Minishell: cd: HOME not set\n");
-			return (NULL);
+		write(2, "Minishell: cd: HOME not set\n", ft_strlen("Minishell: cd: HOME not set\n"));
+		(*info)->exitstatus = 1;
+		if ((*info)->inchild == true)
+			exit(1);
 	}
 	if (locate == NULL || *locate == '\0')
 	{
-		printf("Minishell: cd: HOME not set\n");
-		return (NULL);
+		write(2, "Minishell: cd: HOME not set\n", ft_strlen("Minishell: cd: HOME not set\n"));
+		(*info)->exitstatus = 1;
+		if ((*info)->inchild == true)
+			exit(1);
 	}
 	return(locate);
 }
@@ -128,7 +135,8 @@ char	*ft_backone(char *locate)
 	if (ft_strlen(locate) > 5)
 		i--;
 	output = malloc(sizeof(char) * (i + 2));
-	//error??
+	if (!output)
+		exit(1);
 	while (j <= i)
 	{
 		output[j] = locate[j];
@@ -153,10 +161,10 @@ void	ft_move(char *locate, t_env **head)
 	}
 }
 
-void   ft_cd(char *arraystring, char **cmdarray, t_env **head)
+void   ft_cd(char **cmdarray, t_env **head, t_info **info)
 {
 	char	*locate;
-	char 	**cdpath;
+	//char 	**cdpath;
 	bool	move;
 
 	move = true;
@@ -164,18 +172,33 @@ void   ft_cd(char *arraystring, char **cmdarray, t_env **head)
 	locate = ft_path(locate);
 	if (cmdarray[1] == NULL || cmdarray[1][0] == '~')
 	{
-		locate = ft_home(locate, head);
+		free (locate);
+		locate = ft_home(locate, head, info);
 		if (ft_homeset(head) == false)
 			move = false;
 	}
 	else if (cmdarray[1][1] != '\0' 
 		&& ft_strncmp(cmdarray[1], "..", ft_strlen(cmdarray[1])) == 0)
+	{
+		free (locate);
 		locate = ft_backone(locate);
+	}
 	else if (cmdarray[1][0] != '.' 
 		&& cmdarray[1][1] != '\0')
+	{	
+		free (locate);
 		locate = ft_cdsub(cmdarray[1]);
+	}
 	if (move == true)
 		ft_move(locate, head);
 	if (locate)
 		free(locate);
+	if ((*info)->inchild == true)
+	{
+		ft_freelist(head);
+		free((*info));
+		exit(0);
+	}
+	else
+		(*info)->exitstatus = 0;
 }

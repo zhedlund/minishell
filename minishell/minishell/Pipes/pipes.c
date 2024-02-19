@@ -17,13 +17,13 @@
 	return: void
 	note: the function is called by: handle_pipe_cmd()
  */
-void handle_child_process(t_cmd *cmd, int fd_pipe[], int pid, t_env **head, t_info **info)
+void handle_child_process(t_cmd *cmd, int fd_pipe[], t_env **head, t_info **info)
 {
     close(fd_pipe[1]);
     dup2(fd_pipe[0], STDIN_FILENO);
     run_cmd(((t_pipe *)cmd)->right, head, info);
     close(fd_pipe[0]);
-    wait(&pid);
+    //exit((*info)->exitstatus);
 }
 
 /* cmd: pointer to the command struct
@@ -32,15 +32,13 @@ void handle_child_process(t_cmd *cmd, int fd_pipe[], int pid, t_env **head, t_in
 	return: void
 	note: the function is called by: handle_pipe_cmd()
  */
-void handle_parent_process(t_cmd *cmd, int fd_pipe[], int pid, int status, t_env **head, t_info **info)
+void handle_parent_process(t_cmd *cmd, int fd_pipe[], t_env **head, t_info **info)
 {
     close(fd_pipe[0]);
     dup2(fd_pipe[1], STDOUT_FILENO);
     run_cmd(((t_pipe *)cmd)->left, head, info);
     close(fd_pipe[1]);
-    wait(&pid);
-	//if (WIFEXITED(pid))
-		//printf("Exit status handle_parent_process: %d\n", WEXITSTATUS(status));
+    wait(&(*info)->infopid);
 }
 
 /* pipe_cmd: pointer to the command struct
@@ -51,22 +49,33 @@ void handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info)
 {
     int fd_pipe[2];
     int pid;
-	int	status;
+	//int	status;
+
+    //(*info)->infostatus = status;
     if (pipe(fd_pipe) < 0)
 	{
         perror("pipe");
-        exit(1);
+        exit(0);
     }
     pid = fork();
+     (*info)->infopid = pid;
     if (pid < 0)
 	{
         perror("fork");
         exit(1);
     }
-    //printf("pipe command right%s\n", (pipe_cmd)->right);
-    //printf("pipe command left%s\n", (pipe_cmd)->left);
-	if (pid == 0)
-        	handle_child_process((t_cmd *)pipe_cmd, fd_pipe, pid, head, info);
-	else
-        	handle_parent_process((t_cmd *)pipe_cmd, fd_pipe, pid, status, head, info);
+    if ((*info)->solocat == false)
+	{
+        if (pid == 0)
+            	handle_parent_process((t_cmd *)pipe_cmd, fd_pipe, head, info);
+	    else
+        	    handle_child_process((t_cmd *)pipe_cmd, fd_pipe, head, info);
+    }
+    if ((*info)->solocat == true)
+    {
+        if (pid == 0)
+            	handle_child_process((t_cmd *)pipe_cmd, fd_pipe, head, info);
+	    else
+        	    handle_parent_process((t_cmd *)pipe_cmd, fd_pipe, head, info);
+    }
 }

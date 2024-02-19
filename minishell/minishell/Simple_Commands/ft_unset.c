@@ -27,12 +27,15 @@ void	ft_unsetsub(char *inputi, t_env **head)
 
 	temp = *head;
 	test = *head;
+	//printf("in sub\n");
 	while (temp != NULL)
         {
+        	//printf("looking for match\n");
         	if (ft_strncmp(temp->field, inputi, strlen(inputi)) == 0)
         		break ;
         	temp = temp->next;
         }
+        //printf("skipped loop\n");
         if (temp == NULL)
         	return ;
         else if (temp->prev == NULL)
@@ -45,7 +48,6 @@ void	ft_unsetsub(char *inputi, t_env **head)
         else if (temp->next == NULL)
         {
         	passprev = temp->prev;
-        	//printf("%s\n", (char *)passprev);
         	passnext = temp->next;
         	passprev->next = passnext;
         	//passnext->prev = passprev;
@@ -65,25 +67,41 @@ void	ft_unsetsub(char *inputi, t_env **head)
         }
 }
 
-int    ft_unset(char *arraystring, char **cmdinfo, t_env **head)
+void    ft_unset(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info)
 {
-	//extern char	**environ;
 	char	**input;
 	int	i;
 	
-	input = cmdinfo;
-	//printf("cmdinfo[1] == %s\n", cmdinfo[1]);
+	input = exec_cmd->argv;
 	i = 1;
+	printf("in unset\n");
 	if (input[i] == NULL)
-        	printf("unset: not enough arguments\n");
-    while (input[i] != NULL)
+    {
+		(*info)->exitstatus = 0;
+		if ((*info)->inchild == true)
+			exit(0);
+	}
+	while (input[i] != NULL)
 	{
+		printf("looping\n");
 		ft_unsetsub(input[i], head);
 		i++;
 	}
     //ft_freearray(input);
 	//ft_env("env", head);
-	return (0);
+	if ((*info)->inchild == true)
+	{
+		//printf("in child true\n");
+		ft_freelist(head);
+		free((*info));
+		free(arraystring);
+		exit(0);
+	}
+	else
+	{
+		(*info)->exitstatus = 0;
+		free(arraystring);
+	}
         //to finish this need environmental variable set up
         //parser needs 'not a valid variable' i.e. doesn't conform to naming rules
         //echo $variable_name

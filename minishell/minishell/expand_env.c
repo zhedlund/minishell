@@ -43,9 +43,12 @@ char *expand_exit_status(char *input, int status)
 	{
         ft_strcat(expanded_input, argv[i]);
         ft_strcat(expanded_input, " "); // Add space between words
-        free(argv[i]); // Free memory allocated for each string
+        //ft_freearray(argv);
+		free(argv[i]); // Free memory allocated for each string
     }
-    free(argv); // Free memory allocated for the array of strings
+    free(argv);
+	//ft_freearray(argv);
+	//free(input); // Free memory allocated for the array of strings
     return expanded_input;
 }
 
@@ -54,7 +57,7 @@ char *expand_exit_status(char *input, int status)
 	returns a new array with the expanded variables
 	note: called by parse_tokens()
 	*/
-char	**expand_env(char **argv, t_info **info)
+char	**expand_env(char **argv)
 {
 	int		i;
 	char	*name;

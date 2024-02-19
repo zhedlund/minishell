@@ -33,16 +33,17 @@ bool ft_equalpresent(char *check)
     return(validcheck);
 }
 
-int ft_inititalchar(char *arraystring)
+int ft_inititalchar(char *arraystring, t_info **info)
 {
     //need a list of invalid identifiers - anything that isn't a char
     if ((arraystring[0] >= 65 && arraystring[0] <= 90)
         || (arraystring[0] >= 97 && arraystring[0] <= 122))
         return (0);
-    printf("Minishell: export: '");
-    printf("%s", arraystring);
-    printf("':  not a valid identifier\n");
-    return (1);
+    write(2, "Minishell: export: '", ft_strlen("Minishell: export: '"));
+	write(2, arraystring, ft_strlen(arraystring));
+    write(2, "': not a valid identifier\n", ft_strlen("': not a valid identifier\n"));
+    (*info)->exitstatus = 1;
+	return (1);
 }
 
 void    ft_exportsub(char *toexport, t_env **head)
@@ -83,13 +84,13 @@ bool    ft_unexpectedtoken(char *check)
     }
     if (unexpected == false)
         return (false);
-    printf("Minishell: syntax error near unexpected token '");
-    printf("%c", check[a]);
-    printf("'\n");
+    write(2, "Minishell: syntax error near unexpected token '", ft_strlen("Minishell: syntax error near unexpected token '"));
+    write(2, &check[a], ft_strlen(&check[a]));
+    write(2, "\n", ft_strlen("\n"));
     return (true);
 }
 
-void    ft_valididentifier(char *check, t_env **head)
+void    ft_valididentifier(char *check, t_env **head, t_info **info)
 {
     int a;
 
@@ -109,33 +110,47 @@ void    ft_valididentifier(char *check, t_env **head)
     }
     if (check[a] == '\0')
         return ;
-    printf("Minishell: export: '");
-    printf("%s", check);
-    printf("':  not a valid identifier\n");
+    write(2, "Minishell: export: '", ft_strlen("Minishell: export: '"));
+    write(2, check, ft_strlen(check));
+    write(2, "':  not a valid identifier\n", ft_strlen("':  not a valid identifier\n"));
+    (*info)->exitstatus = 1;
+	if ((*info)->inchild == true)
+		exit(1);
 }
 
 //concern with error checking - if this happens in a pipe, then we will print things...
 //but could this entail a problem with e.g. grep or ls...the error message seems to print anyway
 //and this happens whereever it is in the order of piping e.g. pwd | export invalid | ls - still get error message
 //can't find an unexpected token list...perhaps can just have a generic error message?
-int    ft_export(char *arraystring, char **cmdarray, t_env **head)
+void    ft_export(char **cmdarray, t_env **head, t_info **info)
 {
     char    **check;
     int a;
     bool unexpected;
     bool    exportcmd;
+    t_env   *temp;
 
+    temp = *head;
     a = 1;
     unexpected = false;
+    exportcmd = false;
     //initial invalid identifier
     check = cmdarray;
-    printf("input === %s\n", arraystring);
+    printf("made it to export\n");
+    printf("check[0]== %s\n", check[0]);
+    printf("check[1]== %s\n", check[1]);
     if (check[1] == NULL)
     {
         if (ft_strncmp(check[0], "export", ft_strlen(check[0])) == 0)
         {
-                ft_env("env", head);
-                return (0);
+                while (temp != NULL)
+	            {
+		            printf("%s\n", temp->field);
+		            temp = temp->next;
+	            } 
+                (*info)->exitstatus = 0;
+		        if ((*info)->inchild == true)
+			        exit(0);
         }
         exportcmd = false;
         a = 0;
@@ -146,17 +161,21 @@ int    ft_export(char *arraystring, char **cmdarray, t_env **head)
         if (unexpected == true)
         {
             ft_freearray(check);
-            return (0);
+            (*info)->exitstatus = 2;
+		    if ((*info)->inchild == true)
+                exit (2);
         }
         a++;
     }
     a = 1;
     if (exportcmd == false)
         a = 0;
-    if (ft_inititalchar(check[a]) == 1)
+    if (ft_inititalchar(check[a], info) == 1)
     {   
         ft_freearray(check);
-        return (1); //??
+        (*info)->exitstatus = 1;
+		if ((*info)->inchild == true)
+			exit(1);
     }
     //equal present? either way, will need to check other arguements
     if (ft_equalpresent(check[a]) == true)
@@ -166,9 +185,11 @@ int    ft_export(char *arraystring, char **cmdarray, t_env **head)
         a = 1;
     while (check[a] != NULL)
     {
-        ft_valididentifier(check[a], head);
+        ft_valididentifier(check[a], head, info);
         a++;
     }
     //ft_freearray(check);
-    return (0);
+    (*info)->exitstatus = 0;
+	if ((*info)->inchild == true)
+		exit(0);
 }

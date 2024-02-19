@@ -17,7 +17,7 @@ bool	ft_validheredoc(int heredoc, char *file)
 
 	valid = false;
 	//printf("file == %s\n", file);
-	if (heredoc == 0 && file == NULL || file[0] == '<' || file[0] == '>' 
+	if ((heredoc == 0 && file == NULL) || file[0] == '<' || file[0] == '>' 
 		|| file[0] == '\0' || file[0] == '\n' || file[0] == '|')
 	{
 		printf("minishell: syntax error near '<<'\n");

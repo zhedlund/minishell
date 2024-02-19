@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:14:48 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/19 17:03:01 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
-#include <sys/ioctl.h>
+
 /* Main */
 
 int g_signal = 0;
@@ -164,7 +165,7 @@ void	ft_unsetpath(t_info **info, char **cmdarray)
 //this is important because environment altering functions don't affect the parent process
 //so send 'unset' to the child process and it will unset only the child process's copy of the environmental variables
 //that means if you subsequently enter env, then the program will print out the parent's envs which still include the unset variable
-int	ft_disinherit(char *buf, t_env **head, t_info **info, char **expanded)
+int	ft_disinherit(char *buf, t_env **head, t_info **info)
 {
 	int a;
 	char **cmdarray;
@@ -241,6 +242,7 @@ int main(void)
 
 	head = NULL;
 	info = ft_calloc(sizeof(t_info), 1);
+	status = 0;
 	get_env(&head); //previously &head
 	while (get_cmd(buf, sizeof(buf), &head, &info) >= 0)
 	{
@@ -259,7 +261,7 @@ int main(void)
 			continue; // Skip processing this command and move to the next one
 		}
 		expanded = expand_exit_status(buf, status);
-		if (ft_disinherit(buf, &head, &info, &expanded) == false
+		if (ft_disinherit(buf, &head, &info) == false
 				&& info->panic == false)
 		{
 				if (fork_process() == 0)

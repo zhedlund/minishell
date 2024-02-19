@@ -6,13 +6,13 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/14 12:49:51 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/19 20:58:23 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tree.h"
 
-static char **expand_env_exit(char **argv, int status) {
+char **expand_env_exit(char **argv, int status) {
     int i = 0;
     while (argv[i] != NULL) {
         if (ft_strcmp(argv[i], "$?") == 0) {
@@ -57,7 +57,7 @@ char *expand_exit_status(char *input, int status)
 	returns a new array with the expanded variables
 	note: called by parse_tokens()
 	*/
-char	**expand_env(char **argv)
+char	**expand_env(char **argv, int exit_status)
 {
 	int		i;
 	char	*name;
@@ -76,11 +76,11 @@ char	**expand_env(char **argv)
 				argv[i] = ft_strdup(value);
 			}
 		}
-		/*if (argv[i][0] == '$' && argv[i][1] == '?')
+		if (argv[i][0] == '$' && argv[i][1] == '?')
 		{
 			free(argv[i]);
-			argv[i] = ft_itoa((*info)->exit_status);
-		}*/
+			argv[i] = ft_itoa(exit_status);
+		}
 		i++;
 	}
 	return (argv);

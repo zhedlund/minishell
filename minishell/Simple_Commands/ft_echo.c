@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:22:47 by jelliott          #+#    #+#             */
-/*   Updated: 2023/12/11 15:22:49 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/19 20:36:09 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 //works for expansion
@@ -17,11 +18,11 @@ void	ft_printout(int a, char **cmdargs, t_info **info)
 {
 		while (cmdargs[a] != NULL)
 		{
-			if (ft_strlen("$?") == ft_strlen(cmdargs[a])
+			/*if (ft_strlen("$?") == ft_strlen(cmdargs[a])
 				&& ft_strncmp(cmdargs[a],"$?", ft_strlen("$?")) == 0)
 					printf("%d", (*info)->exitstatus);
-			else
-				printf("%s", cmdargs[a]);
+			else*/
+			printf("%s", cmdargs[a]);
 			if (cmdargs[a + 1] != NULL)
 				printf(" ");
 			a++;

@@ -3,13 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:24:21 by jelliott          #+#    #+#             */
-/*   Updated: 2023/12/11 15:24:23 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/19 21:10:23 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
+
 //using errno to print the error message, but need to check if we are allowed to use this
 //problem here that there is no variable to give - same with some other builtin functions
 //this function uses getcwd to store the pwd in a string and then prints the string
@@ -29,8 +31,8 @@ void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_c
 		free (cmdargs[check]);
 		check++;
 	}
-	if ((*info)->expanded != NULL)
-		free((*info)->expanded);
+	//if ((*info)->expanded != NULL)
+		//free((*info)->expanded);
 	//if ((*head) != NULL)
 		ft_freelist(head);
 	//if ((*info) != NULL)

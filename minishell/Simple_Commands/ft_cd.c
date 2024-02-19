@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:07 by jelliott          #+#    #+#             */
-/*   Updated: 2023/12/11 15:25:09 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/19 21:34:53 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
-#include <limits.h>
 
 char	*ft_cdsub(char *arraystring)
 {
@@ -109,7 +109,7 @@ char	*ft_path(char *former)
 	i = ft_strlen(path);
 	output = (char *)malloc(sizeof(char) * (i + 1));
 	output[i] = '\0';
-	output = strcpy(output, path);
+	output = ft_strcpy(output, path);
 	if (!former)
 		return (output);
 	else

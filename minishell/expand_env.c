@@ -6,16 +6,12 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/20 15:50:56 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 22:59:21 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_tree.h"
 
-/* 	Expands environment variables in the form of $USER, $HOME, etc. 
-	returns a new array with the expanded variables
-	note: called by parse_tokens()
-	*/
 char	*ft_findvalue(char *name, t_env **head)
 {
 	t_env	*temp;
@@ -32,6 +28,10 @@ char	*ft_findvalue(char *name, t_env **head)
 	return(temp->field);
 }
 
+/* 	Expands environment variables in the form of $USER, $HOME, etc. 
+	returns a new array with the expanded variable
+	note: called by parse_tokens()
+	*/
 char	**expand_env(char **argv)
 {
 	int		i;

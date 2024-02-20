@@ -1,5 +1,7 @@
 EVAL CHECK 
 
+No refactoring if not absolutely necessary! Go through checklist first.
+
 - Set the $PATH to a multiple directory value (directory1:directory2)
 	and ensure that directories are checked in order from left to right.
 	- I have no idea how to test this?

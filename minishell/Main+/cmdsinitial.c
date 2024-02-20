@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   run_cmd.c                                          :+:      :+:    :+:   */
+/*   cmdsinitial.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:14 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 12:14:25 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/20 17:40:57 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
 
 /* cmd: pointer to the command struct
 	return: void
@@ -81,7 +81,7 @@ void	ft_ctrlc(int sig)
 	note: the function is called by: main()
  */
  // ctrl\ ctrlc now taken care of
-int get_cmd(char *buf, int nbuf, t_env **head, t_info **info)
+int get_cmd(char *buf, int buf_size, t_env **head, t_info **info)
 {
 	char	*input;
 
@@ -107,12 +107,10 @@ int get_cmd(char *buf, int nbuf, t_env **head, t_info **info)
 		free(*info);
 		exit(0);
 	}
-		ft_strlcpy(buf, input, nbuf); // copy input to buf
-		buf[nbuf - 1] = '\0'; // null-terminated string
-    		add_history(buf); // Add input to history
-    		free(input); // Free memory allocated by readline()
-		//add_history(buf);
-		
+	ft_strlcpy(buf, input, buf_size); // copy input to buf
+	buf[buf_size - 1] = '\0'; // null-terminated string
+    add_history(buf); // Add input to history
+    free(input); // Free memory allocated by readline()
 	return (0);
 }
 

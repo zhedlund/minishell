@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 11:01:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:50:47 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
     		printf("token ad1: %s\n", exec_cmd->argv[args]); //debug statement
 			printf("info exitpre expand: %d\n", (*info)->exitstatus); //debug statement
 			//expand_env_exit(&exec_cmd->argv[args], (*info)->exitstatus); // Expand exit status
-			expand_env(&exec_cmd->argv[args], (*info)->exitstatus); // Expand environment variables
+			expand_env(&exec_cmd->argv[args]); // Expand environment variables
     		expanded_token = expand_env_in_str(exec_cmd->argv[args], (*info)->exitstatus); // Expand environment variables within double-quoted strings
     		printf("token ad2: %s\n", expanded_token); // debug statement
     		free(exec_cmd->argv[args]); // Free the original token

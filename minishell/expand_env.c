@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/20 14:45:49 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 15:50:56 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 	returns a new array with the expanded variables
 	note: called by parse_tokens()
 	*/
-char	**expand_env(char **argv, int exit_status)
+char	**expand_env(char **argv)
 {
 	int		i;
 	char	*name;
@@ -138,45 +138,3 @@ char	*expand_env_in_str(const char *str, int exit_status)
 	expanded[index] = '\0';
 	return (expanded);
 }
-
-
-
-/*char **expand_env_exit(char **argv, int status) {
-    int i = 0;
-    while (argv[i] != NULL) {
-        if (ft_strcmp(argv[i], "$?") == 0) {
-            // Replace "$?" with the string representation of the exit status
-            free(argv[i]); // Free the original string
-            argv[i] = ft_itoa(status); // Allocate memory and copy the exit status string
-        }
-        i++;
-    }
-    return argv;
-}
-
-char *expand_exit_status(char *input, int status)
-{
-    char **argv = ft_split(input, ' '); // Split the input string into an array of strings
-    argv = expand_env_exit(argv, status);
-    size_t total_length = 0;
-	// Concatenate the array of strings into one string
-    for (int i = 0; argv[i] != NULL; i++)
-        total_length += ft_strlen(argv[i]) + 1; // Add 1 for space between words
-    char *expanded_input = malloc(total_length + 1); // Add 1 for null terminator
-    if (expanded_input == NULL) {
-        ft_putstr_fd("Memory allocation failed\n", 2);
-        exit(1);
-    }
-    expanded_input[0] = '\0'; // Initialize the string to empty
-    for (int i = 0; argv[i] != NULL; i++)
-	{
-        ft_strcat(expanded_input, argv[i]);
-        ft_strcat(expanded_input, " "); // Add space between words
-        //ft_freearray(argv);
-		free(argv[i]); // Free memory allocated for each string
-    }
-    free(argv);
-	//ft_freearray(argv);
-	//free(input); // Free memory allocated for the array of strings
-    return expanded_input;
-}*/

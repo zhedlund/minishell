@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 14:53:31 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 17:45:20 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,8 +247,8 @@ int main(void)
 	get_env(&head);
 	while (get_cmd(buf, sizeof(buf), &head, &info) >= 0)
 	{
-		if (buf[0] == ' ' || buf[0] == '\t')
-			continue ;
+		if (buf[0] == ' ' || buf[0] == '\t') // needs to be improved, cmd should still run if initial whitespace
+			continue ; 						// need to check if input is only whitespace
 		ft_heredocmain(buf, &info);
 		ft_isitcat(buf, &info);
 		signal(SIGQUIT, ft_ctrlc);

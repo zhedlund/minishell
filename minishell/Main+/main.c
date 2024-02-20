@@ -274,6 +274,9 @@ int main(void)
 				status = info->exitstatus;
 		}
 		unlink("/tmp/hdtemp");
+		info->hdcount = 0;
+		info->catcount = 0;
+		//anything else like this that needs resetting?
 	}
 	rl_clear_history();
 	free(info);

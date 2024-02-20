@@ -178,24 +178,30 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 		a++;
 	}
 	cmdarray = ft_split(buf, ' ');
-	if (ft_strncmp(cmdarray[0], "export", ft_strlen(buf)) == 0
-		|| ft_strncmp(cmdarray[0], "unset", ft_strlen(buf)) == 0
-			|| ft_strncmp(cmdarray[0], "cd", ft_strlen(buf)) == 0
-				|| ft_strncmp(cmdarray[0], "exit", ft_strlen(buf)) == 0)
+	//if (ft_strlen(cmdarray[0]) <=2)
+	//	return (false);
+	if ((ft_strlen(cmdarray[0]) == ft_strlen("export")
+		 && ft_strncmp(cmdarray[0], "export", ft_strlen(buf)) == 0)
+			|| (ft_strlen(cmdarray[0]) == ft_strlen("unset")
+				&& ft_strncmp(cmdarray[0], "unset", ft_strlen(buf)) == 0))
 	{
-			//parse_cmd(buf, info);
-			//printf("parsed!\n");
-			if (ft_strncmp(cmdarray[0], "exit", ft_strlen(buf)) == 0)
-				ft_freearray(cmdarray);
-			run_cmd(parse_cmd(buf, info), head, info);
-			//ft_builtinsmenu(cmdarray[0], cmdarray, head, info);
+			run_cmd(parse_cmd(buf, info, head), head, info);
 			ft_unsetpath(info, cmdarray);
-			//printf("prefree\n");
 			ft_freearray(cmdarray);
-			//printf("should be free\n");
-			//free(expanded);
 			return (true);
 	}
+	if ((ft_strlen(cmdarray[0]) == ft_strlen("cd") 
+			&& ft_strncmp(cmdarray[0], "cd", ft_strlen(buf)) == 0)
+				|| (ft_strlen(cmdarray[0]) == ft_strlen("exit")
+					&& ft_strncmp(cmdarray[0], "exit", ft_strlen(buf)) == 0))
+	{
+			if (ft_strlen(cmdarray[0]) == ft_strlen("exit"))
+				ft_freearray(cmdarray);
+			run_cmd(parse_cmd(buf, info, head), head, info);
+			ft_freearray(cmdarray);
+			return (true);
+	}
+	printf("here!\n");
 	ft_freearray(cmdarray);
 	return (false);
 }

@@ -36,18 +36,18 @@ EVAL CHECK
 	  if used on empty line:
 	  exit code: 0, should be 130
 	  
-- echo / quotes:
+ZH - echo / quotes:
 	minishell> echo ""abc""
 	output: abc""
 	expected: abc
 	error in ft_echo or in parser?
 	  
-- quotes: minishell> echo "hello '''" / echo 'hello """'
+ZH - quotes: minishell> echo "hello '''" / echo 'hello """'
 	unmatched quote
 	should be: hello ''' / hello """
 
-- "" 	should print "Error", exit(127)
+ZH - "" 	should print "Error", exit(127)
 	now prints nothing, exit 0
 	
-- command with only space:
+ZH - command with only space/tabs:
 	- in bash commands works even with leading whitespace, we should check full line

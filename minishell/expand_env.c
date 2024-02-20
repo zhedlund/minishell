@@ -16,6 +16,22 @@
 	returns a new array with the expanded variables
 	note: called by parse_tokens()
 	*/
+char	*ft_findvalue(char *name, t_env **head)
+{
+	t_env	*temp;
+
+	temp = *head;
+	while (temp != NULL)
+    {
+        if (ft_strncmp(temp->field, name, strlen(name)) == 0)
+        	break ;
+		temp = temp->next;
+	}
+	if (temp == NULL)
+		return (""); //does this always work, need to check with debugging statements removed
+	return(temp->field);
+}
+
 char	**expand_env(char **argv)
 {
 	int		i;
@@ -28,12 +44,10 @@ char	**expand_env(char **argv)
 		if (argv[i][0] == '$' && argv[i][1] != '\0' && argv[i][1] != '?')
 		{
 			name = argv[i] + 1;
-			value = getenv(name);
+			value = ft_findvalue(name, head);
+			free(argv[i]);
 			if (value != NULL)
-			{
-				free(argv[i]);
 				argv[i] = ft_strdup(value);
-			}
 		}
 		i++;
 	}

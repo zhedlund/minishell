@@ -167,8 +167,6 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 {
 	int a;
 	char **cmdarray;
-	//parse_cmd(buf, info);
-	//t_exec	*test;
 
 	a = 0;
 	while (buf[a] != '\0')
@@ -178,8 +176,6 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 		a++;
 	}
 	cmdarray = ft_split(buf, ' ');
-	//if (ft_strlen(cmdarray[0]) <=2)
-	//	return (false);
 	if ((ft_strlen(cmdarray[0]) == ft_strlen("export")
 		 && ft_strncmp(cmdarray[0], "export", ft_strlen(buf)) == 0)
 			|| (ft_strlen(cmdarray[0]) == ft_strlen("unset")

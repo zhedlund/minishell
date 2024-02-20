@@ -1,0 +1,4 @@
+in handle
+cmd == echo
+cmdnxt== hello
+hello

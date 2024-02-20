@@ -1,3 +1,4 @@
 .gitignore
 .DS_Store
 minishell/.DS_Store
+minishell/suppressions.supp

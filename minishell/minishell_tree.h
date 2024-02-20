@@ -23,7 +23,6 @@
 #define SYMBOLS "<|>"
 
 extern int g_signal;
-//extern int	globalsignum;
 
 typedef struct s_cmd 
 {
@@ -131,8 +130,9 @@ void	ft_freearray(char **tofree);
 int		ft_isalnum(int c);
 int		ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
+int		ft_isspace(char c);
 
-int main(void);
+int		main(void);
 void	get_env(t_env **head);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info);
 void	ft_cd(char **cmdarray, t_env **head, t_info **info);

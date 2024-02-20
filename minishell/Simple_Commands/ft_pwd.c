@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:24:21 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/19 21:10:23 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 21:41:49 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_c
 	cmdargs = exec_cmd->argv;
 	check = 1;
 	rl_clear_history();
-	//clear_history();
 	if (arraystring == NULL)
 		check = 0;
 	while (cmdargs[check] != NULL)
@@ -31,8 +30,6 @@ void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_c
 		free (cmdargs[check]);
 		check++;
 	}
-	//if ((*info)->expanded != NULL)
-		//free((*info)->expanded);
 	//if ((*head) != NULL)
 		ft_freelist(head);
 	//if ((*info) != NULL)
@@ -44,7 +41,7 @@ void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_c
 
 void    ft_pwd(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd)
 {
-	char	store[PATH_MAX];
+	char	store[PATH_MAX]; // PATH_MAX in limits.h defines the maximum length of a path, usually 4096
 	char	*path;
 	int	i;
 	

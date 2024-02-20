@@ -6,18 +6,17 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 15:50:47 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 20:32:46 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell_tree.h"
 
-/* cmd: pointer to the command struct
-	position_ptr: pointer to the pointer to the first character of the string to be parsed
-	end_str: pointer to the last character of the string to be parsed
-	return: pointer to the command struct
-	note: the function is called by: parse_exec(), parse_redir(), parse_pipe(), parse_cmd(),
-	run_cmd(), main(), get_cmd()
+/* cmd: pointer to the cmd struct
+	position_ptr: ptr to ptr to the first character of the string to be parsed
+	end_str: ptr to the last character of the string to be parsed
+	return: ptr to the cmd struct
+	note: the function is called by: parse_exec(), parse_pipe()
  */
 t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str, t_info **info)
 {
@@ -46,14 +45,13 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str, t_info **info
 }
 
 /* Function to handle token parsing and filling arguments
-	exec_cmd: pointer to the command struct
+	exec_cmd: pointer to the cmd struct
 	cmd: pointer to the pointer to the command struct
-	position_ptr: pointer to the pointer to the first character of the string to be parsed
-	end_str: pointer to the last character of the string to be parsed
+	position_ptr: ptr to ptr to first character of the string to be parsed
+	end_str: ptr to the last character of the string to be parsed
 	note: the function is called by: parse_exec()
 */
 
-/* Function to parse tokens and fill arguments with environmental variable expansion */
 void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str, t_info **info)
 {
     int		args;
@@ -69,22 +67,15 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 		if (token_type == 0)
 			break;
 		if (token_type == 'q' || token_type == 'd')
-		{
-			exec_cmd->argv[args] = make_copy(token_start, token_end - 1); // Exclude the ending quote
-			printf("token qd: %s\n", exec_cmd->argv[args]); //debug statement
-		}
+			exec_cmd->argv[args] = make_copy(token_start, token_end - 1);
 		else
 			exec_cmd->argv[args] = make_copy(token_start, token_end);
 		if (token_type != 'q')
 		{
-    		printf("token ad1: %s\n", exec_cmd->argv[args]); //debug statement
-			printf("info exitpre expand: %d\n", (*info)->exitstatus); //debug statement
-			//expand_env_exit(&exec_cmd->argv[args], (*info)->exitstatus); // Expand exit status
-			expand_env(&exec_cmd->argv[args]); // Expand environment variables
-    		expanded_token = expand_env_in_str(exec_cmd->argv[args], (*info)->exitstatus); // Expand environment variables within double-quoted strings
-    		printf("token ad2: %s\n", expanded_token); // debug statement
-    		free(exec_cmd->argv[args]); // Free the original token
-    		exec_cmd->argv[args] = expanded_token; // Assign the expanded token
+			expand_env(&exec_cmd->argv[args]); // Expands env var if single arg w/o quotes
+    		expanded_token = expand_env_in_str(exec_cmd->argv[args], (*info)->exitstatus); // Expand env var in double-quoted string
+    		free(exec_cmd->argv[args]);
+    		exec_cmd->argv[args] = expanded_token;
 		}
 		args++;
 		if (args >= MAXARGS)

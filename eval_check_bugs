@@ -42,12 +42,13 @@ ZH - echo / quotes:
 	expected: abc
 	error in ft_echo or in parser?
 	  
-ZH - quotes: minishell> echo "hello '''" / echo 'hello """'
+ZH - 	unmatched quotes: minishell> echo "hello '''" / echo 'hello """'
 	unmatched quote
 	should be: hello ''' / hello """
 
-ZH - "" 	should print "Error", exit(127)
+FIXED ZH - "" 	should print "Error", exit(127)
 	now prints nothing, exit 0
 	
-ZH - command with only space/tabs:
-	- in bash commands works even with leading whitespace, we should check full line
+FIXED ZH - command with only space/tabs: 
+	- in bash commands works even with leading whitespace
+	we should check full line - FIXED

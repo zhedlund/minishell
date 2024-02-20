@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/12 22:44:47 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 20:51:54 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -349,4 +349,13 @@ char	*ft_itoa(int n)
 		num = n;
 	str = num_to_array(str, num, len);
 	return (str);
+}
+
+int ft_isspace(char c)
+{
+    if (c == ' ' || c == '\t' || c == '\n' || c == '\v'
+		|| c == '\f' || c == '\r')
+        return (1);
+    else
+        return (0);
 }

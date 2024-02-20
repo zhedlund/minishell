@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 17:45:20 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 22:34:34 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,14 @@ int has_unmatched_quotes(char *argv[])
 	return (0);
 }
 
-//this function decides whether to block or unblock non-builtin simple functions
-//on the basis of whether or not PATH has been unset, or reset properly
-//alter bool in info array that is checked by later functions
+/* decides whether to block or unblock non-builtin simple functions
+ * on the basis of whether or not PATH has been unset, or reset properly
+ * alter bool in info array that is checked by later functions
+ * info: pointer to the info struct
+ * cmdarray: array of strings containing the command and its arguments
+ * return: void
+ * note: this function is called by: main()
+*/
 void	ft_unsetpath(t_info **info, char **cmdarray)
 {
 	extern char	**environ;
@@ -236,6 +241,17 @@ void	ft_isitcat(char	*buf, t_info **info)
 	ft_freearray(cmdarray);
 }
 
+int	is_whitespace(const char *buf)
+{
+    while (*buf != '\0')
+	{
+        if (!isspace(*buf))
+            return (0);
+        buf++;
+    }
+    return (1);
+}
+
 int main(void)
 {
 	static char	buf[1024];
@@ -249,24 +265,23 @@ int main(void)
 	get_env(&head);
 	while (get_cmd(buf, sizeof(buf), &head, &info) >= 0)
 	{
-		if (buf[0] == ' ' || buf[0] == '\t') // needs to be improved, cmd should still run if initial whitespace
-			continue ; 						// need to check if input is only whitespace
 		ft_heredocmain(buf, &info);
 		ft_isitcat(buf, &info);
-		signal(SIGQUIT, ft_ctrlc);
+		signal(SIGQUIT, ft_ctrlc); // put all signal related into a function (norm)
 		signal(SIGINT, ft_ctrlc);
 		if (ft_whichsignalfunction(buf, &info) == 2)
 		{
 			signal(SIGINT, ft_ctrlc2);
 			signal(SIGQUIT, ft_ctrlc2);
 		}
+		if (is_whitespace(buf)) // make void function for input check (norm)
+			continue ;
 		if (has_unmatched_quotes((char *[]){buf, NULL}))
 		{
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue;
 		}
-		if (ft_disinherit(buf, &head, &info) == false
-				&& info->panic == false)
+		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)
 					run_cmd(parse_cmd(buf, &info), &head, &info);

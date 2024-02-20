@@ -1,15 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_builtins.c                                      :+:      :+:    :+:   */
+/*   ft_builtinsmenu.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 18:10:00 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/15 18:10:02 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/20 21:13:32 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
+
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info)
 {
 	(*info)->inchild = false;

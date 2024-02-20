@@ -109,9 +109,8 @@ int		get_token(char **input_ptr, char *end_str, char **token_start, char **token
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, int exit_status);
-char	*expand_env_in_str(const char *str);
-char	*expand_exit_status(char *input, int status);
-char	**expand_env_exit(char **argv, int status);
+char	*expand_env_in_str(const char *str, int exit_status);
+void	expand_exit_status(int exit_status, char *expanded, size_t *index);
 
 /* utils */
 char	*ft_strtok(char *str, const char *delim);

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/19 21:04:02 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/20 14:53:31 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,13 +263,10 @@ int main(void)
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue;
 		}
-		//info->expanded = expand_exit_status(buf, status);
-		//if (ft_disinherit(info->expanded, &head, &info) == false
 		if (ft_disinherit(buf, &head, &info) == false
 				&& info->panic == false)
 		{
 				if (fork_process() == 0)
-					//run_cmd(parse_cmd(info->expanded, &info), &head, &info);
 					run_cmd(parse_cmd(buf, &info), &head, &info);
 				wait(&status);
 				if (WIFEXITED(status))
@@ -277,8 +274,6 @@ int main(void)
 				status = info->exitstatus;
 		}
 		unlink("/tmp/hdtemp");
-		//free(info->expanded);
-		//info->expanded = NULL;
 	}
 	rl_clear_history();
 	free(info);

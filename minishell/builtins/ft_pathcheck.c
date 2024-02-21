@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_simple.c                                      :+:      :+:    :+:   */
+/*   ft_pathcheck.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:20:04 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 21:12:00 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 20:39:04 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd, t_env *
 		return (potentialpath);
 	else if (choice == 1)
 	{
-		write(2, "Minishell: ", ft_strlen("Minishell: "));
+		write(2, "minishell: ", ft_strlen("minishell: ")); // why not use ft_putstr_fd?
 		write(2, potentialpath, ft_strlen(potentialpath));
 		write(2, ": No such file or directory\n", ft_strlen(": No such file or directory\n"));
 		ft_multifree(NULL, head, info, exec_cmd);

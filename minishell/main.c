@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/21 16:51:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 22:08:22 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int main(void)
 		}
 		if (is_whitespace(buf)) // make void function for input check (norm)
 			continue ;
-		if (has_unmatched_quotes((char *[]){buf, NULL}))
+		if (has_unmatched_quotes(buf))
 		{
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue;

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing1.c                                         :+:      :+:    :+:   */
+/*   parse_cmd.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:05:32 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/21 14:23:11 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 18:26:48 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,8 @@ t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info, t_env **hea
  */
 t_cmd	*parse_cmd(char *str, t_info **info, t_env **head)
 {
-	char *end_str;
-	t_cmd *cmd;
+	char	*end_str;
+	t_cmd	*cmd;
 
 	end_str = str + ft_strlen(str);
 	cmd = parse_line(&str, end_str, info, head);

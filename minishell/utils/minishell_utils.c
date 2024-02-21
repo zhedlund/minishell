@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/20 20:51:54 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 20:52:03 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	is_whitespace(const char *buf)
 {
     while (*buf != '\0')
 	{
-        if (!ft_isspace(*buf))
+		if (ft_strchr(WHITESPACE, *buf))
             return (0);
         buf++;
     }

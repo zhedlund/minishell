@@ -1,44 +1,17 @@
-COMPILER WARNINGS
-
-ERROR: heredoc/hdmain.c:22:11: error: no member named 'nospace' in 'struct s_info'
-        (*info)->nospace = direct; // error: no member named 'nospace' in 'struct s_info', had to comment out to compile
-
-
-builtins/ft_builtinsmenu.c:23:18: warning: incompatible pointer types passing 'char **' to parameter of type 't_exec *' (aka 'struct s_exec *') [-Wincompatible-pointer-types]
-                ft_unset(argv, cmdinfo, head, info);
-                               ^~~~~~~
-builtins/../minishell_tree.h:159:43: note: passing argument to parameter 'exec_cmd' here
-void            ft_unset(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
-                                                    ^
-builtins/ft_builtinsmenu.c:26:11: warning: incompatible pointer types passing 'char **' to parameter of type 't_exec *' (aka 'struct s_exec *') [-Wincompatible-pointer-types]
-                ft_exit(cmdinfo, head, info);
-                        ^~~~~~~
-builtins/../minishell_tree.h:168:25: note: passing argument to parameter 'exec_cmd' here
-void    ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
-
-builtins/ft_echo.c:17:50: warning: unused parameter 'info' [-Wunused-parameter]
-void    ft_printout(int a, char **cmdargs, t_info **info) // warning: unused parameter 'info' [-Wunused-parameter]
-
-builtins/ft_pathcheck.c:42:42: warning: unused parameter 'info' [-Wunused-parameter]
-int     ft_choice(const char *file, t_info **info)
-
-
+NORMINETTE CHECK
 
 
 FUNCTIONS W MORE THAN 25 LINES
+- start with the functions you wrote
 
-main
-parse_tokens
-get_token
+handle_exec_cmd - wtf happend here? XD it was like 10 lines before lol
+		tip: make a function that compare str+strlen that's called with 
+		a string literal, to make it shorter and readable, since strncmp + 
+		strlen is pretty much everywhere.
 
-handle_exec_cmd - omg wtf happend here? make a function that compare str and strlen to call with name of builtin, to make it shorter and readable.
-
-handle_pipe_cmd
-handle_redir_cmd
+get_env
 ft_disinherit
 ft_isitcat
-get_cmd
-handle_env_var
 ft_unset
 ft_unsetsub
 ft_exit
@@ -48,18 +21,39 @@ ft_gethome
 ft_backone
 ft_cd
 ft_echo
-get_env
 ft_heredocarray
 ft_hdprocess
 ft_disinherit
 
+ZH -
+get_token: need to add some logic to handle echo ""abc""
+handle_env_var
+parse_tokens
+has_unmatched_quotes 
+expand_env_in_str
+ft_execvp
+handle_pipe_cmd
+handle_redir_cmd
+get_cmd
 
- 
-
+main
 
 FUNCTIONS WITH TOO MANY PARAMETERS
+- split functions first?
 
 handle_env_var
 parse_tokens
+
+
++ change relevant //comments above functions into docstrings:
+
+/* str: ptr to ....
+ * returns: ....
+ */
+ 
++ remove debug statements
+
+
+DONE:
 
 

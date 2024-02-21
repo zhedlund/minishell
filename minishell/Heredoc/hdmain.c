@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   hdmain.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:05 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/20 10:18:07 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:30:00 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file)
@@ -18,7 +19,7 @@ bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file)
 
 	valid = false;
 	a = 0;
-	(*info)->nospace = direct;
+	//(*info)->nospace = direct; // error: no member named 'nospace' in 'struct s_info', had to comment out to compile
 	if (direct == true)
 		a = 2;
 	if ((heredoc == 0 && file == NULL) || file[a] == '<' || file[a] == '>' 

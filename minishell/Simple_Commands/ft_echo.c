@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:22:47 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/19 20:36:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:31:12 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 //works for expansion
 //still need to work out exit statuses
-void	ft_printout(int a, char **cmdargs, t_info **info)
+void	ft_printout(int a, char **cmdargs, t_info **info) // warning: unused parameter 'info' [-Wunused-parameter]
 {
 		while (cmdargs[a] != NULL)
 		{

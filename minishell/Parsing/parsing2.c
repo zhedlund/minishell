@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 20:32:46 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:25:25 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_cmd *parse_redir(t_cmd *cmd, char **position_ptr, char *end_str, t_info **info
 	note: the function is called by: parse_exec()
 */
 
-void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str, t_info **info)
+void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str, t_info **info, t_env **head)
 {
     int		args;
     char	*token_start;
@@ -72,8 +72,8 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 			exec_cmd->argv[args] = make_copy(token_start, token_end);
 		if (token_type != 'q')
 		{
-			expand_env(&exec_cmd->argv[args]); // Expands env var if single arg w/o quotes
-    		expanded_token = expand_env_in_str(exec_cmd->argv[args], (*info)->exitstatus); // Expand env var in double-quoted string
+			expand_env(&exec_cmd->argv[args], head); // Expands env var if single arg w/o quotes
+    		expanded_token = expand_env_in_str(exec_cmd->argv[args], (*info)->exitstatus, head); // Expand env var in double-quoted string
     		free(exec_cmd->argv[args]);
     		exec_cmd->argv[args] = expanded_token;
 		}
@@ -92,7 +92,7 @@ void parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_
 	return: pointer to the command struct
 	note: the function is called by: parse_pipe()
 */
-t_cmd *parse_exec(char **position_ptr, char *end_str, t_info **info)
+t_cmd *parse_exec(char **position_ptr, char *end_str, t_info **info, t_env **head)
 {
     t_cmd *cmd;
     t_exec *exec_command;
@@ -100,6 +100,6 @@ t_cmd *parse_exec(char **position_ptr, char *end_str, t_info **info)
 	cmd = exec_cmd();
 	exec_command = (t_exec *)cmd;
     cmd = parse_redir(cmd, position_ptr, end_str, info);
-    parse_tokens(exec_command, &cmd, position_ptr, end_str, info);
+    parse_tokens(exec_command, &cmd, position_ptr, end_str, info, head);
     return (cmd);
 }

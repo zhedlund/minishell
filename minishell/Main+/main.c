@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/20 22:34:34 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:21:43 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,7 +284,7 @@ int main(void)
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)
-					run_cmd(parse_cmd(buf, &info), &head, &info);
+					run_cmd(parse_cmd(buf, &info, &head), &head, &info);
 				wait(&status);
 				if (WIFEXITED(status))
 					info->exitstatus = WEXITSTATUS(status);

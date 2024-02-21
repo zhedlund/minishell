@@ -100,15 +100,15 @@ t_cmd	*redir_cmd(t_cmd *sub_cmd, char *file, int type, t_info **info);
 t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 
 /* parsing */
-t_cmd	*parse_cmd(char *str, t_info **info);
+t_cmd	*parse_cmd(char *str, t_info **info, t_env **head);
 t_cmd	*parse_redir(t_cmd *cmd, char **position_ptr, char *end_str, t_info **info);
-t_cmd	*parse_exec(char **position_ptr, char *end_str, t_info **info);
-t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info);
+t_cmd	*parse_exec(char **position_ptr, char *end_str, t_info **info, t_env **head);
+t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info, t_env **head);
 int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
 char	*make_copy(char *start_ptr, char *end_ptr);
-char	**expand_env(char **argv);
-char	*expand_env_in_str(const char *str, int exit_status);
+char	**expand_env(char **argv, t_env **head);
+char	*expand_env_in_str(const char *str, int exit_status, t_env **head);
 void	expand_exit_status(int exit_status, char *expanded, size_t *index);
 
 /* utils */
@@ -132,6 +132,8 @@ int		ft_atoi(const char *nptr);
 char	*ft_itoa(int n);
 int		ft_isspace(char c);
 
+
+/* unsorted stuff, builtins and signals mostly */
 int		main(void);
 void	get_env(t_env **head);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info);

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/20 22:59:21 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 13:57:58 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_findvalue(char *name, t_env **head)
 	temp = *head;
 	while (temp != NULL)
     {
-        if (ft_strncmp(temp->field, name, strlen(name)) == 0)
+        if (ft_strncmp(temp->field, name, ft_strlen(name)) == 0)
         	break ;
 		temp = temp->next;
 	}
@@ -32,7 +32,7 @@ char	*ft_findvalue(char *name, t_env **head)
 	returns a new array with the expanded variable
 	note: called by parse_tokens()
 	*/
-char	**expand_env(char **argv)
+char	**expand_env(char **argv, t_env **head)
 {
 	int		i;
 	char	*name;
@@ -60,7 +60,7 @@ static void	error_max_size(void)
 	exit(EXIT_FAILURE);
 }
 
-static int	handle_env_var(const char *str, size_t i, char *expanded, size_t *index)
+static int	handle_env_var(const char *str, size_t i, char *expanded, size_t *index, t_env **head)
 {
 	const char	*env_start;
 	const char	*env_end;
@@ -75,7 +75,7 @@ static int	handle_env_var(const char *str, size_t i, char *expanded, size_t *ind
 	len = env_end - env_start;
 	env_name = (char *)malloc(sizeof(len + 1));
 	ft_strlcpy(env_name, env_start, len + 1);
-	env_value = getenv(env_name);
+	env_value = ft_findvalue(env_name, head);
 	free(env_name);
 	if (env_value != NULL)
 	{
@@ -120,7 +120,7 @@ void	expand_exit_status(int exit_status, char *expanded, size_t *index)
 	returns a new string with the expanded variables
 	note: called by parse_tokens()
 	*/
-char	*expand_env_in_str(const char *str, int exit_status)
+char	*expand_env_in_str(const char *str, int exit_status, t_env **head)
 {
 	size_t	len;
 	char	*expanded;
@@ -139,7 +139,7 @@ char	*expand_env_in_str(const char *str, int exit_status)
 	while (i < len)
 	{
 		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != '?')
-			i = handle_env_var(str, i, expanded, &index);
+			i = handle_env_var(str, i, expanded, &index, &head);
 		else if (str[i] == '$' && str[i + 1] == '?')
 		{
     		expand_exit_status(exit_status, expanded, &index);

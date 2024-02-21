@@ -79,3 +79,18 @@ void handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info)
         	    handle_parent_process((t_cmd *)pipe_cmd, fd_pipe, head, info);
     }
 }
+
+/* return: pid of the child process
+ * note: the function is called by: run_cmd()
+ * Fork but perror on failure
+ */
+  
+int fork_process(void)
+{
+	int pid;
+
+	pid = fork();
+	if (pid == -1)
+		perror("fork");
+	return (pid);
+}

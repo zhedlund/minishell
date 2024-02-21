@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:09:43 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/11 19:39:09 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:43:54 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
         current_pos++;
     if (token_start != NULL)
         *token_start = current_pos;
-	if (*current_pos == '\'') // Check for single-quoted string
+	else if (*current_pos == '\'') // Check for single-quoted string
 	{
 		token_type = 'q'; // Single-quoted string
 		current_pos++;
@@ -85,35 +85,4 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
     return (token_type);
 }
 
-/* position_ptr: pointer to the pointer to the first character of the string to be parsed
-	end_str: pointer to the last character of the string to be parsed
-	token_char: pointer to the string of token characters
-	return: 1 if the next token is a token character, 0 otherwise
-	note: the function is called by: parse_redir(), parse_pipe(), parse_exec(), parse_cmd()
- */
-int check_next_token(char **position_ptr, char *end_str, char *token_char)
-{
-	char *current_pos;
 
-	current_pos = *position_ptr;
-	while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))
-		current_pos++;
-	*position_ptr = current_pos;
-	return (*current_pos && ft_strchr(token_char, *current_pos));
-}
-
-/* 	start_ptr: pointer to the first character of the string to be copied
-	end_ptr: pointer to the last character of the string to be copied
-	return: pointer to the copy of the string
-	note: the copy is allocated on the heap and must be freed by the caller */
-char *make_copy(char *start_ptr, char *end_ptr)
-{
-	size_t len;
-	char *copy;
-
-	len = end_ptr - start_ptr;
-	copy = malloc(len + 1);
-	if (copy != NULL)
-		ft_strlcpy(copy, start_ptr, len + 1); //copy n characters from s to c and ensure null-termination
-	return (copy);
-}

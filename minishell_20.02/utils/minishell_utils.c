@@ -12,6 +12,36 @@
 
 #include "../minishell_tree.h"
 
+
+/* 	start_ptr: pointer to the first character of the string to be copied
+	end_ptr: pointer to the last character of the string to be copied
+	return: pointer to the copy of the string
+	note: the copy is allocated on the heap and must be freed by the caller */
+	
+char *make_copy(char *start_ptr, char *end_ptr)
+{
+	size_t len;
+	char *copy;
+
+	len = end_ptr - start_ptr;
+	copy = malloc(len + 1);
+	if (copy != NULL)
+		ft_strlcpy(copy, start_ptr, len + 1); //copy n characters from s to c and ensure null-termination
+	return (copy);
+}
+
+int	is_whitespace(const char *buf)
+{
+    while (*buf != '\0')
+	{
+        if (!ft_isspace(*buf))
+            return (0);
+        buf++;
+    }
+    return (1);
+}
+
+
 void	*ft_memset(void *s, int c, size_t n)
 {
 	char	*ps;

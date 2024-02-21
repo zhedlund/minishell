@@ -106,12 +106,25 @@ t_cmd	*parse_exec(char **position_ptr, char *end_str, t_info **info, t_env **hea
 t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info, t_env **head);
 int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
+void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str, t_info **info, t_env **head);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, t_env **head);
 char	*expand_env_in_str(const char *str, int exit_status, t_env **head);
 void	expand_exit_status(int exit_status, char *expanded, size_t *index);
+void	ft_isitcat(char	*buf, t_info **info);
+int		has_unmatched_quotes(char *argv[]);
+
+/* signals */
+int		ft_whichsignalfunction(char *buf, t_info **info);
+int		ft_whichsignalsub(char *signalarray, int ctrlc, char *buf, t_info **info);
+void	ft_ctrlc(int sig);
+void	ft_ctrlc2(int signal);
 
 /* utils */
+void	error_max_size(void);
+int		is_whitespace(const char *buf);
+
+
 char	*ft_strtok(char *str, const char *delim);
 size_t	ft_strlen(const char *str);
 int		ft_strcmp(const char *s1, const char *s2);
@@ -134,7 +147,6 @@ int		ft_isspace(char c);
 
 
 /* unsorted stuff, builtins and signals mostly */
-int		main(void);
 void	get_env(t_env **head);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info);
 void	ft_cd(char **cmdarray, t_env **head, t_info **info);
@@ -155,5 +167,8 @@ void	ft_exportsub(char *toexport, t_env **head);
 void    ft_echo(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
 void    ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
+int		ft_disinherit(char *buf, t_env **head, t_info **info);
+char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd, t_env **head);
+char	*ft_findvalue(char *name, t_env **head);
 
 #endif

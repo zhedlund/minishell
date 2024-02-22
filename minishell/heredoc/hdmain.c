@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:05 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/21 16:19:54 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 11:52:58 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file)
 
 	valid = false;
 	a = 0;
-	//(*info)->nospace = direct; // error: no member named 'nospace' in 'struct s_info', had to comment out to compile
+	(*info)->nospace = direct; // error: no member named 'nospace' in 'struct s_info', had to comment out to compile
 	if (direct == true)
 		a = 2;
 	if ((heredoc == 0 && file == NULL) || file[a] == '<' || file[a] == '>' 

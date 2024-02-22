@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/21 22:08:22 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 12:17:50 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ int main(void)
 			signal(SIGINT, ft_ctrlc2);
 			signal(SIGQUIT, ft_ctrlc2);
 		}
-		if (is_whitespace(buf)) // make void function for input check (norm)
-			continue ;
 		if (has_unmatched_quotes(buf))
 		{
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue;
 		}
+		if (is_whitespace(buf))
+			continue ;
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)

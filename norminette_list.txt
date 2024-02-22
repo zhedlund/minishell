@@ -27,9 +27,7 @@ ft_disinherit
 
 ZH -
 get_token: need to add some logic to handle echo ""abc""
-handle_env_var
-parse_tokens
-has_unmatched_quotes 
+handle_env_var 
 expand_env_in_str
 ft_execvp
 handle_pipe_cmd
@@ -42,7 +40,7 @@ FUNCTIONS WITH TOO MANY PARAMETERS
 - split functions first?
 
 handle_env_var
-parse_tokens
+parse_tokens - norminetted file, but too many parameters
 
 
 + change relevant //comments above functions into docstrings:
@@ -55,5 +53,5 @@ parse_tokens
 
 
 DONE:
-
+has_unmatched_quotes
 

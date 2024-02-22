@@ -77,6 +77,7 @@ typedef struct s_info
 	bool	solocat;
 	bool	aout;
 	bool	cmdnf;
+	bool	nospace;
 	//t_env	*env;
 }		t_info;
 

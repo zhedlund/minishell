@@ -6,12 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 15:27:07 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/21 20:52:03 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 12:20:04 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell_tree.h"
-
 
 /* 	start_ptr: pointer to the first character of the string to be copied
 	end_ptr: pointer to the last character of the string to be copied
@@ -34,14 +33,14 @@ int	is_whitespace(const char *buf)
 {
     while (*buf != '\0')
 	{
-		if (ft_strchr(WHITESPACE, *buf))
+		if (!ft_isspace(*buf))
             return (0);
         buf++;
     }
     return (1);
 }
 
-
+/*libft functions, remove after linking libft*/
 void	*ft_memset(void *s, int c, size_t n)
 {
 	char	*ps;

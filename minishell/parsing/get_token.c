@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:09:43 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 14:40:15 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 18:42:27 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 
 int get_token(char **input_ptr, char *end_str, char **token_start, char **token_end)
 {
-    char *current_pos;
-    int token_type;
+    char	*current_pos;
+    int		token_type;
 
     current_pos = *input_ptr;
     while (current_pos < end_str && ft_strchr(WHITESPACE, *current_pos))

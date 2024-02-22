@@ -3,13 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:59 by jelliott          #+#    #+#             */
-/*   Updated: 2023/12/11 15:26:01 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:14:52 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
+
 //can exit alone or with a numerical variable
 //when there is a numerical variable - echo $? will print the exit status [is this relevant?]
 //this function primarily deals with exit alone

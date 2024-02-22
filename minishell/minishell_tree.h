@@ -78,6 +78,7 @@ typedef struct s_info
 	bool	aout;
 	bool	cmdnf;
 	bool	nospace;
+	char	*expanded; //not being used, but is sent to multifree, so I'm leaving it in for now
 	//t_env	*env;
 }		t_info;
 
@@ -148,7 +149,7 @@ int		ft_isspace(char c);
 /* unsorted stuff, builtins and signals mostly */
 void	get_env(t_env **head);
 void	ft_builtinsmenu(char *argv, char **cmdinfo, t_env **head, t_info **info);
-void	ft_cd(char **cmdarray, t_env **head, t_info **info);
+void	ft_cd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_env(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_heredocexecute(char **hdarray, t_info **info);
 void	ft_heredocmain(char *cmdline, t_info **info);
@@ -157,11 +158,12 @@ void	ft_ctrlc(int sig);
 void	ft_ctrlc2(int signal);
 void	ft_unset(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_freelist(t_env **head);
-void	ft_export(char **cmdarray, t_env **head, t_info **info);
+void    ft_export(t_exec *exec_cmd, t_env **head, t_info **info);
+void    ft_exportfree(t_exec **exec_cmd, t_env **head, t_info **info);
 int		ft_inititalchar(char *arraystring, t_info **info);
 void	ft_unsetsub(char *inputi, t_env **head);
 char	*ft_strjoin(char const *s1, char const *s2);
-void    ft_pwd(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
+void    ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_exportsub(char *toexport, t_env **head);
 void    ft_echo(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
 void    ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);

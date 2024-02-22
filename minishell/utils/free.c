@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:48:51 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/21 16:58:19 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:32:53 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_c
 	cmdargs = exec_cmd->argv;
 	check = 1;
 	rl_clear_history();
+	//clear_history();
 	if (arraystring == NULL)
 		check = 0;
 	while (cmdargs[check] != NULL)
@@ -30,12 +31,13 @@ void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_c
 		free (cmdargs[check]);
 		check++;
 	}
-	//if ((*head) != NULL)
-		ft_freelist(head);
-	//if ((*info) != NULL)
-		free((*info));
+	//if ((*info)->expanded != NULL)
+	//	free((*info)->expanded);
+	ft_freelist(head);
+	free((*info));
 	if (arraystring != NULL)
 		free(arraystring);
+	//free(exec_cmd->argv);
 	free(exec_cmd);
 }
 

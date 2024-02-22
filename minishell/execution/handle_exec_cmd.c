@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   handle_exec_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:55:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/21 14:56:24 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:23:50 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
 
 	else if (ft_strlen("pwd") == ft_strlen(exec_cmd->argv[0])
 			&&	ft_strncmp(exec_cmd->argv[0], "pwd", ft_strlen(exec_cmd->argv[0])) == 0)
-		ft_pwd(exec_cmd->argv[0], head, info, exec_cmd); 
+		ft_pwd(head, info, exec_cmd); 
 	else if (ft_strlen("echo") == ft_strlen(exec_cmd->argv[0]) 
 				&&	ft_strncmp(exec_cmd->argv[0], "echo", ft_strlen(exec_cmd->argv[0])) == 0)
 					ft_echo(exec_cmd->argv[0], exec_cmd, head, info); 

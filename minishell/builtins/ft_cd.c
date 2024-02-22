@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:07 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/19 21:34:53 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:13:35 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ void   ft_cd(t_exec *exec_cmd, t_env **head, t_info **info)
 	{
 		(*info)->exitstatus = 0;
 		//ft_freearray(cmdarray);
-		free((*info)->expanded);
+		//free((*info)->expanded);
         free(exec_cmd->argv[0]);
         free(exec_cmd);
 	}

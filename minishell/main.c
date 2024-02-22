@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 12:17:50 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:01:34 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int main(void)
 {
 	static char	buf[1024];
-	int			status; // variable to store exit status of child process
+	int			status;
 	t_info		*info;
 	t_env		*head;
 
@@ -27,7 +27,7 @@ int main(void)
 	{
 		ft_heredocmain(buf, &info);
 		ft_isitcat(buf, &info);
-		signal(SIGQUIT, ft_ctrlc); // put all signal related into a function (norm)
+		signal(SIGQUIT, ft_ctrlc); 
 		signal(SIGINT, ft_ctrlc);
 		if (ft_whichsignalfunction(buf, &info) == 2)
 		{

@@ -3,13 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:33 by jelliott          #+#    #+#             */
-/*   Updated: 2023/12/11 15:28:35 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/22 21:20:27 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
+
 //anything can be added if there is an '='; otherwise either nothing happens OR
 //if the next items contain a +=- etc. them there will be an error message - bash: export: `hallo-de': not a valid identifier
 //also the unexpected token message
@@ -136,7 +138,7 @@ void    ft_exportfree(t_exec **exec_cmd, t_env **head, t_info **info)
         printf("here!!\n");
 		(*info)->exitstatus = 0;
 		//ft_freearray((*exec_cmd)->argv);
-		free((*info)->expanded);
+		//free((*info)->expanded);
         free((*exec_cmd)->argv[0]);
         free((*exec_cmd));
 	}

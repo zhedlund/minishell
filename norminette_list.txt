@@ -26,7 +26,7 @@ ft_hdprocess
 ft_disinherit
 
 ZH -
-get_token: need to add some logic to handle echo ""abc""
+get_token
 handle_env_var 
 expand_env_in_str
 ft_execvp

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:02:34 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/21 22:08:08 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/23 17:32:11 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,20 @@ int get_cmd(char *buf, int buf_size, t_env **head, t_info **info)
 		g_signal = 0;
 		//(*info)->exitstatus = 131;
 	}
-	if (isatty(0)) // checks if connected to stdin (fd 0)
-		input = readline("minishell> "); // read input w promt - interactive mode
+	if (isatty(0))
+		input = readline("minishell> ");
 	else
-		input = readline(""); // read input w/o promt - non-interactive mode
-	if (input == NULL) //for ctrl_d, ...export 1 | export 1 | export 1
+		input = readline("");
+	if (input == NULL)
 	{
 		printf("exit\n");
 		ft_freelist(head);
 		free(*info);
 		exit(0);
 	}
-	ft_strlcpy(buf, input, buf_size); // copy input to buf
-	buf[buf_size - 1] = '\0'; // null-terminated string
-    add_history(buf); // Add input to history
-    free(input); // Free memory allocated by readline()
+	ft_strlcpy(buf, input, buf_size);
+	buf[buf_size - 1] = '\0';
+    add_history(buf);
+    free(input);
 	return (0);
 }

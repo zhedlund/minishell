@@ -33,6 +33,7 @@ ft_execvp
 handle_pipe_cmd
 handle_redir_cmd
 get_cmd
+redir_cmd
 
 main
 
@@ -54,4 +55,7 @@ parse_tokens - norminetted file, but too many parameters
 
 DONE:
 has_unmatched_quotes
+expand_exit_status
+has_unmatched_quotes
+parse_cmd
 

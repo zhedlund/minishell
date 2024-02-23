@@ -165,7 +165,7 @@ void	ft_unsetsub(char *inputi, t_env **head);
 char	*ft_strjoin(char const *s1, char const *s2);
 void    ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_exportsub(char *toexport, t_env **head);
-void    ft_echo(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info);
+void    ft_echo(t_exec *exec_cmd, t_env **head, t_info **info);
 void    ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
 int		ft_disinherit(char *buf, t_env **head, t_info **info);

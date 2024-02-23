@@ -5,19 +5,14 @@ No refactoring if not absolutely necessary! Go through checklist first.
 
 COMPILER WARNINGS
 
-execution/handle_exec_cmd.c:26:10: warning: incompatible pointer types passing 'char *[100]' to parameter of type 't_exec *' (aka 'struct s_exec *') [-Wincompatible-pointer-types]
-                        ft_cd(exec_cmd->argv, head, info);
-                              ^~~~~~~~~~~~~~
-execution/../minishell_tree.h:152:20: note: passing argument to parameter 'exec_cmd' here
-void    ft_cd(t_exec *exec_cmd, t_env **head, t_info **info);
-                      ^
-execution/handle_exec_cmd.c:39:13: warning: incompatible pointer types passing 'char *[100]' to parameter of type 't_exec *' (aka 'struct s_exec *') [-Wincompatible-pointer-types]
-                ft_export(exec_cmd->argv, head, info);
-                          ^~~~~~~~~~~~~~
-execution/../minishell_tree.h:161:27: note: passing argument to parameter 'exec_cmd' here
-void    ft_export(t_exec *exec_cmd, t_env **head, t_info **info);
 
-
+ENV: 
+	it now prints the full line from env,
+	it should only print the variable, not the label:
+	
+	minishell> echo "hello $USER, this is your home: $HOME"
+	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
+	expected: hello zhedlund, this is your home: /home/zhedlund
 
 CTRL+C:
 
@@ -64,10 +59,10 @@ CTRL-\:
 minishell> cat
 ^\Quit (core dumped)
 minishell> echo $?
-0                         <<< wrong, should be 131
+131            // FIXED exit code
 minishell> grep "hey"
-^\minishell> echo $?    <<< wrong, should be ^\Quit (core dumped) on new line
-0                       <<< wrong, should be 131
+^\minishell>          <<< wrong, should be ^\Quit (core dumped) on new line
+131          // FIXED exit code
 minishell>
 
 Bash:
@@ -112,18 +107,4 @@ CD: doesn't work
 minishell> cd utils/
 free(): invalid pointer
 zsh: IOT instruction (core dumped)  ./minishell
-
-	
-ENV: 
-	it now prints the full line from env,
-	it should only print the variable, not the label:
-	
-	minishell> echo "hello $USER, this is your home: $HOME"
-	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
-	expected: hello zhedlund, this is your home: /home/zhedlund
-
-
-- Set the $PATH to a multiple directory value (directory1:directory2)
-	and ensure that directories are checked in order from left to right.
-	- I have no idea how to test this?	
 

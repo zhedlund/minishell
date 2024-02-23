@@ -6,18 +6,17 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:02:34 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/23 17:32:11 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/23 20:02:00 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell_tree.h"
 
 /* buf: pointer to the buffer to store the input
-	nbuf: size of the buffer
-	return: 0 if input is not empty, -1 otherwise
-	note: the function is called by: main()
+ * buf_size: size of the buffer
+ * return: 0 if input is not empty, -1 otherwise
+ * note: the function is called by: main()
  */
-
 int get_cmd(char *buf, int buf_size, t_env **head, t_info **info)
 {
 	char	*input;
@@ -31,7 +30,7 @@ int get_cmd(char *buf, int buf_size, t_env **head, t_info **info)
 		if (g_signal == 4)
 			printf("\n");
 		g_signal = 0;
-		//(*info)->exitstatus = 131;
+		(*info)->exitstatus = 131;
 	}
 	if (isatty(0))
 		input = readline("minishell> ");

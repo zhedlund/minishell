@@ -17,68 +17,113 @@ execution/handle_exec_cmd.c:39:13: warning: incompatible pointer types passing '
 execution/../minishell_tree.h:161:27: note: passing argument to parameter 'exec_cmd' here
 void    ft_export(t_exec *exec_cmd, t_env **head, t_info **info);
 
-ZH: parsing/get_token.c:33:2: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
-        if (*current_pos == '\'') // if changed to else if, nothing works. will fix when splitting the function
 
 
+CTRL+C:
 
-- Set the $PATH to a multiple directory value (directory1:directory2)
-	and ensure that directories are checked in order from left to right.
-	- I have no idea how to test this?
+- ctrl-C in a prompt after you wrote some stuff should display a new line
+								with a new prompt.
+EXIT code should be 130, now it's 0
+
+minishell> echo hey^C
+minishell> echo $?
+0
+
+zhedlund@c4b10c2:~$ echo hey^C
+zhedlund@c4b10c2:~$ echo $?
+130
+
+- Try ctrl-C after running a blocking command like cat  without arguments or grep “something“:
 	
-- env expansion: 
+	
+minishell> cat
+^C
+minishell> echo $?
+0                        <<< wrong, should be 130
+minishell> grep "hey"
+^C
+minishell> echo $?
+127                     <<< wrong, should be 130
+minishell> 	
+
+Bash:			
+
+zhedlund@c4b10c2:~$ cat
+^C
+zhedlund@c4b10c2:~$ echo $?
+130
+zhedlund@c4b10c2:~$ grep "hey"
+^C
+zhedlund@c4b10c2:~$ echo $?
+130
+
+CTRL-\:
+
+- Try ctrl-\ after running a blocking command like cat without arguments or grep “something“:
+
+minishell> cat
+^\Quit (core dumped)
+minishell> echo $?
+0                         <<< wrong, should be 131
+minishell> grep "hey"
+^\minishell> echo $?    <<< wrong, should be ^\Quit (core dumped) on new line
+0                       <<< wrong, should be 131
+minishell>
+
+Bash:
+
+zhedlund@c4b10c2:~$ grep "hey"
+^\Quit (core dumped)
+zhedlund@c4b10c2:~$ echo $?
+131
+zhedlund@c4b10c2:~$ cat
+^\Quit (core dumped)
+zhedlund@c4b10c2:~$ echo $?
+
+
+EXPORT: doesn't work
+
+c4b10c2% ./minishell
+minishell> export this=that
+made it to export
+check[0]== this=that
+check[1]== (null)
+here!!
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+c4b10c2% ./minishell
+minishell> export "this=that"
+made it to export
+check[0]== this=that
+check[1]== (null)
+here!!
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+minishell> export MAIL=zhedlund@student.42berlin.de
+made it to export
+check[0]== MAIL=zhedlund@student.42berlin.de
+check[1]== (null)
+here!!
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+
+CD: doesn't work
+
+minishell> cd utils/
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+
+	
+ENV: 
 	it now prints the full line from env,
 	it should only print the variable, not the label:
 	
 	minishell> echo "hello $USER, this is your home: $HOME"
 	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
 	expected: hello zhedlund, this is your home: /home/zhedlund
-	
-- unset: 
-	- no error message
-	- exit code: 0, should be 1(?)
-	
-- cd:	"cd .." exits minishell	
 
-	wrong error msg + exit code:
-	minishell> cd nonexistingdir
-	chdir: No such file or directory
-	expected:
-	minishell: cd: nonexistingdir : No such file or directory
-	exit code should be 1? 
-	
-- echo
-	
-	minishell> echo -n -n -nnnn -nnnnm
-	-n -nnnn -nnnnmminishell>
-	should be: -nnnnmminishell>
 
-- Ctrl+D: if used to exit, gives exit code 130, should be 0
-	exit code 0 after blocking cmd (correct)
+- Set the $PATH to a multiple directory value (directory1:directory2)
+	and ensure that directories are checked in order from left to right.
+	- I have no idea how to test this?	
 
-- Ctrl+C: if used after blocking cmd like cat:
-	  exit code: 0, should be 130
-	  
-	  if used on empty line:
-	  exit code: 0, should be 130
-	  
-	  if used after writing something:
-		minishell> echo hey ^C
-		exit code 0, should be 130
-	  
-ZH - echo / quotes:
-	minishell> echo ""abc""  
-	output: abc""
-	expected: abc
-	error in ft_echo or in parser?
-	  
-FIXED ZH - 	unmatched quotes: minishell> echo "hello '''" / echo 'hello """'
-	unmatched quote
-	should be: hello ''' / hello """
-
-FIXED ZH - "" 	should print "Error", exit(127)
-	now prints nothing, exit 0
-	
-FIXED ZH - command with only space/tabs: 
-	- in bash commands works even with leading whitespace
-	we should check full line - FIXED

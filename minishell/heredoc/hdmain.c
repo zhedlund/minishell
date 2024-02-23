@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:05 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 11:52:58 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/23 16:31:01 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_hdcount(char **temp, t_info **info, char **inputs)
 	check = ft_split(inputs[0], '|');
 	while (temp[i] != NULL)
 	{
-		printf("string == %s\n", temp[i]);
+		//printf("string == %s\n", temp[i]);
 		if (ft_strncmp(temp[i], "<<", 2) == 0)
 		{
 			if (ft_strlen(temp[i]) >ft_strlen("<<"))

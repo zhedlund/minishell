@@ -1,0 +1,61 @@
+NORMINETTE CHECK
+
+
+FUNCTIONS W MORE THAN 25 LINES
+- start with the functions you wrote
+
+handle_exec_cmd - wtf happend here? XD it was like 10 lines before lol
+		tip: make a function that compare str+strlen that's called with 
+		a string literal, to make it shorter and readable, since strncmp + 
+		strlen is pretty much everywhere.
+
+get_env
+ft_disinherit
+ft_isitcat
+ft_unset
+ft_unsetsub
+ft_exit
+ft_valididentifier
+ft_export
+ft_gethome
+ft_backone
+ft_cd
+ft_echo
+ft_heredocarray
+ft_hdprocess
+ft_disinherit
+
+ZH -
+get_token
+handle_env_var 
+expand_env_in_str
+ft_execvp
+handle_pipe_cmd
+handle_redir_cmd
+get_cmd
+redir_cmd
+
+main
+
+FUNCTIONS WITH TOO MANY PARAMETERS
+- split functions first?
+
+handle_env_var
+parse_tokens - norminetted file, but too many parameters
+
+
++ change relevant //comments above functions into docstrings:
+
+/* str: ptr to ....
+ * returns: ....
+ */
+ 
++ remove debug statements
+
+
+DONE:
+has_unmatched_quotes
+expand_exit_status
+has_unmatched_quotes
+parse_cmd
+

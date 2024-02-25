@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd_find_path.c                                     :+:      :+:    :+:   */
+/*   cd_home.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:21:45 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 17:21:48 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:30:39 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 bool	ft_homeset(t_env **head)
 {

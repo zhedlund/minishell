@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:34:53 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/22 11:16:57 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:29 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 bool	has_unmatched_quotes(const char *input)
 {

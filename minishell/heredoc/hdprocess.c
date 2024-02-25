@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hdprocess.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 11:50:12 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/24 11:50:30 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:33:56 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 void	ft_hdctrld(char *input, t_info **info, char *hdarray)
 {

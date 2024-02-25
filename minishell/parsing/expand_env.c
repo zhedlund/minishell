@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:38:58 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 18:01:12 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:03 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 static int	handle_env_var(const char *str, size_t i, char *expanded, 
 							size_t *index, t_env **head)

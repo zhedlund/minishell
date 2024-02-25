@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   hdmain.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:05 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/20 10:18:07 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:33:38 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file)
 {

@@ -6,7 +6,7 @@
 #    By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 16:02:43 by jelliott          #+#    #+#              #
-#    Updated: 2024/02/22 21:10:09 by zhedlund         ###   ########.fr        #
+#    Updated: 2024/02/25 19:10:20 by zhedlund         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,6 +14,8 @@ NAME = minishell
 CC = cc
 CFLAGS = -Wall -Wextra -g
 LFLAGS = -lreadline
+LIBFTDIR = ./libft
+LIBFT = $(LIBFTDIR)/libft.a
 
 SRC = 	main.c \
 		builtins/ft_disinherit.c \
@@ -49,24 +51,27 @@ SRC = 	main.c \
 		signals/signal_handler.c \
 		utils/free.c \
 		utils/minishell_utils.c \
-		utils/ft_split.c \
-		utils/ft_strtrim.c \
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(OBJ) $(LFLAGS) -o $(NAME)
+$(LIBFT):
+		make -C $(LIBFTDIR)
+
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(OBJ) $(LFLAGS) -o $(NAME) -L$(LIBFTDIR) -lft
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJ)
+	make -C $(LIBFTDIR) clean
 
 fclean: clean
 	rm -f $(NAME)
+	make -C $(LIBFTDIR) fclean
 
 re: fclean all
 

@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:23:44 by jelliott          #+#    #+#             */
-/*   Updated: 2023/12/11 15:23:46 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:32:36 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 void	ft_list_start_end(t_env **head, t_env *temp, bool start)
 {

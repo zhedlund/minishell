@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:26:44 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 15:28:43 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:31:46 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 void	get_env(t_env **head)
 {

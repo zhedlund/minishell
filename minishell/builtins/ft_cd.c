@@ -6,10 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:07 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/19 21:34:53 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:31:14 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 void	ft_move(char *locate, t_env **head, t_info **info)
 {

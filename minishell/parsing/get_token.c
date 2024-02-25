@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:09:43 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 17:41:22 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:25 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 static void	skip_whitespace(char **current_pos, char *end_str)
 {

@@ -1,55 +1,68 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/02/25 21:29:29 by zhedlund          #+#    #+#             */
+/*   Updated: 2024/02/25 21:45:20 by zhedlund         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/wait.h>
-#include <stdbool.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stddef.h>
-#include <signal.h>
-#include <limits.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/ioctl.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <string.h>
+# include <sys/wait.h>
+# include <stdbool.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <stddef.h>
+# include <signal.h>
+# include <limits.h>
+# include <errno.h>
+# include <fcntl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/ioctl.h>
+# include "./libft/libft.h"
 
-#define MAXARGS 100
-#define WHITESPACE " \t\r\n\v"
-#define SYMBOLS "<|>"
+# define MAXARGS 100
+# define WHITESPACE " \t\r\n\v"
+# define SYMBOLS "<|>"
 
-extern int g_signal;
+extern int	g_signal;
 
 typedef struct s_cmd 
 {
-  int	type;
+	int	type;
 }		t_cmd;
 
 typedef struct s_exec
 {
-  int	type;
-  char	*argv[MAXARGS];
+	int		type;
+	char	*argv[MAXARGS];
 }		t_exec;
 
 typedef struct s_redir
 {
-  int	type;
-  t_cmd	*cmd;
-  char	*file;
-  int	mode;
-  int	fd; 
-  bool	first;
+	int		type;
+	t_cmd	*cmd;
+	char	*file;
+	int		mode;
+	int		fd; 
+	bool	first;
 }		t_redir;
 
 typedef struct s_pipe
 {
-  int	type;
-  t_cmd	*left;
-  t_cmd	*right;
+	int		type;
+	t_cmd	*left;
+	t_cmd	*right;
 }		t_pipe;
 
 typedef struct s_env
@@ -60,7 +73,7 @@ typedef struct s_env
 }	t_env;
 
 typedef struct s_info
-{	
+{
 	int		catcount;
 	int		hdcount;
 	bool	panic;
@@ -79,8 +92,8 @@ typedef struct s_info
 	bool	cmdnf;
 	bool	nospace;
 	int		runhere;
-	bool 	exiting;
-	char	*expanded; // not being used, but is sent to multifree
+	bool	exiting;
+	char	*expanded;
 }		t_info;
 
 /* constructors */
@@ -90,13 +103,18 @@ t_cmd	*pipe_cmd(t_cmd *left, t_cmd *right);
 
 /* parsing */
 t_cmd	*parse_cmd(char *str, t_info **info, t_env **head);
-t_cmd	*parse_redir(t_cmd *cmd, char **position_ptr, char *end_str, t_info **info);
-t_cmd	*parse_exec(char **position_ptr, char *end_str, t_info **info, t_env **head);
-t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info, t_env **head);
+t_cmd	*parse_redir(t_cmd *cmd, char **position_ptr, char *end_str,
+			t_info **info);
+t_cmd	*parse_exec(char **position_ptr, char *end_str, t_info **info,
+			t_env **head);
+t_cmd	*parse_line(char **position_ptr, char *end_str, t_info **info,
+			t_env **head);
 int		get_cmd(char *buf, int nbuf, t_env **head, t_info **info);
-int		get_token(char **input_ptr, char *end_str, char **token_start, char **token_end);
+int		get_token(char **input_ptr, char *end_str, char **token_start,
+			char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
-void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr, char *end_str, t_info **info, t_env **head);
+void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
+			char *end_str, t_info **info, t_env **head);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, t_env **head);
 char	*expand_env_in_str(const char *str, int exit_status, t_env **head);
@@ -107,16 +125,15 @@ bool	has_unmatched_quotes(const char *input);
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info);
-void	handle_child_process(t_cmd *cmd, int fd_pipe[], t_env **head, t_info **info);
-void	handle_parent_process(t_cmd *cmd, int fd_pipe[], t_env **head, t_info **info);
 void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info);
-int		fork_process(void);
 void	run_cmd(t_cmd *cmd, t_env **head, t_info **info);
 int		ft_execvp(t_exec *exec_cmd, char *const argv[]);
+int		fork_process(void);
 
 /* signals */
 int		ft_whichsignalfunction(char *buf, t_info **info);
-int		ft_whichsignalsub(char *signalarray, int ctrlc, char *buf, t_info **info);
+int		ft_whichsignalsub(char *signalarray, int ctrlc, char *buf,
+			t_info **info);
 void	ft_ctrlc(int sig);
 void	ft_ctrlc2(int signal);
 
@@ -142,7 +159,8 @@ bool	ft_isitapath(char *input);
 void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head);
 void	ft_is_there_a_path(char *temp, t_exec *exec_cmd);
 char	*ft_is_there_a_path_sub(char **path_options, char *hold);
-char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd, t_env **head);
+char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd,
+			t_env **head);
 bool	ft_checkdirectory(char	*tocheck);
 int		ft_choice(const char *file);
 char	*ft_shorten(const char	*file);
@@ -160,7 +178,8 @@ void	ft_cd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_printout(int a, char **cmdargs, bool newline);
 void	ft_echo(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd);
-void	ft_env(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
+void	ft_env(char *arraystring, t_env **head, t_info **info,
+			t_exec *exec_cmd);
 void	ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unset(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unset_end_free(t_exec *exec_cmd, t_env **head, t_info **info);
@@ -184,32 +203,11 @@ int		ft_disinherit(char *buf, t_env **head, t_info **info);
 /* utils */
 int		is_whitespace(const char *buf);
 bool	ft_identical(char *a, char *b);
-void	ft_multifree(char *arraystring, t_env **head, t_info **info, t_exec *exec_cmd);
+void	ft_multifree(char *arraystring, t_env **head, t_info **info,
+			t_exec *exec_cmd);
 void	error_max_size(void);
 void	ft_freelist(t_env **head);
 int		ft_inititalchar(char *arraystring, t_info **info);
-
-/*libft stuff, remove when linked libft*/
-char	*ft_strtok(char *str, const char *delim);
-size_t	ft_strlen(const char *str);
-int		ft_strcmp(const char *s1, const char *s2);
-char	*ft_strcat(char *dest, const char *src);
-char	*ft_strcpy(char *dest, const char *src);
-char	*ft_strdup(const char *s1);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-void	ft_putstr_fd(char *s, int fd);
-void	*ft_memset(void *s, int c, size_t n);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-char	*ft_strchr(const char *s, int c);
-void	*ft_calloc(size_t nmemb, size_t size);
-char	**ft_split(char const *s, char c);
-char	*ft_strtrim(char const *s1, char const *set);
 void	ft_freearray(char **tofree);
-int		ft_isalnum(int c);
-int		ft_atoi(const char *nptr);
-char	*ft_itoa(int n);
-int		ft_isspace(char c);
-void	ft_putendl_fd(char *s, int fd);
-char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif

@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cd_path_find.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 17:24:33 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 17:24:36 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:30:51 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 char	*ft_cdsub(char *arraystring)
 {

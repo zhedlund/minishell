@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hdprocess.c                                        :+:      :+:    :+:   */
+/*   hdprocess_prep.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:17 by jelliott          #+#    #+#             */
-/*   Updated: 2024/01/20 10:18:20 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:33:47 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
-#include <sys/ioctl.h>
+
+#include "../minishell.h"
 
 char	**ft_heredocarray(int heredoc, char **inputs)
 {

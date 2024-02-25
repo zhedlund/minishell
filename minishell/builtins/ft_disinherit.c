@@ -6,12 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 18:10:00 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 15:27:50 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:31:24 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
-
+#include "../minishell.h"
 
 /* decides whether to block or unblock non-builtin simple functions
  * on the basis of whether or not PATH has been unset, or reset properly
@@ -21,7 +20,6 @@
  * return: void
  * note: this function is called by: main()
 */
-
 void	ft_unsetpath(t_info **info, char **cmdarray)
 {
 	extern char	**environ;

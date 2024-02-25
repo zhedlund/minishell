@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 16:23:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/23 17:30:56 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:06 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 void	error_max_size(void)
 {

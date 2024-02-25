@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:05:32 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 22:03:16 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:39 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 /* 
 	cmd: pointer to the cmd struct

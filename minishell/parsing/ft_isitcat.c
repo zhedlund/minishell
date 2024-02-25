@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isitcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:21:41 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/21 15:22:07 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:11 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 void	ft_isitcat(char	*buf, t_info **info)
 {

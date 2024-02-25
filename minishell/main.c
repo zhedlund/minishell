@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 21:01:34 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:35:07 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_tree.h"
+#include "minishell.h"
 
 int main(void)
 {
@@ -56,7 +56,6 @@ int main(void)
 		info->hdcount = 0;
 		info->catcount = 0;
 		unlink("/tmp/hdtemp");
-		//anything else like this that needs resetting?
 	}
 	rl_clear_history();
 	free(info);

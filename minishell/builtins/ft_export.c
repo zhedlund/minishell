@@ -3,13 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:33 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 12:36:00 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:32:16 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 bool	ft_equalpresent(char *check)
 {

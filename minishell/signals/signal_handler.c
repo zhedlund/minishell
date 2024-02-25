@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
+/*   signal_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:15:28 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/21 15:15:44 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:49 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "../minishell_tree.h"
+
+#include "../minishell.h"
 
 int	g_signal = 0;
 

@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 17:27:44 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:34:42 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 /* 	position_ptr: ptr to ptr to first character of the string to be parsed
 	end_str: pointer to the last character of the string to be parsed

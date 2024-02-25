@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 14:59:55 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 18:06:02 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:32:45 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 char	*ft_is_there_a_path_sub(char **path_options, char *hold)
 {

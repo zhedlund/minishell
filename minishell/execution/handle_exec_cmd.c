@@ -6,16 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:55:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 18:03:40 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:33:07 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
-
-/* exec_cmd: pointer to the command struct
-	return: void
-	note: the function is called by: run_cmd()
- */
+#include "../minishell.h"
 
 void	ft_builtins_not_env(t_exec *exec_cmd, t_env **head, t_info **info)
 {
@@ -85,7 +80,10 @@ void	ft_exiting(t_exec *exec_cmd, t_env **head, t_info **info)
 	ft_execvp(exec_cmd, exec_cmd->argv);
 }
 
-/* if we are in the first child process then we want to exit*/
+/* exec_cmd: pointer to the command struct
+	return: void
+	note: the function is called by: run_cmd()
+ */
 void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	if (exec_cmd->argv[0] == NULL 

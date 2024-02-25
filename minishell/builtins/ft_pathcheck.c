@@ -6,11 +6,11 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:42:30 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/22 21:36:27 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 21:32:21 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell_tree.h"
+#include "../minishell.h"
 
 char	*ft_shorten(const char	*file)
 {

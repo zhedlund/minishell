@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 22:18:56 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 17:27:44 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
 	char	*token;
 
 	expand_env(&cmd->argv[args], head);
-	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus);
+	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
 	free(cmd->argv[args]);
 	cmd->argv[args] = token;
 }
@@ -63,8 +63,11 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
 				&token_start, &token_end);
 		if (token_type == 0)
 			break ;
-		exec_cmd->argv[args] = make_copy(token_start, token_end);
-		if (token_type != 'q')
+		if (token_type == '\'' || token_type == '\"')
+			exec_cmd->argv[args] = make_copy(token_start, token_end -1);
+		else
+			exec_cmd->argv[args] = make_copy(token_start, token_end);
+		if (token_type != '\'')
 			expand_env_var(exec_cmd, args, info, head);
 		args++;
 		if (args >= MAXARGS)

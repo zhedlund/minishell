@@ -1,0 +1,14 @@
+Makefile
+builtins
+execution
+file1
+here
+heredoc
+main.c
+main.o
+minishell
+minishell_tree.h
+parsing
+signals
+suppressions.supp
+utils

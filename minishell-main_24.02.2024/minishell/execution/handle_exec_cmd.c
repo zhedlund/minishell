@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:55:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/23 22:07:14 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 18:03:40 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_builtins_not_env(t_exec *exec_cmd, t_env **head, t_info **info)
 
 void	ft_command_not_found(t_exec *exec_cmd, t_env **head, t_info **info)
 {
-	write(2, "Minishell: ", ft_strlen("Minishell: "));
+	write(2, "minishell: ", ft_strlen("minishell: "));
 	write(2, exec_cmd->argv[0], ft_strlen(exec_cmd->argv[0]));
 	write(2, ": Command not found\n", ft_strlen(": Command not found\n"));
 	(*info)->exitstatus = 127;
@@ -69,24 +69,20 @@ void	ft_itisapath(t_exec *exec_cmd, t_env **head, t_info **info)
 		ft_env(exec_cmd->argv[0], head, info, exec_cmd);
 	}
 	exec_cmd->argv[0] = ft_pathcheck(exec_cmd->argv[0], info, exec_cmd, head);
-	ft_execvp(exec_cmd, exec_cmd->argv, head, info);
+	ft_execvp(exec_cmd, exec_cmd->argv);
 }
 
 void	ft_exiting(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	if (ft_strlen(exec_cmd->argv[0]) >= ft_strlen("./")
 		&& ft_strncmp(exec_cmd->argv[0], "./", ft_strlen("./")) == 0)
-		ft_execvp(exec_cmd, exec_cmd->argv, head, info);
+		ft_execvp(exec_cmd, exec_cmd->argv);
 	if (ft_isitapath(exec_cmd->argv[0]) == true)
 		ft_itisapath(exec_cmd, head, info);
 	ft_builtins_not_env(exec_cmd, head, info);
 	ft_is_it_a_command(exec_cmd, head, info);
 	ft_pathexperiment(exec_cmd, info, head);
-    //if ((*info)->shouldwork == true)
-		//printf("unset path");
-	//ft_command_not_found(exec_cmd, head, info);
-	//else 
-	ft_execvp(exec_cmd, exec_cmd->argv, head, info);
+	ft_execvp(exec_cmd, exec_cmd->argv);
 }
 
 /* if we are in the first child process then we want to exit*/

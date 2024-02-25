@@ -13,6 +13,7 @@ ENV:
 	minishell> echo "hello $USER, this is your home: $HOME"
 	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
 	expected: hello zhedlund, this is your home: /home/zhedlund
+	
 
 CTRL+C:
 

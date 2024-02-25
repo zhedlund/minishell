@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:09:43 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 22:24:59 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 15:54:19 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 		*token_start = current_pos;
 		while (current_pos < end_str && *current_pos != '\'')
 			current_pos++;
+		*token_end = current_pos;
+		if (*current_pos == '\'')
+			current_pos++;
 	}
 	else if (*current_pos == '\"')
 	{
@@ -45,6 +48,9 @@ int get_token(char **input_ptr, char *end_str, char **token_start, char **token_
 		*token_start = current_pos;
 		while (current_pos < end_str && *current_pos != '\"')
             current_pos++;
+		*token_end = current_pos;
+		if (*current_pos == '\"')
+			current_pos++;
 	}
     else if (*current_pos == 0)
         token_type = 0;

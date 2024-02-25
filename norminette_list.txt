@@ -1,6 +1,5 @@
 NORMINETTE CHECK
 
-
 FUNCTIONS W MORE THAN 25 LINES
 - start with the functions you wrote
 
@@ -26,10 +25,6 @@ ft_hdprocess
 ft_disinherit
 
 ZH -
-get_token
-handle_env_var 
-expand_env_in_str
-ft_execvp
 handle_pipe_cmd
 handle_redir_cmd
 get_cmd
@@ -37,11 +32,12 @@ redir_cmd
 
 main
 
-FUNCTIONS WITH TOO MANY PARAMETERS
-- split functions first?
+
+
+FUNCTIONS WITH TOO MANY PARAMETERS:
 
 handle_env_var
-parse_tokens - norminetted file, but too many parameters
+parse_tokens
 
 
 + change relevant //comments above functions into docstrings:
@@ -58,4 +54,6 @@ has_unmatched_quotes
 expand_exit_status
 has_unmatched_quotes
 parse_cmd
+get_token
+ft_execvp
 

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   prebuiltins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 14:59:55 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/24 14:59:57 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/02/25 18:06:02 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell_tree.h"
 
 char	*ft_is_there_a_path_sub(char **path_options, char *hold)
@@ -86,5 +87,5 @@ void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 	if (ft_identical(exec_cmd->argv[0], "env") == true)
 		ft_env(exec_cmd->argv[0], head, info, exec_cmd);
 	else if ((*info)->unsetpath == false)
-		ft_execvp(exec_cmd, exec_cmd->argv, head, info);
+		ft_execvp(exec_cmd, exec_cmd->argv);
 }

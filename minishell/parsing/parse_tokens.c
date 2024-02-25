@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 22:18:56 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 15:55:51 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
 				&token_start, &token_end);
 		if (token_type == 0)
 			break ;
-		exec_cmd->argv[args] = make_copy(token_start, token_end);
+		if (token_type == 'q' || token_type == 'd')
+			exec_cmd->argv[args] = make_copy(token_start, token_end -1);
+		else
+			exec_cmd->argv[args] = make_copy(token_start, token_end);
 		if (token_type != 'q')
 			expand_env_var(exec_cmd, args, info, head);
 		args++;

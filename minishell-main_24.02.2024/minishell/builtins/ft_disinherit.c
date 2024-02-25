@@ -6,40 +6,12 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 18:10:00 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 21:11:13 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 15:27:50 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell_tree.h"
 
-void	get_env(t_env **head)
-{
-	extern char	**environ;
-	int			i;
-	t_env		*temp;
-	t_env		*node;
-
-	i = 1;
-	node = (t_env *)malloc(sizeof(t_env));
-	if (!node)
-		perror("malloc");
-	node->field = ft_strdup(environ[0]);
-	*head = node;
-	while (environ[i] != NULL)
-	{
-		temp = (t_env *)malloc(sizeof(t_env));
-		if (!temp)
-			exit (1);
-		temp->field = ft_strdup(environ[i]);
-		node->next = temp;
-		temp->prev = node;
-		node = temp;
-		node->next = NULL;
-		i++;
-	}
-	temp = *head;
-	temp->prev = node->next;
-}
 
 /* decides whether to block or unblock non-builtin simple functions
  * on the basis of whether or not PATH has been unset, or reset properly

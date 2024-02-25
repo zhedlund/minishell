@@ -11,107 +11,100 @@
 /* ************************************************************************** */
 #include "../minishell_tree.h"
 
-//char	**ft_multiarguements()
+void	ft_list_start_end(t_env **head, t_env *temp, bool start)
+{
+	t_env	*passnext;
+	t_env	*passprev;
 
-//need a better way of doing this - initial function that
-//checks how many arguements - maybe don't even need that
-//then sends to subfunction that does what env does now
-//multiple times if multiple arguements
+	if (start == true)
+	{
+		*head = temp->next;
+		(*head)->prev = temp->prev;
+		free(temp->field);
+		free(temp);
+	}
+	else
+	{
+		passprev = temp->prev;
+		passnext = temp->next;
+		passprev->next = passnext;
+	}
+}
+
+void	ft_list_middle(t_env *temp)
+{
+	t_env	*passnext;
+	t_env	*passprev;
+
+	passprev = temp->prev;
+	passnext = temp->next;
+	passprev->next = passnext;
+	passnext->prev = passprev;
+}
 
 void	ft_unsetsub(char *inputi, t_env **head)
 {
 	t_env	*temp;
-	t_env	*passnext;
-	t_env	*passprev;
-	t_env	*test;
 
 	temp = *head;
-	test = *head;
-	//printf("in sub\n");
 	while (temp != NULL)
-        {
-        	//printf("looking for match\n");
-        	if (ft_strncmp(temp->field, inputi, strlen(inputi)) == 0)
-        		break ;
-        	temp = temp->next;
-        }
-        //printf("skipped loop\n");
-        if (temp == NULL)
-        	return ;
-        else if (temp->prev == NULL)
-        {
-        	*head = temp->next;
-        	(*head)->prev = temp->prev;
-        	free(temp->field);
-        	free(temp);
-        }
-        else if (temp->next == NULL)
-        {
-        	passprev = temp->prev;
-        	passnext = temp->next;
-        	passprev->next = passnext;
-        	//passnext->prev = passprev;
-        	free(temp->field);
-        	free(temp);
-        }
-        else
-        {
-        	passprev = temp->prev;
-        	passnext = temp->next;
-        	//if (ft_strncmp(temp->field, test->field, ft_strlen(temp->field)) == 0)
-        	//	*head = passnext;
-        	free(temp->field);
-        	free(temp);
-        	passprev->next = passnext;
-        	passnext->prev = passprev;
-        }
+	{
+		if (ft_strncmp(temp->field, inputi, strlen(inputi)) == 0)
+			break ;
+		temp = temp->next;
+	}
+	if (temp == NULL)
+		return ;
+	else if (temp->prev == NULL)
+		ft_list_start_end(head, temp, true);
+	else if (temp->next == NULL)
+		ft_list_start_end(head, temp, false);
+	else
+		ft_list_middle(temp);
+	free(temp->field);
+	free(temp);
 }
 
-void    ft_unset(char *arraystring, t_exec *exec_cmd, t_env **head, t_info **info)
+void	ft_unset_end_free(t_exec *exec_cmd, t_env **head, t_info **info)
+{
+	int	a;
+
+	a = 0;
+	if ((*info)->inchild == true)
+	{
+		ft_freelist(head);
+		free((*info));
+		exit(0);
+	}
+	else
+	{
+		(*info)->exitstatus = 0;
+		while (exec_cmd->argv[a] != NULL)
+		{
+			free(exec_cmd->argv[a]);
+			a++;
+		}
+		free(exec_cmd);
+	}
+}
+
+void	ft_unset(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	char	**input;
-	int	i;
-	
+	int		i;
+
 	input = exec_cmd->argv;
 	i = 1;
-	printf("in unset\n");
 	if (input[i] == NULL)
-    {
+	{
 		(*info)->exitstatus = 0;
 		if ((*info)->inchild == true)
 			exit(0);
 	}
 	while (input[i] != NULL)
 	{
-		printf("looping\n");
 		ft_unsetsub(input[i], head);
 		i++;
 	}
-    //ft_freearray(input);
-	//ft_env("env", head);
-	if ((*info)->inchild == true)
-	{
-		//printf("in child true\n");
-		ft_freelist(head);
-		free((*info));
-		free(arraystring);
-		exit(0);
-	}
-	else
-	{
-		(*info)->exitstatus = 0;
-		free(arraystring);
-		free((*info)->expanded);
-		free(exec_cmd);
-	}
-        //to finish this need environmental variable set up
-        //parser needs 'not a valid variable' i.e. doesn't conform to naming rules
-        //echo $variable_name
-        
-        //check if the entered text is an enviromental variable [perhaps there will be an array
-        //containing these? so can compare with this]
-        //if no
-        	//new line
-        //else
-        	//free the variable + information from whatever it has been saved in
+	ft_unset_end_free(exec_cmd, head, info);
 }

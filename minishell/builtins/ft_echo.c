@@ -6,10 +6,9 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:22:47 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 22:29:04 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/19 20:36:09 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell_tree.h"
 
 void	ft_printout(int a, char **cmdargs, bool newline)

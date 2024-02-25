@@ -44,7 +44,6 @@ void handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info)
             exit(2);
         }
         }
-    //(redir_cmd->type == 'h')
 	else
 	{
          if ((fd_redirect = open("/tmp/hdtemp", redir_cmd->mode)) < 0)

@@ -6,154 +6,23 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:07 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 21:13:35 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/19 21:34:53 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell_tree.h"
 
-char	*ft_cdsub(char *arraystring)
-{
-	char	*locate;
-	int	j;
-
-	j = 0;
-	while (arraystring[j] != '\0')
-		j++;
-	locate = (char *)malloc(sizeof(char) * (j + 1));
-	if (!locate)
-		return (NULL);
-	locate[j] = '\0';
-	j = 0;
-	while (arraystring[j] != '\0')
-	{
-		locate[j] = arraystring[j];
-		j++;
-	}
-	locate[j] = '\0';
-	return (locate);
-}
-
-bool	ft_homeset(t_env **head)
-{
-	t_env	*temp;
-
-	temp = *head;
-	while (temp != NULL)
-        {
-        	if (ft_strncmp(temp->field, "HOME", strlen("HOME")) == 0)
-        		return (true);
-        	temp = temp->next;
-        }
-		return (false);
-}
-
-char	*ft_gethome(t_env **head, char *locate)
-{
-	char	**homeinfo;
-	char	*address;
-	t_env	*temp;
-	
-	temp = (*head);
-	homeinfo = NULL;
-	address = NULL;
-	while (temp != NULL)
-        {
-        	if (ft_strncmp(temp->field, "HOME", strlen("HOME")) == 0)
-			{
-				homeinfo = ft_split(temp->field, '=');
-				if (homeinfo[1] != NULL)
-					address = ft_strdup(homeinfo[1]);
-				else
-				{
-					ft_freearray(homeinfo);
-					return (locate);
-				}
-				break ;
-			}
-        	temp = temp->next;
-        }
-		ft_freearray(homeinfo);
-		return (address);
-}
-
-char	*ft_home(char *locate, t_env **head, t_info **info)
-{
-	if (ft_homeset(head) == true)
-		locate = ft_gethome(head, locate);
-	else
-	{
-		write(2, "Minishell: cd: HOME not set\n", ft_strlen("Minishell: cd: HOME not set\n"));
-		(*info)->exitstatus = 1;
-		if ((*info)->inchild == true)
-			exit(1);
-	}
-	if (locate == NULL || *locate == '\0')
-	{
-		write(2, "Minishell: cd: HOME not set\n", ft_strlen("Minishell: cd: HOME not set\n"));
-		(*info)->exitstatus = 1;
-		if ((*info)->inchild == true)
-			exit(1);
-	}
-	return(locate);
-}
-
-char	*ft_path(char *former)
-{
-	char	store[PATH_MAX];
-	char	*path;
-	int	i;
-	char	*output;
-	
-	path = getcwd(store, sizeof(store));
-	i = ft_strlen(path);
-	output = (char *)malloc(sizeof(char) * (i + 1));
-	output[i] = '\0';
-	output = ft_strcpy(output, path);
-	if (!former)
-		return (output);
-	else
-		free(former);
-	return (output);
-}
-
-char	*ft_backone(char *locate)
-{
-	int	i;
-	int	j;
-	char	*output;
-	
-	i = 0;
-	j = 0;
-	output = NULL;
-	if (locate[i] == '/' && locate[1] == '\0')
-		return (locate);
-	while (locate[i] != '\0')
-		i++;
-	while (locate[i] != '/')
-		i--;
-	if (ft_strlen(locate) > 5)
-		i--;
-	output = malloc(sizeof(char) * (i + 2));
-	if (!output)
-		exit(1);
-	while (j <= i)
-	{
-		output[j] = locate[j];
-		j++;
-	}
-	output[j] = '\0';
-	free(locate);
-	return (output);
-}
-
-void	ft_move(char *locate, t_env **head)
+void	ft_move(char *locate, t_env **head, t_info **info)
 {
 	char	*newpwd;
-	
+
 	newpwd = NULL;
 	if (chdir(locate) != 0)
-		perror("chdir");
+	{
+		ft_putstr_fd("cd: no such file or directory: ", 2);
+		if (locate != NULL)
+			ft_putendl_fd(locate, 2);
+		((*info)->exitstatus = 1);
+	}
 	else
 	{
 		newpwd = ft_strjoin("PWD=", locate);
@@ -162,54 +31,69 @@ void	ft_move(char *locate, t_env **head)
 	}
 }
 
-void   ft_cd(t_exec *exec_cmd, t_env **head, t_info **info)
+void	ft_cd_finish(t_exec *exec_cmd, t_env **head, t_info **info)
 {
-	char	*locate;
-	char 	**cmdarray;
-	bool	move;
+	int	a;
 
-	cmdarray = exec_cmd->argv;
-	move = true;
-	locate = NULL;
-	locate = ft_path(locate);
-	if (cmdarray[1] == NULL || cmdarray[1][0] == '~')
-	{
-		free(locate);
-		locate = ft_home(locate, head, info);
-		if (ft_homeset(head) == false)
-			move = false;
-	}
-	else if (cmdarray[1][1] != '\0' 
-		&& ft_strncmp(cmdarray[1], "..", ft_strlen(cmdarray[1])) == 0)
-	{
-		//free(locate);
-		//locate = NULL;
-		locate = ft_backone(locate);
-	}
-	else if (cmdarray[1][0] != '.' 
-		&& cmdarray[1][1] != '\0')
-	{	
-		free(locate);
-		locate = ft_cdsub(cmdarray[1]);
-	}
-	if (move == true)
-		ft_move(locate, head);
-	if (locate)
-		free(locate);
+	a = 0;
 	if ((*info)->inchild == true)
 	{
 		ft_freelist(head);
 		free((*info));
-		ft_freearray(cmdarray);
 		free(exec_cmd);
 		exit(0);
 	}
 	else
 	{
 		(*info)->exitstatus = 0;
-		//ft_freearray(cmdarray);
-		//free((*info)->expanded);
-        free(exec_cmd->argv[0]);
-        free(exec_cmd);
+		while (exec_cmd->argv[a] != NULL)
+		{
+			free(exec_cmd->argv[a]);
+			a++;
+		}
+		free(exec_cmd);
 	}
+}
+
+void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
+{
+	char	*locate;
+	char	**cmdarray;
+	bool	move;
+
+	move = true;
+	locate = NULL;
+	cmdarray = exec_cmd->argv;
+	if (cmdarray[1] == NULL || cmdarray[1][0] == '~')
+	{
+		locate = ft_home(locate, head, info);
+		if (ft_homeset(head) == false)
+			move = false;
+	}
+	else if (ft_identical(cmdarray[1], "..") == true
+		&& ft_identical(cmdarray[1], "/") == false)
+		locate = ft_backone(locate);
+	else if (ft_identical(cmdarray[1], ".") == true)
+		locate = ft_cdsub(cmdarray[1]);
+	else
+		locate = cmdarray[1];
+	if (move == true)
+		ft_move(locate, head, info);
+	if (locate && ft_identical(locate, cmdarray[1]) == false)
+		free(locate);
+}
+
+void	ft_cd(t_exec *exec_cmd, t_env **head, t_info **info)
+{
+	char	**cmdarray;
+
+	cmdarray = exec_cmd->argv;
+	if (cmdarray[1] != NULL && cmdarray[2] != NULL)
+	{
+		(*info)->exitstatus = 1;
+		ft_putstr_fd("Minishell: cd: too many arguments\n", 2);
+	}
+	else
+		ft_cd_execute(exec_cmd, head, info);
+	ft_cd_finish(exec_cmd, head, info);
 }

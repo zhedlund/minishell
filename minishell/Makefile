@@ -18,10 +18,14 @@ LFLAGS = -lreadline
 SRC = 	main.c \
 		builtins/ft_disinherit.c \
 		builtins/ft_cd.c \
+		builtins/cd_home.c \
+		builtins/prebuiltins.c \
+		builtins/cd_path_find.c \
 		builtins/ft_echo.c \
 		builtins/ft_env.c \
 		builtins/ft_exit.c \
 		builtins/ft_export.c \
+		builtins/ft_export_syntax.c \
 		builtins/ft_pathcheck.c \
 		builtins/ft_pwd.c \
 		builtins/ft_unset.c \
@@ -33,6 +37,7 @@ SRC = 	main.c \
 		execution/run_cmd.c \
 		heredoc/hdmain.c \
 		heredoc/hdprocess.c \
+		heredoc/hdprocess_prep.c \
 		parsing/expand_env.c \
 		parsing/expand_exit_status.c \
 		parsing/ft_isitcat.c \

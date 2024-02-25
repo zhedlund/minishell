@@ -6,18 +6,39 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:24:21 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/22 21:30:32 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/19 21:10:23 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell_tree.h"
 
-void    ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd)
+void	ft_multifree(char *a, t_env **head, t_info **info, t_exec *exec_cmd)
+{
+	int			check;
+	char		**cmdargs;
+
+	cmdargs = exec_cmd->argv;
+	check = 1;
+	rl_clear_history();
+	if (a == NULL)
+		check = 0;
+	while (cmdargs[check] != NULL)
+	{
+		free (cmdargs[check]);
+		check++;
+	}
+	ft_freelist(head);
+	free((*info));
+	if (a != NULL)
+		free(a);
+	free(exec_cmd);
+}
+
+void	ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	char	store[PATH_MAX];
 	char	*path;
-	int	i;
-	
+	int		i;
+
 	i = 0;
 	path = getcwd(store, sizeof(store));
 	if (path)

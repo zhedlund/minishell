@@ -40,7 +40,29 @@ int	is_whitespace(const char *buf)
     return (1);
 }
 
+bool	ft_identical(char *a, char *b)
+{
+	if (ft_strlen(a) != ft_strlen(b))
+		return (false);
+	if (ft_strncmp(a, b, ft_strlen(a)) != 0)
+		return (false);
+	return (true);
+}
+
 /*libft functions, remove after linking libft*/
+void	ft_putendl_fd(char *s, int fd)
+{
+	int		i;
+	char	nl;
+
+	nl = '\n';
+	i = 0;
+	while (s[i])
+		i++;
+	write(fd, s, i);
+	write(fd, &nl, 1);
+}
+
 void	*ft_memset(void *s, int c, size_t n)
 {
 	char	*ps;

@@ -44,15 +44,18 @@ int main(void)
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)
+				{
+					info->exiting = true;
 					run_cmd(parse_cmd(buf, &info, &head), &head, &info);
+				}
 				wait(&status);
 				if (WIFEXITED(status))
 					info->exitstatus = WEXITSTATUS(status);
 				status = info->exitstatus;
 		}
-		unlink("/tmp/hdtemp");
 		info->hdcount = 0;
 		info->catcount = 0;
+		unlink("/tmp/hdtemp");
 		//anything else like this that needs resetting?
 	}
 	rl_clear_history();

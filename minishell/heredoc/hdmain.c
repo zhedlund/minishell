@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   hdmain.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:05 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 16:31:01 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/01/20 10:18:07 by jelliott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell_tree.h"
 
 bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file)
 {
-	bool	valid;
-	int	a;
+	bool		valid;
+	int			a;
 
 	valid = false;
 	a = 0;
-	(*info)->nospace = direct; // error: no member named 'nospace' in 'struct s_info', had to comment out to compile
+	(*info)->nospace = direct;
 	if (direct == true)
 		a = 2;
 	if ((heredoc == 0 && file == NULL) || file[a] == '<' || file[a] == '>' 
@@ -31,26 +30,33 @@ bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file)
 	return (false);
 }
 
+void	ft_hdcountsub(char **temp, int i, t_info **info)
+{
+	int			hd;
+
+	hd = (*info)->hdcount;
+	if (ft_strlen(temp[i]) > ft_strlen("<<"))
+		(*info)->panic = ft_validheredoc(info, true, hd, temp[i]);
+	else
+		(*info)->panic = ft_validheredoc(info, false, hd, temp[i + 1]);
+	(*info)->hdcount++;
+	hd = (*info)->hdcount;
+	if (i != 0 && (*info)->hdcount >= 1 
+		&& ft_strncmp(temp[i - 1], "cat", 2) == 0)
+		(*info)->catcount++;
+}
+
 void	ft_hdcount(char **temp, t_info **info, char **inputs)
 {
-	int	i;
-	char	**check;
-	
+	int			i;
+	char		**check;
+
 	i = 0;
 	check = ft_split(inputs[0], '|');
 	while (temp[i] != NULL)
 	{
-		//printf("string == %s\n", temp[i]);
 		if (ft_strncmp(temp[i], "<<", 2) == 0)
-		{
-			if (ft_strlen(temp[i]) >ft_strlen("<<"))
-				(*info)->panic = ft_validheredoc(info, true, (*info)->hdcount, temp[i]);
-			else
-				(*info)->panic = ft_validheredoc(info, false, (*info)->hdcount, temp[i + 1]);
-			(*info)->hdcount++;
-			if (i != 0 && (*info)->hdcount >= 1 && ft_strncmp(temp[i - 1], "cat", 2) == 0)
-				(*info)->catcount++;
-		}
+			ft_hdcountsub(temp, i, info);
 		i++;
 	}
 	if ((*info)->panic == true)
@@ -61,7 +67,7 @@ void	ft_hdcount(char **temp, t_info **info, char **inputs)
 		(*info)->catcount = 0;
 	}
 	if ((*info)->hdcount == 1 && check[1] == NULL 
-			&& (*info)->catcount == 0)
+		&& (*info)->catcount == 0)
 		(*info)->panic = true;
 	ft_freearray(check);
 }
@@ -85,16 +91,16 @@ char	**ft_checkheredoc(char **inputs, t_info **info)
 		return (inputs);
 	}
 	(*info)->first = true;
-	heredocarray = ft_heredocarray((*info)->hdcount, temp); //extract from inputs
-	ft_heredocexecute(heredocarray, info); //while loop - see notes
-	ft_freearray(temp);//is this helping?
-	return(NULL);
+	heredocarray = ft_heredocarray((*info)->hdcount, temp);
+	ft_heredocexecute(heredocarray, info);
+	ft_freearray(temp);
+	return (NULL);
 }
 
 void	ft_heredocmain(char *cmdline, t_info **info)
 {
 	int	i;
-	
+
 	i = 0;
 	(*info)->hdcount = 0;
 	(*info)->inputs = ft_split(cmdline, ';');

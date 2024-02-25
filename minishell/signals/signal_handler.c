@@ -9,10 +9,9 @@
 /*   Updated: 2024/02/21 15:15:44 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell_tree.h"
 
-int g_signal = 0;
+int	g_signal = 0;
 
 void	ft_ctrlc2(int signal)
 {
@@ -25,23 +24,22 @@ void	ft_ctrlc2(int signal)
 	if (signal == SIGQUIT)
 	{
 		(void)signal;
-        	write(1, "\033[K", 3); //"\033[K" is an escape code that means clear the line (it prevents a ghostly ^\ from appearing)
-			g_signal = 2;
-    }
+		write(1, "\033[K", 3);
+		g_signal = 2;
+	}
 }
 
 /* Ctrl-c handle */
-
 void	ft_ctrlc(int sig)
 {
 	if (sig == SIGQUIT)
 	{
 		(void)sig;
-    	rl_on_new_line();
-        rl_redisplay();
-        write(1, "\033[K", 3); //"\033[K" is an escape code that means clear the line (it prevents a ghostly ^\ from appearing)
+		rl_on_new_line();
 		rl_redisplay();
-    }
+		write(1, "\033[K", 3);
+		rl_redisplay();
+	}
 	if (sig == SIGINT)
 	{
 		(void)sig;
@@ -66,9 +64,9 @@ int	ft_whichsignalsub(char *signalarray, int ctrlc, char *buf, t_info **info)
 int	ft_whichsignalfunction(char *buf, t_info **info)
 {
 	char	**signalarray;
-	int	i;
-	int	ctrlc;
-	
+	int		i;
+	int		ctrlc;
+
 	i = 0;
 	ctrlc = 0;
 	signalarray = ft_split(buf, ' ');
@@ -76,7 +74,7 @@ int	ft_whichsignalfunction(char *buf, t_info **info)
 	while (signalarray[i] != NULL)
 	{
 		if (ft_strncmp(signalarray[i], "cat", ft_strlen(buf)) == 0)
-			ctrlc = 2; //include the options here and return true or false
+			ctrlc = 2;
 		else if (ft_strncmp(signalarray[i], "wc", ft_strlen(buf)) == 0)
 		{
 			ctrlc = 2;

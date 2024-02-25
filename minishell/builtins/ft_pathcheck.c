@@ -12,12 +12,12 @@
 
 #include "../minishell_tree.h"
 
-static char	*ft_shorten(const char	*file)
+char	*ft_shorten(const char	*file)
 {
-	int	count;
+	int		count;
 	char	*new;
-	int	length1;
-	int	length2;
+	int		length1;
+	int		length2;
 
 	count = 0;
 	while (file[count] != '\0')
@@ -39,9 +39,9 @@ static char	*ft_shorten(const char	*file)
 	return (new);
 }
 
-static int	ft_choice(const char *file)
+int	ft_choice(const char *file)
 {
-	int	count;
+	int		count;
 	bool	path;
 
 	count = 0;
@@ -53,25 +53,18 @@ static int	ft_choice(const char *file)
 		count++;
 	}
 	if (path == false)
-	{
-		//not the right condition, but checking if a real command, maybe use full_path?
-		//if (access(file, X_OK) != 0)
-		//	(*info)->cmdnf = true;
-		//else
-		//	(*info)->cmdnf = false;
 		return (0);
-	}
 	if (access(file, X_OK) != 0)
-		return(1);
-	return(2);
+		return (1);
+	return (2);
 }
 
-static bool	ft_checkdirectory(char	*tocheck)
+bool	ft_checkdirectory(char	*tocheck)
 {
-	struct stat	fileStat;
+	struct stat	filestat;
 
-	if (stat(tocheck, &fileStat) == 0 
-		&& S_ISDIR(fileStat.st_mode))
+	if (stat(tocheck, &filestat) == 0 
+		&& S_ISDIR(filestat.st_mode))
 	{
 		printf("minishell: is a directory: %s\n", tocheck);
 		return (true);
@@ -79,26 +72,42 @@ static bool	ft_checkdirectory(char	*tocheck)
 	return (false);
 }
 
-char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd, t_env **head)
+char	*ft_pathcheck(char *pp, t_info **info, t_exec *exec_cmd, t_env **head)
 {
 	int	choice;
-	
-	if (ft_checkdirectory(potentialpath) == true)
+
+	if (ft_checkdirectory(pp) == true)
 		return (NULL);
-	choice = ft_choice(potentialpath);
-	if (ft_strlen(potentialpath) >= ft_strlen("./") &&
-		ft_strncmp(potentialpath, "./", ft_strlen("./")) == 0)
+	choice = ft_choice(pp);
+	if (ft_strlen(pp) >= ft_strlen("./") 
+		&& ft_strncmp(pp, "./", ft_strlen("./")) == 0)
 		(*info)->aout = true;
 	if (choice == 0 || (*info)->aout == true)
-		return (potentialpath);
+		return (pp);
 	else if (choice == 1)
 	{
-		write(2, "Minishell: ", ft_strlen("Minishell: "));
-		write(2, potentialpath, ft_strlen(potentialpath));
-		write(2, ": No such file or directory\n", ft_strlen(": No such file or directory\n"));
+		ft_putstr_fd("Minishell: ", 2);
+		ft_putstr_fd(pp, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
 		ft_multifree(NULL, head, info, exec_cmd);
 		exit (127);
 	}
 	(*info)->stillexecute = true;
-	return (ft_shorten(potentialpath));
+	return (ft_shorten(pp));
+}
+
+bool	ft_isitapath(char *input)
+{
+	int	a;
+
+	a = 0;
+	if (input == NULL)
+		return (false);
+	while (input[a] != '\0')
+	{
+		if (input[a] == '/')
+			return (true);
+		a++;
+	}
+	return (false);
 }

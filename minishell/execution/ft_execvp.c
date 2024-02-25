@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/23 20:14:21 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/25 18:02:01 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static char	*find_cmd_path(const char *file)
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
+int	ft_execvp(t_exec *exec_cmd, char *const argv[])
 {
 	char		*full_path;
 	const char	*file;
@@ -87,7 +87,6 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 	if (full_path == NULL)
 	{
 		perror(file);
-		ft_multifree(NULL, head, info, exec_cmd);
 		exit (127);
 	}
 	else if (access(full_path, X_OK) != 0)

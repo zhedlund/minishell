@@ -1,0 +1,13 @@
+Makefile
+builtins
+execution
+heredoc
+libft
+main.c
+main.o
+minishell
+minishell.h
+parsing
+signals
+test1
+utils

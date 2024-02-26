@@ -1,0 +1,123 @@
+EVAL CHECK 
+
+No refactoring if not absolutely necessary! Go through checklist first.
+
+
+COMPILER WARNINGS
+
+
+ENV: 
+	it now prints the full line from env,
+	it should only print the variable, not the label:
+	
+	minishell> echo "hello $USER, this is your home: $HOME"
+	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
+	expected: hello zhedlund, this is your home: /home/zhedlund
+
+////
+remaining issues
+
+grep "this" - an issue
+
+minishell> echo hey^C
+minishell> echo $?
+0
+
+//////////////////////////////////
+Seems fixed
+
+1.CD: doesn't work
+
+minishell> cd utils/
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+
+2. EXPORT: doesn't work
+
+c4b10c2% ./minishell
+minishell> export this=that
+made it to export
+check[0]== this=that
+check[1]== (null)
+here!!
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+c4b10c2% ./minishell
+minishell> export "this=that"
+made it to export
+check[0]== this=that
+check[1]== (null)
+here!!
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+minishell> export MAIL=zhedlund@student.42berlin.de
+made it to export
+check[0]== MAIL=zhedlund@student.42berlin.de
+check[1]== (null)
+here!!
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+
+3. CTRL-\:
+
+- wc -l - new problem - any other options like this
+
+notes	- (if the only arguement is) cat, wc, grep with one arguement - Quit coredumped - exit code - 131
+	- (if the initial arguement is) cat, wc, grep with one arguement (and further arguements are differnt e.g. builtins) - ^\ - exit code 0
+	- if with redirections different
+	- ...
+	
+cat, wc, grep ft, wc -l (any others?)
+any combination of the above
+
+any of the above with simple commands - solo cat should also be updated
+
+and of the above with redirections
+
+CTRL-\:
+
+- Try ctrl-\ after running a blocking command like cat without arguments or grep “something“:
+
+minishell> cat
+^\Quit (core dumped)
+minishell> echo $?
+131            // FIXED exit code
+minishell> grep "hey"
+^\minishell>          <<< wrong, should be ^\Quit (core dumped) on new line
+131          // FIXED exit code
+minishell>
+
+Bash:
+
+zhedlund@c4b10c2:~$ grep "hey"
+^\Quit (core dumped)
+zhedlund@c4b10c2:~$ echo $?
+131
+zhedlund@c4b10c2:~$ cat
+^\Quit (core dumped)
+zhedlund@c4b10c2:~$ echo $?
+
+4. - Try ctrl-C after running a blocking command like cat  without arguments or grep “something“:
+	
+	
+minishell> cat
+^C
+minishell> echo $?
+0                        <<< wrong, should be 130
+minishell> grep "hey"
+^C
+minishell> echo $?
+127                     <<< wrong, should be 130
+minishell> 	
+
+Bash:			
+
+zhedlund@c4b10c2:~$ cat
+^C
+zhedlund@c4b10c2:~$ echo $?
+130
+zhedlund@c4b10c2:~$ grep "hey"
+^C
+zhedlund@c4b10c2:~$ echo $?
+130
+

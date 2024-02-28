@@ -1,0 +1,34 @@
+NORMINETTE CHECK
+
+
+FUNCTIONS WITH TOO MANY PARAMETERS:
+- handle_env_var
+- parse_tokens
+
+FUNCTIONS W MORE THAN 25 LINES:
+- main
+- prebuiltins
+- ft_isitcat
+- main
+
+NORMINETTE ERRORS:
+- ft_env
+- handle_exec_cmd
+
+
++ char *expanded; in info struct is not being used, but is sent to multifree as an argument?
+
++ remove debug statements
+
+If time:
++ remove unused functions
++ make helper functions static and remove from headerfile
++ change relevant comments above functions into docstrings:
+
+//this is a comment 
+
+Docstring:
+
+/* str: ptr to ....
+ * returns: ....
+ */

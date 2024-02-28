@@ -1,0 +1,96 @@
+EVAL CHECK 
+
+Eval sheet: https://enzodeg40.github.io/42-Evals/Cursus/Minishell/
+
+Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ4p6k7JfE5g3jICNA/edit?pli=1#gid=0
+
+No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
+
+
+1. Input empty string doesn't give error (wrong):
+
+minishell> ""
+minishell> echo $?
+0
+
+Should print "Error" (printed from perror in ft_execvp, so probably from changes in handle_exec_cmd)
+It was like this before (correct):
+
+minishell> ""
+Error
+minishell> echo $?
+12
+
+2. CD
+valgrind error with cd command:
+
+ERROR SUMMARY: 63 errors from 17 contexts (suppressed: 0 from 0
+
+sometimes it gives this error, but not every time
+minishell> cd parsing/
+free(): invalid pointer
+zsh: IOT instruction (core dumped)  ./minishell
+
+3. ENV: 
+	minishell> echo "hello $USER, this is your home: $HOME"
+	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
+	expected: hello zhedlund, this is your home: /home/zhedlund
+
+4. SIGNALS:
+Enter on empty line gives segfault
+
+5. CTRL+C:
+
+- ctrl-C in a prompt after you wrote some stuff should display a new line with a new prompt.
+
+minishell> echo hey^C
+minishell> echo $?
+0                   <<< wrong, should be 130
+
+bash for reference:
+zhedlund@c4b10c2:~$ echo hey^C
+zhedlund@c4b10c2:~$ echo $?
+130
+
+6.
+- Try ctrl-C after running a blocking command like cat  without arguments or grep “something“:
+	
+minishell> cat
+^C
+minishell> echo $?
+131                    <<< wrong, should be 130
+minishell> grep "something"
+^C
+minishell> echo $?
+131                    <<< wrong, should be 130
+
+Bash for reference:			
+
+zhedlund@c4b10c2:~$ cat
+^C
+zhedlund@c4b10c2:~$ echo $?
+130
+zhedlund@c4b10c2:~$ grep "something"
+^C
+zhedlund@c4b10c2:~$ echo $?
+130
+
+
+7. CTRL-\:
+
+- Try ctrl-\ after running a blocking command like cat without arguments or grep “something“:
+
+works with cat and wc, not grep.
+
+minishell> grep "something"
+^\minishell>          <<< wrong, should be ^\Quit (core dumped) on new line
+
+
+8. FUNCTIONS WITH TOO MANY PARAMETERS:
+
+handle_env_var
+parse_tokens
+
+
+
+

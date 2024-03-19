@@ -22,9 +22,6 @@ minishell> ""
 just gives new line, error code 0
 should print "Error", error code 127
 
-minishell>  press enter on empty line
-zsh: segmentation fault (core dumped)  ./minishell
-
 minishell> .
 free(): double free detected in tcache 2
 
@@ -48,7 +45,7 @@ zsh: IOT instruction (core dumped)  ./minishell
 4. SIGNALS:
 Enter on empty line gives segfault
 
-minishell>  press enter on empty line
+minishell> 
 zsh: segmentation fault (core dumped)  ./minishell
 
 5. CTRL+C:

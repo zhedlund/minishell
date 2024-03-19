@@ -7,6 +7,8 @@ Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ
 No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
 
 
+ADD WERROR FLAG IN MAKEFILE
+
 1. Input empty string doesn't give error (wrong):
 
 minishell> ""
@@ -17,9 +19,15 @@ Should print "Error" (printed from perror in ft_execvp, so probably from changes
 It was like this before (correct):
 
 minishell> ""
-Error
-minishell> echo $?
-12
+just gives new line, error code 0
+should print "Error", error code 127
+
+minishell>  press enter on empty line
+zsh: segmentation fault (core dumped)  ./minishell
+
+minishell> .
+free(): double free detected in tcache 2
+
 
 2. CD
 valgrind error with cd command:
@@ -31,6 +39,7 @@ minishell> cd parsing/
 free(): invalid pointer
 zsh: IOT instruction (core dumped)  ./minishell
 
+
 3. ENV: 
 	minishell> echo "hello $USER, this is your home: $HOME"
 	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
@@ -38,6 +47,9 @@ zsh: IOT instruction (core dumped)  ./minishell
 
 4. SIGNALS:
 Enter on empty line gives segfault
+
+minishell>  press enter on empty line
+zsh: segmentation fault (core dumped)  ./minishell
 
 5. CTRL+C:
 
@@ -91,6 +103,8 @@ minishell> grep "something"
 handle_env_var
 parse_tokens
 
+9. EXPORT
 
+export without args prints the list, but segfaults
 
 

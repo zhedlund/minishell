@@ -26,7 +26,7 @@ minishell> .
 free(): double free detected in tcache 2
 
 
-2. CD
+FIXED. 2. CD
 valgrind error with cd command:
 
 ERROR SUMMARY: 63 errors from 17 contexts (suppressed: 0 from 0
@@ -37,12 +37,12 @@ free(): invalid pointer
 zsh: IOT instruction (core dumped)  ./minishell
 
 
-3. ENV: 
+FIXED. 3. ENV: 
 	minishell> echo "hello $USER, this is your home: $HOME"
 	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
 	expected: hello zhedlund, this is your home: /home/zhedlund
 
-4. SIGNALS:
+FIXED. 4. SIGNALS:
 Enter on empty line gives segfault
 
 minishell> 
@@ -61,7 +61,7 @@ zhedlund@c4b10c2:~$ echo hey^C
 zhedlund@c4b10c2:~$ echo $?
 130
 
-6.
+FIXED. 6.
 - Try ctrl-C after running a blocking command like cat  without arguments or grep “something“:
 	
 minishell> cat

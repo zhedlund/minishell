@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:02:34 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/20 20:55:06 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/20 22:36:16 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	get_cmd(char *buf, int buf_size, t_env **head, t_info **info)
 		free(*info);
 		exit(0);
 	}
+	if (input[0] == '\0')
+        return (get_cmd(buf, buf_size, head, info));
 	ft_strlcpy(buf, input, buf_size);
 	buf[buf_size - 1] = '\0';
 	add_history(buf);

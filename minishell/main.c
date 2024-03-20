@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/03/19 20:19:25 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/20 20:57:22 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,12 @@ int main(void)
 		}
 		if (is_whitespace(buf))
 			continue ;
+		if (ft_strncmp(buf, "\"\"", 2) == 0)
+		{ 
+        	printf("Error: Command '' not found.\n");
+			info->exitstatus = 127;
+			continue;
+		}
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)

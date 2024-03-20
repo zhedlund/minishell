@@ -7,9 +7,9 @@ Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ
 No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
 
 
-ADD WERROR FLAG IN MAKEFILE
+FIXED. 0. ADD WERROR FLAG IN MAKEFILE
 
-1. Input empty string doesn't give error (wrong):
+FIXED. 1. Input empty string doesn't give error (wrong):
 
 minishell> ""
 minishell> echo $?

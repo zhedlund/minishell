@@ -100,7 +100,7 @@ minishell> grep "something"
 handle_env_var
 parse_tokens
 
-9. EXPORT
+FIXED. 9. EXPORT
 
 export without args prints the list, but segfaults
 

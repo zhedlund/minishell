@@ -12,45 +12,13 @@
 
 #include "minishell.h"
 
-void	ft_doublequotes(char **cmdargs, int a)
-{
-	bool	space;
-	int	i;
-	char	dqq;
-	char	*dq;
-
-	dqq = 34;
-	dq = &dqq;
-	i = 0;
-	space = false;
-	cmdargs[a] = ft_strtrim(cmdargs[a], dq);
-	if (cmdargs[a][0] == '\0')
-		i = 1;
-	while (cmdargs[a][i] != '\0')
-	{
-		while (cmdargs[a][i] == 34)
-			i++;
-		if (cmdargs[a][i] == '\0')
-			i++;
-		printf("%c", cmdargs[a][i]);
-		i++;
-	}
-}
-
-
 int main(void)
 {
 	static char	buf[1024];
 	int			status;
 	t_info		*info;
 	t_env		*head;
-	char	*bufex;
-	char	dqq;
-	char	*dq;
-	const char	*test;
 
-	dqq = 34;
-	dq = &dqq;
 	status = 0;
 	head = NULL;
 	info = ft_calloc(sizeof(t_info), 1);
@@ -61,7 +29,9 @@ int main(void)
 		ft_isitcat(buf, &info);
 		signal(SIGQUIT, ft_ctrlc); 
 		signal(SIGINT, ft_ctrlc);
-		bufex = ft_strdup(buf);
+		//handle_signals(&info);
+		//g_signal = 0;
+		//call_handle signals here and if ctrlc, check input and appropriate exit code
 		if (ft_whichsignalfunction(buf, &info) == 2)
 		{
 			signal(SIGINT, ft_ctrlc2);
@@ -72,19 +42,20 @@ int main(void)
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue;
 		}
-		printf("newbuf == %s\n", buf);
-		test = ft_countquotes(bufex, buf);
+		if (ft_strncmp(buf, "\"\"", 2) == 0)
+        {
+            printf("Error: Command '' not found.\n");
+            info->exitstatus = 127;
+            continue;
+        }
 		if (is_whitespace(buf))
 			continue ;
-		printf("test == %s\n", test);
-		//bufex = ft_strtrim(buf, dq);
-		//printf("bufex == %s\n", bufex);
-		if (ft_disinherit((char *)test, &head, &info) == false && info->panic == false)
+		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)
 				{
 					info->exiting = true;
-					run_cmd(parse_cmd((char *)test, &info, &head), &head, &info);
+					run_cmd(parse_cmd(buf, &info, &head), &head, &info);
 				}
 				wait(&status);
 				if (WIFEXITED(status))

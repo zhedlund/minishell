@@ -6,10 +6,9 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:07 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:31:14 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/19 21:34:53 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 void	ft_move(char *locate, t_env **head, t_info **info)
@@ -80,7 +79,8 @@ void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
 		locate = cmdarray[1];
 	if (move == true)
 		ft_move(locate, head, info);
-	if (locate && ft_identical(locate, cmdarray[1]) == false)
+	else if (locate && cmdarray[0] != NULL 
+		&& ft_identical(locate, cmdarray[1]) == false)
 		free(locate);
 }
 

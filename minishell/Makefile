@@ -28,6 +28,7 @@ SRC = 	main.c \
 		builtins/ft_exit.c \
 		builtins/ft_export.c \
 		builtins/ft_export_syntax.c \
+		builtins/export_utils.c \
 		builtins/ft_pathcheck.c \
 		builtins/ft_pwd.c \
 		builtins/ft_unset.c \
@@ -43,13 +44,13 @@ SRC = 	main.c \
 		parsing/expand_env.c \
 		parsing/expand_exit_status.c \
 		parsing/ft_isitcat.c \
+		parsing/find_relative_env.c \
 		parsing/get_cmd.c \
 		parsing/get_token.c \
 		parsing/has_unmatched_quotes.c \
 		parsing/parse_cmd.c \
 		parsing/parse_tokens.c \
 		signals/signal_handler.c \
-		signals/whichsignal.c \
 		utils/free.c \
 		utils/minishell_utils.c \
 

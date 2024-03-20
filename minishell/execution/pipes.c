@@ -72,14 +72,14 @@ void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info)
 		exit(1);
 	}
 	pid = fork_process();
-	if ((*info)->solocat == false  && (*info)->firstcommandmix == false)
+	if ((*info)->solocat == false)
 	{
 		if (pid == 0)
 			pipe_cmd_left((t_cmd *)pipe_cmd, fd_pipe, head, info);
 		else
 			pipe_cmd_right((t_cmd *)pipe_cmd, fd_pipe, head, info);
 	}
-	if ((*info)->solocat == true || (*info)->firstcommandmix == true)
+	if ((*info)->solocat == true)
 	{
 		if (pid == 0)
 			pipe_cmd_right((t_cmd *)pipe_cmd, fd_pipe, head, info);

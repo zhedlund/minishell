@@ -74,7 +74,7 @@ static char	*find_cmd_path(const char *file)
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int	ft_execvp(t_exec *exec_cmd, char *const argv[])
+int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 {
 	char		*full_path;
 	const char	*file;
@@ -87,6 +87,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[])
 	if (full_path == NULL)
 	{
 		perror(file);
+		ft_multifree(head, info, exec_cmd);
 		exit (127);
 	}
 	else if (access(full_path, X_OK) != 0)

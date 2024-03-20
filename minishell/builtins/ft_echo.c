@@ -6,16 +6,15 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:22:47 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:31:39 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/19 20:36:09 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 void	ft_echoend(t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	(*info)->exitstatus = 0;
-	ft_multifree(NULL, head, info, exec_cmd);
+	ft_multifree(head, info, exec_cmd);
 	exit(0);
 }
 
@@ -37,48 +36,18 @@ int	ft_minusnfun(char *cmdarg)
 	return (true);
 }
 
-/*
-void	ft_doublequotes(char **cmdargs, int a)
-{
-	bool	space;
-	int	i;
-	char	dqq;
-	char	*dq;
-
-	dqq = 34;
-	dq = &dqq;
-	i = 0;
-	space = false;
-	cmdargs[a] = ft_strtrim(cmdargs[a], dq);
-	if (cmdargs[a][0] == '\0')
-		i = 1;
-	while (cmdargs[a][i] != '\0')
-	{
-		while (cmdargs[a][i] == 34)
-			i++;
-		if (cmdargs[a][i] == '\0')
-			i++;
-		printf("%c", cmdargs[a][i]);
-		i++;
-	}
-}
-*/
-
 void	ft_printout(int a, char **cmdargs, bool newline)
 {
 	if (ft_minusnfun(cmdargs[a]) == true)
-			a++;
-	//if	(cmdargs[a][0] == '\0' || cmdargs[a][0] == 34)
-	//{
-		//a++;
-		//ft_doublequotes(cmdargs, a);
-		//a++;
-		//if (cmdargs[a][0] == '\0' || cmdargs[a][0] == 34)
-		//	ft_doublequotes(cmdargs, a);
-	//	a++;
-	//}
+		a++;
 	while (cmdargs[a] != NULL)
 	{
+		if (cmdargs[a][0] == 92 
+			&& cmdargs[a][1] == '\0')
+		{
+			a++;
+			printf(" ");
+		}
 		printf("%s", cmdargs[a]);
 		if (cmdargs[a + 1] != NULL)
 			printf(" ");
@@ -93,7 +62,7 @@ void	ft_minusndecide(t_env **head, t_info **info, t_exec *exec_cmd)
 	int		a;
 	bool	newline;
 	char	**cmdargs;
-	
+
 	cmdargs = exec_cmd->argv;
 	a = 1;
 	newline = false;
@@ -107,10 +76,10 @@ void	ft_minusndecide(t_env **head, t_info **info, t_exec *exec_cmd)
 			ft_echoend(head, info, exec_cmd);
 		}
 	}
-		if (cmdargs[2] == NULL)
-			newline = true;
-		if (newline == false)
-			a -= 1;
+	if (cmdargs[2] == NULL)
+		newline = true;
+	if (newline == false)
+		a -= 1;
 	ft_printout(a, cmdargs, newline);
 	ft_echoend(head, info, exec_cmd);
 }
@@ -119,13 +88,29 @@ void	ft_echo(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	bool	newline;
 	char	**cmdargs;
-	int	a;
+	int		a;
+	int		n;
 
+	n = 1;
 	a = 1;
 	newline = true;
 	cmdargs = exec_cmd->argv;
+	if (cmdargs[1] == NULL)
+	{
+		printf("\n");
+		exit(0);
+	}
 	if (cmdargs[1][0] == '-' && cmdargs[1][1] == 'n')
-		ft_minusndecide(head, info, exec_cmd);
+	{
+		while (cmdargs[1][n] != '\0')
+		{
+			if (cmdargs[1][n] != 'n')
+				break ;
+			n++;
+		}
+		if (cmdargs[1][n] == '\0')
+			ft_minusndecide(head, info, exec_cmd);
+	}
 	ft_printout(a, cmdargs, newline);
 	ft_echoend(head, info, exec_cmd);
 }

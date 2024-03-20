@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:38:58 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:34:03 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/27 17:49:19 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ char	*expand_env_in_str(const char *str, int exit_status, t_env **head)
 	size_t	i;
 
 	index = 0;
-	expanded = (char *)malloc(sizeof(PATH_MAX));
+	expanded = (char *)malloc(PATH_MAX);
 	if (!expanded)
 		return (NULL);
 	i = 0;
@@ -99,9 +99,9 @@ char	**expand_env(char **argv, t_env **head)
 		{
 			name = argv[i] + 1;
 			value = ft_findvalue(name, head);
-			//free(argv[i]);
+			free(argv[i]);
 			if (value != NULL)
-				argv[i] = value;
+				argv[i] = ft_strdup(value);
 		}
 		i++;
 	}

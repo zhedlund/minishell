@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_syntax.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:52:41 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:32:08 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/23 12:52:44 by jelliott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info)

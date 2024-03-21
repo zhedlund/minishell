@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:33:01 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:27:38 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 {
 	char		*full_path;
 	const char	*file;
-
+	
 	file = exec_cmd->argv[0];
 	if ((file[0] == '.' && file[1] == '/') || (file[0] == '/'))
 		full_path = ft_strdup(file);
@@ -97,7 +97,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 	}
 	else if (execve(full_path, argv, NULL) == -1)
 	{
-		ft_putstr_fd("Error\n", 2);
+		perror(full_path);
 		exit(127);
 	}
 	free(full_path);

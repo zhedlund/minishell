@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:42:30 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/22 21:36:27 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:50:22 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ bool	ft_checkdirectory(char	*tocheck)
 	if (stat(tocheck, &filestat) == 0 
 		&& S_ISDIR(filestat.st_mode))
 	{
-		printf("minishell: is a directory: %s\n", tocheck);
+		printf("minishell: Is a directory: %s\n", tocheck);
 		return (true);
 	}
 	return (false);

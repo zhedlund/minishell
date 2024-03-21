@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:35:07 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 12:46:34 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,19 @@ int main(void)
 			signal(SIGINT, ft_ctrlc2);
 			signal(SIGQUIT, ft_ctrlc2);
 		}
+		/*if (is_whitespace(buf))
+			continue ;
 		if (has_unmatched_quotes(buf))
 		{
 			ft_putstr_fd("unmatched quote\n", 2);
 			continue;
 		}
-		if (ft_strncmp(buf, "\"\"", 2) == 0)
-        {
-            printf("Error: Command '' not found.\n");
+		if (ft_identical(buf, "\"\""))
+		{
+			printf("Command '' not found\n");
             info->exitstatus = 127;
             continue;
-        }
-		if (is_whitespace(buf))
-			continue ;
+		}*/
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)

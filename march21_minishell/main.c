@@ -12,6 +12,25 @@
 
 #include "minishell.h"
 
+void	ft_mainsignals(t_info **info, char *buf)
+{
+	signal(SIGQUIT, ft_ctrlc); 
+	signal(SIGINT, ft_ctrlc);
+	if (ft_whichsignalfunction(buf, info) == 2)
+	{
+		signal(SIGINT, ft_ctrlc2);
+		signal(SIGQUIT, ft_ctrlc2);
+	}
+	if (g_signal == 130 || g_signal == 6)
+	{
+		if (g_signal == 130)
+			(*info)->exitstatus = 130;
+		if (g_signal == 6)
+			(*info)->exitstatus = 0;
+		g_signal = 0;		
+	}
+}
+
 int main(void)
 {
 	static char	buf[1024];
@@ -27,16 +46,7 @@ int main(void)
 	{
 		ft_heredocmain(buf, &info);
 		ft_isitcat(buf, &info);
-		signal(SIGQUIT, ft_ctrlc); 
-		signal(SIGINT, ft_ctrlc);
-		//handle_signals(&info);
-		//g_signal = 0;
-		//call_handle signals here and if ctrlc, check input and appropriate exit code
-		if (ft_whichsignalfunction(buf, &info) == 2)
-		{
-			signal(SIGINT, ft_ctrlc2);
-			signal(SIGQUIT, ft_ctrlc2);
-		}
+		ft_mainsignals(&info, buf);
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)

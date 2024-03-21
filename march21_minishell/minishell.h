@@ -94,6 +94,8 @@ typedef struct s_info
 	int		runhere;
 	bool	exiting;
 	char	*expanded;
+	bool	pipe;
+	bool	firstcommandmix;
 }		t_info;
 
 /* constructors */
@@ -137,6 +139,11 @@ int		ft_whichsignalsub(char *signalarray, int ctrlc, char *buf,
 void	ft_ctrlc(int sig);
 void	ft_ctrlc2(int signal);
 void	handle_signals(t_info **info);
+int		ft_firstcommandcheck(char *buf, t_info **info);
+bool	ft_greponearguement(char *totest);
+char	**ft_arraytrim(char **totrim);
+void	ft_othercommands(char **firstcommandarray, t_info **info);
+
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);

@@ -51,6 +51,7 @@ SRC = 	main.c \
 		parsing/parse_cmd.c \
 		parsing/parse_tokens.c \
 		signals/signal_handler.c \
+		signals/whichsignal.c \
 		utils/free.c \
 		utils/minishell_utils.c \
 

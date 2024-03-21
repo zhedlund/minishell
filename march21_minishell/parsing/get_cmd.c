@@ -16,12 +16,20 @@ void	handle_signals(t_info **info)
 {
 	if (g_signal != 0)
 	{
-		if (g_signal == 2 && (*info)->allcat == true)
-			ft_putstr_fd("Quit (core dumped)\n", 2);
-		if (g_signal == 4) //another condition here
-			ft_putstr_fd("\n", 1);
+		if (g_signal == 2 && (*info)->firstcommandmix == false)
+			printf("Quit (core dumped)\n");
+		else if (g_signal == 4)
+			printf("\n");
+		if (g_signal == 2 
+			&& (*info)->firstcommandmix == false)
+			(*info)->exitstatus = 131;
+		else if (g_signal != 2 && (*info)->firstcommandmix == false)
+			(*info)->exitstatus = 130;
+		else if (g_signal == 130)
+			(*info)->exitstatus = 130;
+		else
+			(*info)->exitstatus = 0;
 		g_signal = 0;
-		(*info)->exitstatus = 130;
 	}
 }
 
@@ -81,7 +89,8 @@ int	get_cmd(char *buf, int buf_size, t_env **head, t_info **info)
 
 	signal(SIGINT, ft_ctrlc);
 	signal(SIGQUIT, ft_ctrlc);
-	handle_signals(info);
+	if (g_signal != 0)
+		handle_signals(info);
 	if (isatty(0))
 		input = readline("minishell> ");
 	else

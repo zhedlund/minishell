@@ -12,8 +12,6 @@
 
 werror flag
 
-add signal condition for ctrl-c!!!
-
 export fixed, how?
 - Added this condition to ft_disinherit before the unsetpath call:
 if (ft_identical("export", cmdarray[0]) == true
@@ -42,3 +40,6 @@ function added
 newline when press enter (in get_cmd):
 if (input[0] == '\0')
     return (get_cmd(buf, buf_size, head, info));
+
+various signal problems
+- all signal functions updated and some new ones added

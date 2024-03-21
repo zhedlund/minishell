@@ -50,7 +50,7 @@ FIXED. 4. SIGNALS:
 	minishell> 
 	zsh: segmentation fault (core dumped)  ./minishell
 
-5. CTRL+C:
+FIXED	5. CTRL+C:
 
 	"ctrl-C in a prompt after you wrote some stuff should display a new line with a new prompt."
 
@@ -87,7 +87,7 @@ FIXED. 6.
 	130
 
 
-7. CTRL-\:
+FIXED	7. CTRL-\:
 
 	"Try ctrl-\ after running a blocking command like cat without arguments or grep “something“":
 

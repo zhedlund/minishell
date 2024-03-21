@@ -37,19 +37,6 @@ int main(void)
 			signal(SIGINT, ft_ctrlc2);
 			signal(SIGQUIT, ft_ctrlc2);
 		}
-		/*if (is_whitespace(buf))
-			continue ;
-		if (has_unmatched_quotes(buf))
-		{
-			ft_putstr_fd("unmatched quote\n", 2);
-			continue;
-		}
-		if (ft_identical(buf, "\"\""))
-		{
-			printf("Command '' not found\n");
-            info->exitstatus = 127;
-            continue;
-		}*/
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
 				if (fork_process() == 0)

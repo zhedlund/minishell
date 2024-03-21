@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:34:42 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 23:14:25 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,7 @@ int	check_next_token(char **position_ptr, char *end_str, char *token_char)
 	return (*current_pos && ft_strchr(token_char, *current_pos));
 }
 
-static void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
-{
-	char	*token;
 
-	expand_env(&cmd->argv[args], head);
-	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
-	free(cmd->argv[args]);
-	cmd->argv[args] = token;
-}
 
 /* Function to handle token parsing and filling arguments
 	exec_cmd: pointer to the cmd struct
@@ -47,8 +39,7 @@ static void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
 	end_str: ptr to the last character of the string to be parsed
 	note: the function is called by: parse_exec()
 */
-
-void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
+/*void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
 						char *end_str, t_info **info, t_env **head)
 {
 	int		args;
@@ -76,3 +67,4 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
 	}
 	exec_cmd->argv[args] = NULL;
 }
+*/

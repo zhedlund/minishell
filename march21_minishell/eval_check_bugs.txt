@@ -100,7 +100,7 @@ FIXED	7. CTRL-\:
 8. FUNCTIONS WITH TOO MANY PARAMETERS:
 
 	handle_env_var
-	parse_tokens
+	FIXED. parse_tokens, but still too long
 
 FIXED. 9. EXPORT
 

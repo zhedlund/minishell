@@ -6,7 +6,7 @@
 #    By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 16:02:43 by jelliott          #+#    #+#              #
-#    Updated: 2024/03/21 21:13:54 by zhedlund         ###   ########.fr        #
+#    Updated: 2024/03/21 21:17:21 by zhedlund         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,6 +52,7 @@ SRC = main.c \
     parsing/parse_cmd.c \
     parsing/parse_tokens.c \
     signals/signal_handler.c \
+	signals/whichsignal.c \
     utils/free.c \
     utils/minishell_utils.c
 

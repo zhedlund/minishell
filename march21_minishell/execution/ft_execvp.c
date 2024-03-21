@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/21 13:27:38 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 21:33:07 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 	{
 		perror(file);
 		ft_multifree(head, info, exec_cmd);
-		exit (127);
+		exit(127);
 	}
 	else if (access(full_path, X_OK) != 0)
 	{

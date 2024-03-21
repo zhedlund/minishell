@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:05:32 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:34:39 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 23:50:25 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,27 @@ t_cmd	*parse_exec(char **position_ptr, char *end_str, t_info **info,
 	cmd = exec_cmd();
 	exec_command = (t_exec *)cmd;
 	cmd = parse_redir(cmd, position_ptr, end_str, info);
-	parse_tokens(exec_command, &cmd, position_ptr, end_str, info, head);
+	(*info)->args = 0;
+	while (!check_next_token(position_ptr, end_str, "|"))
+	{
+		(*info)->token_type = get_token(position_ptr, end_str,
+				&(*info)->token_start, &(*info)->token_end);
+		if ((*info)->token_type == 0)
+			break ;
+		if ((*info)->token_type == '\'' || (*info)->token_type == '\"')
+			exec_command->argv[(*info)->args] = make_copy((*info)->token_start,
+					(*info)->token_end -1);
+		else
+			exec_command->argv[(*info)->args] = make_copy((*info)->token_start,
+					(*info)->token_end);
+		if ((*info)->token_type != '\'')
+			expand_env_var(exec_command, (*info)->args, info, head);
+		(*info)->args++;
+		if ((*info)->args >= MAXARGS)
+			ft_putstr_fd("Too many arguments\n", 2);
+		cmd = parse_redir(cmd, position_ptr, end_str, info);
+	}
+	exec_command->argv[(*info)->args] = NULL;
 	return (cmd);
 }
 

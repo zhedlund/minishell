@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 21:29:29 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/21 13:47:40 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 22:35:27 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,10 @@ typedef struct s_info
 	char	*expanded;
 	bool	pipe;
 	bool	firstcommandmix;
+	int		args;
+	char	*token_start;
+	char	*token_end;
+	int		token_type;
 }		t_info;
 
 /* constructors */
@@ -124,6 +128,7 @@ void	expand_exit_status(int exit_status, char *expanded, size_t *index);
 void	ft_isitcat(char	*buf, t_info **info);
 bool	has_unmatched_quotes(const char *input);
 char	*ft_findvalue(char *name, t_env **head);
+void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head);
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info);

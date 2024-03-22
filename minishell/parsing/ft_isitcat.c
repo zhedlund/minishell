@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:21:41 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:34:11 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:42:30 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 void	ft_isitcat(char	*buf, t_info **info)
 {
-	char **cmdarray;
-	int	count;
-	int	catcount;
-	int	catplus;
+	char	**cmdarray;
+	int		count;
+	int		catcount;
+	int		catplus;
 
 	count = 0;
 	catcount = 0;
@@ -29,8 +29,8 @@ void	ft_isitcat(char	*buf, t_info **info)
 		if (ft_strlen("cat") == ft_strlen(cmdarray[count]) 
 			&& ft_strncmp("cat", cmdarray[count], ft_strlen("cat")) == 0)
 			catcount++;
-		if (ft_strlen(cmdarray[count]) > ft_strlen("cat") &&
-			ft_strncmp("cat ", cmdarray[count], ft_strlen("cat ")) == 0)
+		if (ft_strlen(cmdarray[count]) > ft_strlen("cat")
+			&& ft_strncmp("cat ", cmdarray[count], ft_strlen("cat ")) == 0)
 			catplus++;
 		count++;
 	}
@@ -38,7 +38,7 @@ void	ft_isitcat(char	*buf, t_info **info)
 		(*info)->solocat = false;
 	if (catcount == 0)
 		(*info)->solocat = false;
-	if (catcount !=0 && catplus == 0)
+	if (catcount != 0 && catplus == 0)
 		(*info)->solocat = true;
 	if (ft_strlen(cmdarray[0]) != ft_strlen("cat") 
 		|| ft_strncmp("cat", cmdarray[0], ft_strlen("cat")) != 0)

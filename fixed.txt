@@ -1,0 +1,45 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    fixed.txt                                          :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/03/20 19:50:41 by jelliott          #+#    #+#              #
+#    Updated: 2024/03/20 19:50:43 by jelliott         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+werror flag
+
+export fixed, how?
+- Added this condition to ft_disinherit before the unsetpath call:
+if (ft_identical("export", cmdarray[0]) == true
+	&& cmdarray[1] == NULL)
+{
+	ft_freearray(cmdarray);
+	return (true);
+}
+
+"" - now acts as expected: (in main):
+if (ft_strncmp(buf, "\"\"", 2) == 0)
+{
+    printf("Error: Command '' not found.\n");
+    info->exitstatus = 127;
+    continue;
+}
+
+cd now works, added condition to this free in ft_cd_execute:
+else if (locate && cmdarray[0] != NULL 
+	&& ft_identical(locate, cmdarray[1]) == false)
+	free(locate);
+	
+'=' in expansion gone:
+function added
+
+newline when press enter (in get_cmd):
+if (input[0] == '\0')
+    return (get_cmd(buf, buf_size, head, info));
+
+various signal problems
+- all signal functions updated and some new ones added

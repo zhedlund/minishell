@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:33:01 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:46:37 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,20 @@ static char	*find_cmd_path(const char *file)
 	return (NULL);
 }
 
+static void	free_exit(const char *file, t_env **head, t_info **info,
+						t_exec *exec_cmd)
+{
+	perror(file);
+	ft_multifree(head, info, exec_cmd);
+	exit(127);
+}
+
 /* Function to execute a simple command w options. Works similar to execvp
  * @param file: command to execute
  * @param argv: arguments for the command
  * @return: 0 if successful, -1 if not
  */
-int	ft_execvp(t_exec *exec_cmd, char *const argv[])
+int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 {
 	char		*full_path;
 	const char	*file;
@@ -85,10 +93,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[])
 	else
 		full_path = find_cmd_path(file);
 	if (full_path == NULL)
-	{
-		perror(file);
-		exit (127);
-	}
+		free_exit(file, head, info, exec_cmd);
 	else if (access(full_path, X_OK) != 0)
 	{
 		perror(full_path);
@@ -96,7 +101,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[])
 	}
 	else if (execve(full_path, argv, NULL) == -1)
 	{
-		ft_putstr_fd("Error\n", 2);
+		perror(full_path);
 		exit(127);
 	}
 	free(full_path);

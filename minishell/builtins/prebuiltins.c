@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   prebuiltins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 14:59:55 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:32:45 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/24 14:59:57 by jelliott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 char	*ft_is_there_a_path_sub(char **path_options, char *hold)
@@ -30,7 +29,7 @@ char	*ft_is_there_a_path_sub(char **path_options, char *hold)
 	return (path_options[a]);
 }
 
-void	ft_is_there_a_path(char *temp, t_exec *exec_cmd)
+bool	ft_path_search_sub(char *temp, t_exec *exec_cmd)
 {
 	char	*hold;
 	char	*path_options_prep;
@@ -38,20 +37,29 @@ void	ft_is_there_a_path(char *temp, t_exec *exec_cmd)
 	int		a;
 	bool	path;
 
-	path = true;
 	a = 0;
+	path = true;
+	hold = ft_strjoin("/", exec_cmd->argv[0]);
+	path_options_prep = ft_strtrim(temp, "PATH=");
+	path_options = ft_split(path_options_prep, ':');
+	hold = ft_is_there_a_path_sub(path_options, hold);
+	if (path_options[a + 1] == NULL)
+		path = false;
+	free(path_options_prep);
+	free(hold);
+	ft_freearray(path_options);
+	return (path);
+}
+
+void	ft_is_there_a_path(char *temp, t_exec *exec_cmd)
+{
+	bool	path;
+
+	path = true;
 	if (exec_cmd->argv[0] != NULL 
 		&& exec_cmd->argv[0][0] != '\0')
 	{
-		hold = ft_strjoin("/", exec_cmd->argv[0]);
-		path_options_prep = ft_strtrim(temp, "PATH=");
-		path_options = ft_split(path_options_prep, ':');
-		hold = ft_is_there_a_path_sub(path_options, hold);
-		if (path_options[a + 1] == NULL)
-			path = false;
-		free(path_options_prep);
-		free(hold);
-		ft_freearray(path_options);
+		ft_path_search_sub(temp, exec_cmd);
 		if (path == false)
 		{
 			ft_putstr_fd("The command could not be located, ", 2);
@@ -76,8 +84,8 @@ void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 	if (temp == NULL)
 	{
 		ft_putstr_fd("Minishell: ", 2); 
-		ft_putendl_fd(exec_cmd->argv[0], 2);
-		ft_putstr_fd("No such file or directory\n", 2);
+		ft_putstr_fd(exec_cmd->argv[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
 		(*info)->unsetpath = true;
 		if ((*info)->exiting == true)
 			exit (127);
@@ -85,7 +93,7 @@ void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 	else
 		ft_is_there_a_path(ft_strdup(temp->field), exec_cmd);
 	if (ft_identical(exec_cmd->argv[0], "env") == true)
-		ft_env(exec_cmd->argv[0], head, info, exec_cmd);
+		ft_env(head, info, exec_cmd);
 	else if ((*info)->unsetpath == false)
-		ft_execvp(exec_cmd, exec_cmd->argv);
+		ft_execvp(exec_cmd, exec_cmd->argv, head, info);
 }

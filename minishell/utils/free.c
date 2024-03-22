@@ -45,25 +45,3 @@ void	ft_freelist(t_env **head)
 	nodenext = NULL;
 	(*head) = NULL;
 }
-
-void	ft_multifree(char *a, t_env **head, t_info **info, t_exec *exec_cmd)
-{
-	int			check;
-	char		**cmdargs;
-
-	cmdargs = exec_cmd->argv;
-	check = 1;
-	rl_clear_history();
-	if (a == NULL)
-		check = 0;
-	while (cmdargs[check] != NULL)
-	{
-		free (cmdargs[check]);
-		check++;
-	}
-	ft_freelist(head);
-	free((*info));
-	if (a != NULL)
-		free(a);
-	free(exec_cmd);
-}

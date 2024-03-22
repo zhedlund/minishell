@@ -1,15 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   signal_handler.c                                   :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:15:28 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:34:49 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:15:44 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 int	g_signal = 0;
@@ -40,6 +39,7 @@ void	ft_ctrlc(int sig)
 		rl_redisplay();
 		write(1, "\033[K", 3);
 		rl_redisplay();
+		g_signal = 6;
 	}
 	if (sig == SIGINT)
 	{
@@ -48,17 +48,43 @@ void	ft_ctrlc(int sig)
 		write(STDERR_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
+		g_signal = 130;
 	}
 }
 
-int	ft_whichsignalsub(char *signalarray, int ctrlc, char *buf, t_info **info)
+//more investigations //one is it grep with one arguement?
+	//2 what are the other commands?
+
+int	ft_igreatertwo(char **signalarray, t_info **info, int ctrlc)
 {
-	if (signalarray[0] != '|')
-		(*info)->allcat = false;
-	if (ft_strncmp(signalarray, "grep", ft_strlen(buf)) == 0)
-		return (2);
-	if (ft_strncmp(signalarray, "yes", ft_strlen(buf)) == 0)
-		return (2);
+	if (ft_firstcommandcheck(signalarray[0], info) == 2
+		&& (signalarray[1][0] == '>'
+		|| signalarray[2][0] == '>'))
+		ctrlc = 2;
+	return (ctrlc);
+}
+
+int	ft_nopipe(char **signalarray, int i, t_info **info, char *buf)
+{
+	int	ctrlc;
+
+	ctrlc = 0;
+	if ((*info)->pipe == false && i == 1)
+	{
+		if (ft_identical(signalarray[0], "cat") == true
+			|| ft_identical(signalarray[0], "wc") == true)
+			ctrlc = 2;
+	}
+	if ((*info)->pipe == false && i == 2)
+	{
+		if (ft_identical(signalarray[0], "wc") == true
+			&& ft_identical(signalarray[1], "-l") == true)
+			ctrlc = 2;
+		if (ft_greponearguement(buf) == true)
+			ctrlc = 2;
+	}
+	if ((*info)->pipe == false && i > 2)
+		ctrlc = ft_igreatertwo(signalarray, info, ctrlc);
 	return (ctrlc);
 }
 
@@ -71,21 +97,22 @@ int	ft_whichsignalfunction(char *buf, t_info **info)
 	i = 0;
 	ctrlc = 0;
 	signalarray = ft_split(buf, ' ');
-	(*info)->allcat = true;
 	while (signalarray[i] != NULL)
 	{
-		if (ft_strncmp(signalarray[i], "cat", ft_strlen(buf)) == 0)
-			ctrlc = 2;
-		else if (ft_strncmp(signalarray[i], "wc", ft_strlen(buf)) == 0)
-		{
-			ctrlc = 2;
-			if (signalarray[i + 1] != NULL && signalarray[i + 1][0] != '|')
-				i++;
-		}
-		else
-			ctrlc = ft_whichsignalsub(signalarray[i], ctrlc, buf, info);
+		if (signalarray[i][0] == '|')
+			(*info)->pipe = true;
 		i++;
 	}
+	if ((*info)->pipe == true)
+	{
+		ctrlc = ft_firstcommandcheck(buf, info);
+		ft_freearray(signalarray);
+		return (ctrlc);
+	}
+	else
+		ctrlc = ft_nopipe(signalarray, i, info, buf);
+	if (ctrlc == 2)
+		(*info)->firstcommandmix = false; 
 	ft_freearray(signalarray);
 	return (ctrlc);
 }

@@ -6,13 +6,32 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/03/20 22:30:59 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:35:37 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int main(void)
+void	ft_mainsignals(t_info **info, char *buf)
+{
+	signal(SIGQUIT, ft_ctrlc); 
+	signal(SIGINT, ft_ctrlc);
+	if (ft_whichsignalfunction(buf, info) == 2)
+	{
+		signal(SIGINT, ft_ctrlc2);
+		signal(SIGQUIT, ft_ctrlc2);
+	}
+	if (g_signal == 130 || g_signal == 6)
+	{
+		if (g_signal == 130)
+			(*info)->exitstatus = 130;
+		if (g_signal == 6)
+			(*info)->exitstatus = 0;
+		g_signal = 0;
+	}
+}
+
+int	main(void)
 {
 	static char	buf[1024];
 	int			status;
@@ -27,37 +46,18 @@ int main(void)
 	{
 		ft_heredocmain(buf, &info);
 		ft_isitcat(buf, &info);
-		signal(SIGQUIT, ft_ctrlc); 
-		signal(SIGINT, ft_ctrlc);
-		if (ft_whichsignalfunction(buf, &info) == 2)
-		{
-			signal(SIGINT, ft_ctrlc2);
-			signal(SIGQUIT, ft_ctrlc2);
-		}
-		if (has_unmatched_quotes(buf))
-		{
-			ft_putstr_fd("unmatched quote\n", 2);
-			continue;
-		}
-		if (is_whitespace(buf))
-			continue ;
-		if (ft_strncmp(buf, "\"\"", 2) == 0)
-		{ 
-        	printf("Error: Command '' not found.\n");
-			info->exitstatus = 127;
-			continue;
-		}
+		ft_mainsignals(&info, buf);
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)
 		{
-				if (fork_process() == 0)
-				{
-					info->exiting = true;
-					run_cmd(parse_cmd(buf, &info, &head), &head, &info);
-				}
-				wait(&status);
-				if (WIFEXITED(status))
-					info->exitstatus = WEXITSTATUS(status);
-				status = info->exitstatus;
+			if (fork_process() == 0)
+			{
+				info->exiting = true;
+				run_cmd(parse_cmd(buf, &info, &head), &head, &info);
+			}
+			wait(&status);
+			if (WIFEXITED(status))
+				info->exitstatus = WEXITSTATUS(status);
+			status = info->exitstatus;
 		}
 		info->hdcount = 0;
 		info->catcount = 0;
@@ -66,5 +66,5 @@ int main(void)
 	rl_clear_history();
 	free(info);
 	ft_freelist(&head);
-	return(0);
+	return (0);
 }

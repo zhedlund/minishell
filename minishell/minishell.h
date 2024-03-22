@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 21:29:29 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:45:20 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:29:33 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,12 @@ typedef struct s_info
 	int		runhere;
 	bool	exiting;
 	char	*expanded;
+	bool	pipe;
+	bool	firstcommandmix;
+	int		args;
+	char	*token_start;
+	char	*token_end;
+	int		token_type;
 }		t_info;
 
 /* constructors */
@@ -113,21 +119,26 @@ int		get_cmd(char *buf, int nbuf, t_env **head, t_info **info);
 int		get_token(char **input_ptr, char *end_str, char **token_start,
 			char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
-void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
-			char *end_str, t_info **info, t_env **head);
+//void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
+			//char *end_str, t_info **info, t_env **head);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, t_env **head);
 char	*expand_env_in_str(const char *str, int exit_status, t_env **head);
 void	expand_exit_status(int exit_status, char *expanded, size_t *index);
 void	ft_isitcat(char	*buf, t_info **info);
 bool	has_unmatched_quotes(const char *input);
+char	*ft_findvalue(char *name, t_env **head);
+void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head);
+void	copy_tokens_and_expand(t_exec *exec_command, t_info **info,
+			t_env **head);
 
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info);
 void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info);
 void	run_cmd(t_cmd *cmd, t_env **head, t_info **info);
-int		ft_execvp(t_exec *exec_cmd, char *const argv[]);
+int		ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head,
+			t_info **info);
 int		fork_process(void);
 
 /* signals */
@@ -136,6 +147,11 @@ int		ft_whichsignalsub(char *signalarray, int ctrlc, char *buf,
 			t_info **info);
 void	ft_ctrlc(int sig);
 void	ft_ctrlc2(int signal);
+void	handle_signals(t_info **info);
+int		ft_firstcommandcheck(char *buf, t_info **info);
+bool	ft_greponearguement(char *totest);
+char	**ft_arraytrim(char **totrim);
+void	ft_othercommands(char **firstcommandarray, t_info **info);
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);
@@ -161,7 +177,7 @@ void	ft_is_there_a_path(char *temp, t_exec *exec_cmd);
 char	*ft_is_there_a_path_sub(char **path_options, char *hold);
 char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd,
 			t_env **head);
-bool	ft_checkdirectory(char	*tocheck);
+//bool	ft_checkdirectory(char	*tocheck, t_info **info);
 int		ft_choice(const char *file);
 char	*ft_shorten(const char	*file);
 char	*ft_home(char *locate, t_env **head, t_info **info);
@@ -178,14 +194,14 @@ void	ft_cd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_printout(int a, char **cmdargs, bool newline);
 void	ft_echo(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd);
-void	ft_env(char *arraystring, t_env **head, t_info **info,
-			t_exec *exec_cmd);
+void	ft_env(t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unset(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unset_end_free(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unsetsub(char *inputi, t_env **head);
 void	ft_list_middle(t_env *temp);
 void	ft_list_start_end(t_env **head, t_env *temp, bool start);
+char	*ft_noquotes(char *input);
 void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_invalid_identifier(t_env **head, t_info **info, t_exec *exec_cmd);
 int		ft_valididentifier(char *check);
@@ -203,8 +219,7 @@ int		ft_disinherit(char *buf, t_env **head, t_info **info);
 /* utils */
 int		is_whitespace(const char *buf);
 bool	ft_identical(char *a, char *b);
-void	ft_multifree(char *arraystring, t_env **head, t_info **info,
-			t_exec *exec_cmd);
+void	ft_multifree(t_env **head, t_info **info, t_exec *exec_cmd);
 void	error_max_size(void);
 void	ft_freelist(t_env **head);
 int		ft_inititalchar(char *arraystring, t_info **info);

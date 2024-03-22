@@ -11,30 +11,32 @@ FIXED. 0. ADD WERROR FLAG IN MAKEFILE
 
 FIXED. 1. Input empty string doesn't give error (wrong):
 
-minishell> ""
-minishell> echo $?
-0
+	minishell> ""
+	minishell> echo $?
+	0
 
-Should print "Error" (printed from perror in ft_execvp, so probably from changes in handle_exec_cmd)
-It was like this before (correct):
+	Should print "Error" (printed from perror in ft_execvp, so probably from changes in handle_exec_cmd)
+	It was like this before (correct):
 
-minishell> ""
-just gives new line, error code 0
-should print "Error", error code 127
+	minishell> ""
+	just gives new line, error code 0
+	should print "Error", error code 127
 
-minishell> .
-free(): double free detected in tcache 2
+FIXED 1.1 Single dot gives double free:
+
+	minishell> .
+	free(): double free detected in tcache 2
 
 
 FIXED. 2. CD
-valgrind error with cd command:
+	valgrind error with cd command:
 
-ERROR SUMMARY: 63 errors from 17 contexts (suppressed: 0 from 0
+	ERROR SUMMARY: 63 errors from 17 contexts (suppressed: 0 from 0
 
-sometimes it gives this error, but not every time
-minishell> cd parsing/
-free(): invalid pointer
-zsh: IOT instruction (core dumped)  ./minishell
+	sometimes it gives this error, but not every time
+	minishell> cd parsing/
+	free(): invalid pointer
+	zsh: IOT instruction (core dumped)  ./minishell
 
 
 FIXED. 3. ENV: 
@@ -43,65 +45,65 @@ FIXED. 3. ENV:
 	expected: hello zhedlund, this is your home: /home/zhedlund
 
 FIXED. 4. SIGNALS:
-Enter on empty line gives segfault
+	Enter on empty line gives segfault
 
-minishell> 
-zsh: segmentation fault (core dumped)  ./minishell
+	minishell> 
+	zsh: segmentation fault (core dumped)  ./minishell
 
-5. CTRL+C:
+FIXED	5. CTRL+C:
 
-- ctrl-C in a prompt after you wrote some stuff should display a new line with a new prompt.
+	"ctrl-C in a prompt after you wrote some stuff should display a new line with a new prompt."
 
-minishell> echo hey^C
-minishell> echo $?
-0                   <<< wrong, should be 130
+	minishell> echo hey^C
+	minishell> echo $?
+	0                   <<< wrong, should be 130
 
-bash for reference:
-zhedlund@c4b10c2:~$ echo hey^C
-zhedlund@c4b10c2:~$ echo $?
-130
+	bash for reference:
+	zhedlund@c4b10c2:~$ echo hey^C
+	zhedlund@c4b10c2:~$ echo $?
+	130
 
 FIXED. 6.
-- Try ctrl-C after running a blocking command like cat  without arguments or grep “something“:
+	"Try ctrl-C after running a blocking command like cat  without arguments or grep “something“":
 	
-minishell> cat
-^C
-minishell> echo $?
-131                    <<< wrong, should be 130
-minishell> grep "something"
-^C
-minishell> echo $?
-131                    <<< wrong, should be 130
+	minishell> cat
+	^C
+	minishell> echo $?
+	131                    <<< wrong, should be 130
+	minishell> grep "something"
+	^C
+	minishell> echo $?
+	131                    <<< wrong, should be 130
 
-Bash for reference:			
+	Bash for reference:			
 
-zhedlund@c4b10c2:~$ cat
-^C
-zhedlund@c4b10c2:~$ echo $?
-130
-zhedlund@c4b10c2:~$ grep "something"
-^C
-zhedlund@c4b10c2:~$ echo $?
-130
+	zhedlund@c4b10c2:~$ cat
+	^C
+	zhedlund@c4b10c2:~$ echo $?
+	130
+	zhedlund@c4b10c2:~$ grep "something"
+	^C
+	zhedlund@c4b10c2:~$ echo $?
+	130
 
 
-7. CTRL-\:
+FIXED	7. CTRL-\:
 
-- Try ctrl-\ after running a blocking command like cat without arguments or grep “something“:
+	"Try ctrl-\ after running a blocking command like cat without arguments or grep “something“":
 
-works with cat and wc, not grep.
+	works with cat and wc, not grep.
 
-minishell> grep "something"
-^\minishell>          <<< wrong, should be ^\Quit (core dumped) on new line
+	minishell> grep "something"
+	^\minishell>          <<< wrong, should be ^\Quit (core dumped) on new line
 
 
 8. FUNCTIONS WITH TOO MANY PARAMETERS:
 
-handle_env_var
-parse_tokens
+	handle_env_var
+	FIXED. parse_tokens, but still too long
 
 FIXED. 9. EXPORT
 
-export without args prints the list, but segfaults
+	export without args prints the list, but segfaults
 
 

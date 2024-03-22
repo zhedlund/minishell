@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:42:30 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:32:21 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:50:22 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ bool	ft_checkdirectory(char	*tocheck)
 	if (stat(tocheck, &filestat) == 0 
 		&& S_ISDIR(filestat.st_mode))
 	{
-		printf("minishell: is a directory: %s\n", tocheck);
+		printf("minishell: Is a directory: %s\n", tocheck);
 		return (true);
 	}
 	return (false);
@@ -89,7 +89,7 @@ char	*ft_pathcheck(char *pp, t_info **info, t_exec *exec_cmd, t_env **head)
 		ft_putstr_fd("Minishell: ", 2);
 		ft_putstr_fd(pp, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		ft_multifree(NULL, head, info, exec_cmd);
+		ft_multifree(head, info, exec_cmd);
 		exit (127);
 	}
 	(*info)->stillexecute = true;

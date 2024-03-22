@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:08:48 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:34:42 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:25:13 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,23 @@ int	check_next_token(char **position_ptr, char *end_str, char *token_char)
 	return (*current_pos && ft_strchr(token_char, *current_pos));
 }
 
-static void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
+/*  Function to copy tokens and expand env variables
+	exec_command: pointer to the exec struct
+	info: pointer to the info struct
+	head: pointer to the env struct
+	note: the function is called by: parse_exec()
+*/
+void	copy_tokens_and_expand(t_exec *exec_command, t_info **info,
+								t_env **head)
 {
-	char	*token;
-
-	expand_env(&cmd->argv[args], head);
-	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
-	free(cmd->argv[args]);
-	cmd->argv[args] = token;
+	if ((*info)->token_type == '\'' || (*info)->token_type == '\"')
+		exec_command->argv[(*info)->args] = make_copy((*info)->token_start,
+				(*info)->token_end -1);
+	else
+		exec_command->argv[(*info)->args] = make_copy((*info)->token_start,
+				(*info)->token_end);
+	if ((*info)->token_type != '\'')
+		expand_env_var(exec_command, (*info)->args, info, head);
 }
 
 /* Function to handle token parsing and filling arguments
@@ -47,8 +56,7 @@ static void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
 	end_str: ptr to the last character of the string to be parsed
 	note: the function is called by: parse_exec()
 */
-
-void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
+/*void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
 						char *end_str, t_info **info, t_env **head)
 {
 	int		args;
@@ -76,3 +84,4 @@ void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
 	}
 	exec_cmd->argv[args] = NULL;
 }
+*/

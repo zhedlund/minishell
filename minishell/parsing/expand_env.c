@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:38:58 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/27 17:49:19 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:24:12 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,14 @@ char	**expand_env(char **argv, t_env **head)
 		i++;
 	}
 	return (argv);
+}
+
+void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
+{
+	char	*token;
+
+	//expand_env(&cmd->argv[args], head);
+	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
+	free(cmd->argv[args]);
+	cmd->argv[args] = token;
 }

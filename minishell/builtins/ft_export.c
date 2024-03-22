@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:28:33 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:32:16 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/02/23 12:36:00 by jelliott         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "../minishell.h"
 
 bool	ft_equalpresent(char *check)
@@ -101,10 +100,17 @@ void	ft_export(t_exec *exec_cmd, t_env **head, t_info **info)
 	char	**check;
 	bool	unexpected;
 	t_env	*temp;
+	int		a;
 
+	a = 0;
 	temp = *head;
 	unexpected = false;
 	check = exec_cmd->argv;
+	while (check[a] != NULL)
+	{
+		check[a] = ft_noquotes(check[a]);
+		a++;
+	}
 	if (check[1] == NULL)
 		ft_solo_export(head, info, exec_cmd);
 	else

@@ -1,0 +1,14 @@
+Heredoc
+Main+
+Minishell
+Parsing
+Pipes
+Redirections
+Simple_Commands
+Utils
+expand_env.c
+expand_env.o
+makefile
+minishell_tree.h
+test1
+todo.txt

@@ -1,0 +1,16 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    changes.txt                                        :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/02/27 22:18:13 by jelliott          #+#    #+#              #
+#    Updated: 2024/02/27 22:18:16 by jelliott         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
+- All builtins have been altered
+- Main has been altered
+- nearly all functions in expand_env.c have been altered
+- New functions for quotes in parsing quotes.c and has_unmatched_quotes.c

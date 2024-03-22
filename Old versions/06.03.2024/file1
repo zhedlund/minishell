@@ -1,0 +1,20 @@
+hello
+total 76
+drwxr-xr-x 9 jelliott 2022_berlin   282 Feb  6 18:00 .
+drwxr-xr-x 3 jelliott 2022_berlin    86 Jan 26 18:31 ..
+drwxr-xr-x 2 jelliott 2022_berlin   120 Feb  6 17:49 Heredoc
+drwxr-xr-x 2 jelliott 2022_berlin    76 Feb  6 17:53 Main+
+-rwxr-xr-x 1 jelliott 2022_berlin 41720 Feb  6 17:53 Minishell
+drwxr-xr-x 2 jelliott 2022_berlin   158 Feb  6 17:49 Parsing
+drwxr-xr-x 2 jelliott 2022_berlin    36 Feb  6 17:49 Pipes
+drwxr-xr-x 2 jelliott 2022_berlin    50 Feb  6 17:49 Redirections
+drwxr-xr-x 2 jelliott 2022_berlin   322 Feb  6 17:49 Simple_Commands
+drwxr-xr-x 2 jelliott 2022_berlin   160 Feb  6 17:51 Utils
+-rw-r--r-- 1 jelliott 2022_berlin  3435 Feb  6 17:50 expand_env.c
+-rw-r--r-- 1 jelliott 2022_berlin  2472 Feb  6 17:50 expand_env.o
+-rw-r--r-- 1 jelliott 2022_berlin     6 Feb  6 18:00 file1
+-rw-r--r-- 1 jelliott 2022_berlin  1964 Feb  6 10:45 makefile
+-rw-r--r-- 1 jelliott 2022_berlin  4040 Feb  6 17:32 minishell_tree.h
+-rw-r--r-- 1 jelliott 2022_berlin   963 Jan 25 16:48 suppressions.supp
+-rw-r--r-- 1 jelliott 2022_berlin   140 Jan 25 15:52 test1
+-rw-r--r-- 1 jelliott 2022_berlin  3630 Feb  6 15:28 todo.txt

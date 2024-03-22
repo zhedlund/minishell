@@ -1,0 +1,70 @@
+EVAL CHECK 
+
+Eval sheet: https://enzodeg40.github.io/42-Evals/Cursus/Minishell/
+
+Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ4p6k7JfE5g3jICNA/edit?pli=1#gid=0
+
+No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
+
+
+1. FUNCTIONS WITH TOO MANY PARAMETERS:
+
+	handle_env_var
+
+2. EXPORT
+	some undefined behaviours:
+	
+	- Doesn't work with numbers in var before =, but works with number in new var:
+	
+	minishell> export hhh3=hhh
+	Minishell: export: 'hhh3=hhh':  not a valid identifier
+	minishell> export aaa=bbb3
+	minishell> echo $aaa
+	bbb3
+	
+	- the error still gives exit code 0
+	
+	bash works with numbers, as long as it's not the first character:
+
+	zhedlund@c4c4c1:~$ export 666="lol"
+	bash: export: `666=lol': not a valid identifier
+	zhedlund@c4c4c1:~$ export h666="lol"
+	zhedlund@c4c4c1:~$ export h666=lol
+	zhedlund@c4c4c1:~$ echo $h666
+	lol
+
+
+	
+	- doesn't work with space in new variable (not sure it makes sense with space in env var, but works in bash):
+
+	minishell> export aaa="bbb ccc"
+	minishell> echo $aaa
+	bbb
+	
+
+
+3. HEREDOC
+	expansions not working with cat:
+	(I changed the promt to imitate bash)
+	
+	minishell> cat << hh
+	> $USER
+	> hh
+	$USER
+	
+	bash:
+	zhedlund@c4c4c1:~$ cat << hh
+	> $USER
+	> hh
+	zhedlund
+
+
+4. ENV PATH
+	I still don't know how to test this in a simple way:
+	
+	"Set the $PATH to a multiple directory value (directory1:directory2) and ensure that directories are checked in order from left to right."
+	
+	
+5. NORMINETTE
+	
+	

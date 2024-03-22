@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 14:59:32 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/22 14:46:37 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 20:50:26 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ static char	*allocate_full_path(const char *token, const char *file)
  * @param file: command to execute
  * @return: full path of command
  */
-static char	*find_cmd_path(const char *file)
+static char	*find_cmd_path(const char *file, t_env **head)
 {
 	char	*path;
 	char	*path_copy;
 	char	*token;
 	char	*full_path;
 
-	path = getenv("PATH");
+	path = ft_findvalue("PATH", head);
 	path_copy = ft_strdup(path);
 	token = ft_strtok(path_copy, ":");
 	full_path = NULL;
@@ -91,7 +91,7 @@ int	ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info)
 	if ((file[0] == '.' && file[1] == '/') || (file[0] == '/'))
 		full_path = ft_strdup(file);
 	else
-		full_path = find_cmd_path(file);
+		full_path = find_cmd_path(file, head);
 	if (full_path == NULL)
 		free_exit(file, head, info, exec_cmd);
 	else if (access(full_path, X_OK) != 0)

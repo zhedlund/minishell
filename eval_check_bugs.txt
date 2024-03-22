@@ -7,103 +7,64 @@ Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ
 No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
 
 
-FIXED. 0. ADD WERROR FLAG IN MAKEFILE
-
-FIXED. 1. Input empty string doesn't give error (wrong):
-
-	minishell> ""
-	minishell> echo $?
-	0
-
-	Should print "Error" (printed from perror in ft_execvp, so probably from changes in handle_exec_cmd)
-	It was like this before (correct):
-
-	minishell> ""
-	just gives new line, error code 0
-	should print "Error", error code 127
-
-FIXED 1.1 Single dot gives double free:
-
-	minishell> .
-	free(): double free detected in tcache 2
-
-
-FIXED. 2. CD
-	valgrind error with cd command:
-
-	ERROR SUMMARY: 63 errors from 17 contexts (suppressed: 0 from 0
-
-	sometimes it gives this error, but not every time
-	minishell> cd parsing/
-	free(): invalid pointer
-	zsh: IOT instruction (core dumped)  ./minishell
-
-
-FIXED. 3. ENV: 
-	minishell> echo "hello $USER, this is your home: $HOME"
-	output: hello USER=zhedlund, this is your home: HOME=/home/zhedlund
-	expected: hello zhedlund, this is your home: /home/zhedlund
-
-FIXED. 4. SIGNALS:
-	Enter on empty line gives segfault
-
-	minishell> 
-	zsh: segmentation fault (core dumped)  ./minishell
-
-FIXED	5. CTRL+C:
-
-	"ctrl-C in a prompt after you wrote some stuff should display a new line with a new prompt."
-
-	minishell> echo hey^C
-	minishell> echo $?
-	0                   <<< wrong, should be 130
-
-	bash for reference:
-	zhedlund@c4b10c2:~$ echo hey^C
-	zhedlund@c4b10c2:~$ echo $?
-	130
-
-FIXED. 6.
-	"Try ctrl-C after running a blocking command like cat  without arguments or grep “something“":
-	
-	minishell> cat
-	^C
-	minishell> echo $?
-	131                    <<< wrong, should be 130
-	minishell> grep "something"
-	^C
-	minishell> echo $?
-	131                    <<< wrong, should be 130
-
-	Bash for reference:			
-
-	zhedlund@c4b10c2:~$ cat
-	^C
-	zhedlund@c4b10c2:~$ echo $?
-	130
-	zhedlund@c4b10c2:~$ grep "something"
-	^C
-	zhedlund@c4b10c2:~$ echo $?
-	130
-
-
-FIXED	7. CTRL-\:
-
-	"Try ctrl-\ after running a blocking command like cat without arguments or grep “something“":
-
-	works with cat and wc, not grep.
-
-	minishell> grep "something"
-	^\minishell>          <<< wrong, should be ^\Quit (core dumped) on new line
-
-
-8. FUNCTIONS WITH TOO MANY PARAMETERS:
+1. FUNCTIONS WITH TOO MANY PARAMETERS:
 
 	handle_env_var
-	FIXED. parse_tokens, but still too long
 
-FIXED. 9. EXPORT
+2. EXPORT
+	some undefined behaviours:
+	
+	- Doesn't work with numbers in var before =, but works with number in new var:
+	
+	minishell> export hhh3=hhh
+	Minishell: export: 'hhh3=hhh':  not a valid identifier
+	minishell> export aaa=bbb3
+	minishell> echo $aaa
+	bbb3
+	
+	- the error still gives exit code 0
+	
+	bash works with numbers, as long as it's not the first character:
 
-	export without args prints the list, but segfaults
+	zhedlund@c4c4c1:~$ export 666="lol"
+	bash: export: `666=lol': not a valid identifier
+	zhedlund@c4c4c1:~$ export h666="lol"
+	zhedlund@c4c4c1:~$ export h666=lol
+	zhedlund@c4c4c1:~$ echo $h666
+	lol
 
 
+	
+	- doesn't work with space in new variable (not sure it makes sense with space in env var, but works in bash):
+
+	minishell> export aaa="bbb ccc"
+	minishell> echo $aaa
+	bbb
+	
+
+
+3. HEREDOC
+	expansions not working with cat:
+	(I changed the promt to imitate bash)
+	
+	minishell> cat << hh
+	> $USER
+	> hh
+	$USER
+	
+	bash:
+	zhedlund@c4c4c1:~$ cat << hh
+	> $USER
+	> hh
+	zhedlund
+
+
+4. ENV PATH
+	I still don't know how to test this in a simple way:
+	
+	"Set the $PATH to a multiple directory value (directory1:directory2) and ensure that directories are checked in order from left to right."
+	
+	
+5. NORMINETTE
+	
+	

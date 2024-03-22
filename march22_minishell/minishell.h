@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 21:29:29 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/21 22:35:27 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:29:33 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,8 +119,8 @@ int		get_cmd(char *buf, int nbuf, t_env **head, t_info **info);
 int		get_token(char **input_ptr, char *end_str, char **token_start,
 			char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
-void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
-			char *end_str, t_info **info, t_env **head);
+//void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
+			//char *end_str, t_info **info, t_env **head);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, t_env **head);
 char	*expand_env_in_str(const char *str, int exit_status, t_env **head);
@@ -129,12 +129,16 @@ void	ft_isitcat(char	*buf, t_info **info);
 bool	has_unmatched_quotes(const char *input);
 char	*ft_findvalue(char *name, t_env **head);
 void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head);
+void	copy_tokens_and_expand(t_exec *exec_command, t_info **info,
+			t_env **head);
+
 /* execution */
 void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info);
 void	handle_redir_cmd(t_redir *redir_cmd, t_env **head, t_info **info);
 void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info);
 void	run_cmd(t_cmd *cmd, t_env **head, t_info **info);
-int		ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head, t_info **info);
+int		ft_execvp(t_exec *exec_cmd, char *const argv[], t_env **head,
+			t_info **info);
 int		fork_process(void);
 
 /* signals */
@@ -148,7 +152,6 @@ int		ft_firstcommandcheck(char *buf, t_info **info);
 bool	ft_greponearguement(char *totest);
 char	**ft_arraytrim(char **totrim);
 void	ft_othercommands(char **firstcommandarray, t_info **info);
-
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);

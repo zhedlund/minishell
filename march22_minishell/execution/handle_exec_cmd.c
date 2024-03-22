@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:55:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/02/25 21:33:07 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:26:21 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 void	ft_builtins_not_env(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	if (ft_identical(exec_cmd->argv[0], "cd") == true)
-			ft_cd(exec_cmd, head, info);
+		ft_cd(exec_cmd, head, info);
 	else if (ft_identical(exec_cmd->argv[0], "unset") == true)
-			ft_unset(exec_cmd, head, info);
+		ft_unset(exec_cmd, head, info);
 	else if (ft_identical(exec_cmd->argv[0], "exit") == true)
 		ft_exit(exec_cmd, head, info);
 	else if (ft_identical(exec_cmd->argv[0], "export") == true)
@@ -84,7 +84,7 @@ void	ft_exiting(t_exec *exec_cmd, t_env **head, t_info **info)
 	return: void
 	note: the function is called by: run_cmd()
  */
-void handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
+void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	if (exec_cmd->argv[0] == NULL 
 		|| exec_cmd->argv[0][0] == '\0')

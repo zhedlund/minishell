@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static int	handle_env_var(const char *str, size_t i, char *expanded, 
+static int	handle_env_var(const char *str, char *expanded, 
 							size_t *index, t_env **head)
 {
 	const char	*start;
@@ -21,7 +21,7 @@ static int	handle_env_var(const char *str, size_t i, char *expanded,
 	char		*name;
 	size_t		len;
 
-	start = str + i + 1;
+	start = str + (*head)->i + 1;
 	end = start;
 	while (*end && (*end == '_' || ft_isalnum(*end)))
 		end++;
@@ -58,25 +58,24 @@ char	*expand_env_in_str(const char *str, int exit_status, t_env **head)
 {
 	char	*expanded;
 	size_t	index;
-	size_t	i;
 
 	index = 0;
 	expanded = (char *)malloc(PATH_MAX);
 	if (!expanded)
 		return (NULL);
-	i = 0;
-	while (i < ft_strlen(str))
+	(*head)->i = 0;
+	while ((*head)->i < ft_strlen(str))
 	{
-		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != '?')
-			i = handle_env_var(str, i, expanded, &index, head);
-		else if (str[i] == '$' && str[i + 1] == '?')
+		if (str[(*head)->i] == '$' && str[(*head)->i + 1] != '\0' && str[(*head)->i + 1] != '?')
+			(*head)->i = handle_env_var(str, expanded, &index, head);
+		else if (str[(*head)->i] == '$' && str[(*head)->i + 1] == '?')
 		{
 			expand_exit_status(exit_status, expanded, &index);
-			i++;
+			(*head)->i++;
 		}
 		else
-			copy_to_expanded(expanded, &index, str[i]);
-		i++;
+			copy_to_expanded(expanded, &index, str[(*head)->i]);
+		(*head)->i++;
 	}
 	expanded[index] = '\0';
 	return (expanded);

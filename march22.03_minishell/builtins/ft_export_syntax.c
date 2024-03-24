@@ -24,7 +24,8 @@ void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info)
 	}
 	else
 	{
-		(*info)->exitstatus = 0;
+		if ((*info)->invalid_export != true)
+			(*info)->exitstatus = 0;
 		while (exec_cmd->argv[a] != NULL)
 		{
 			free(exec_cmd->argv[a]);
@@ -38,6 +39,7 @@ void	ft_invalid_identifier(t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	ft_putstr_fd("':  not a valid identifier\n", 2);
 	(*info)->exitstatus = 1;
+	printf("exit status == %d\n", (*info)->exitstatus);
 	if ((*info)->inchild == true)
 	{
 		ft_exportfree(exec_cmd, head, info);
@@ -50,13 +52,21 @@ int	ft_valididentifier(char *check)
 	int	a;
 
 	a = 0;
-	while (check[a] != '\0')
+	if (check[a] >= 48 && check[a] <= 57)
 	{
-		if ((check[a] >= 65 && check[a] <= 90)
+		ft_putstr_fd("Minishell: export: '", 2);
+		ft_putstr_fd(check, 2);
+		return (2);
+	}
+	while (check[a] != '=')
+	{
+		if ((check[a] >= 48 && check[a] <= 57)
+			||(check[a] >= 65 && check[a] <= 90)
 			|| (check[a] >= 97 && check[a] <= 122))
 			a++;
 		else
 			break ;
+		a++;
 	}
 	if (check[a] == '=' && a != 0)
 		return (0);

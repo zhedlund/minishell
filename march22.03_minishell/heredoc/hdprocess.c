@@ -22,7 +22,8 @@ void	ft_hdctrld(char *input, t_info **info, char *hdarray)
 	(*info)->runhere++;
 }
 
-void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input)
+//new header issue
+void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input, t_env **head)
 {
 	int	i;
 
@@ -32,7 +33,10 @@ void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input)
 		input = (readline("> "));
 		if (input != NULL 
 			&& ft_identical(hdarray[i], input) == false)
+		{
+			input = expand_env_in_str(input, 0, head);
 			write(fd, input, ft_strlen(input));
+		}
 		if (input == NULL || (ft_strlen(hdarray[i]) == ft_strlen(input) 
 				&& ft_strncmp(hdarray[i], input, ft_strlen(hdarray[i])) == 0))
 		{

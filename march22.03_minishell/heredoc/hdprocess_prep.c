@@ -50,7 +50,7 @@ static void	ft_hdsigint(int signal)
 	g_signal = 3;
 }
 
-void	ft_hdprocess_prep(t_info **info, char **hdarray)
+void	ft_hdprocess_prep(t_info **info, char **hdarray, t_env **head)
 {
 	int		i;
 	char	*input;
@@ -61,15 +61,15 @@ void	ft_hdprocess_prep(t_info **info, char **hdarray)
 	(*info)->runhere = 0;
 	input = NULL;
 	g_signal = 0;
-	ft_hdprocess(hdarray, info, fd, input);
+	ft_hdprocess(hdarray, info, fd, input, head);
 	g_signal = 0;
 	(*info)->hdcount = 0;
 }
 
-void	ft_heredocexecute(char **hdarray, t_info **info)
+void	ft_heredocexecute(char **hdarray, t_info **info, t_env **head)
 {
 	signal(SIGINT, ft_hdsigint);
-	ft_hdprocess_prep(info, hdarray);
+	ft_hdprocess_prep(info, hdarray, head);
 	signal(SIGINT, ft_ctrlc);
 	ft_freearray(hdarray);
 }

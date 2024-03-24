@@ -6,12 +6,44 @@ Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ
 
 No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
 
+STILL TO DO:
 
-1. FUNCTIONS WITH TOO MANY PARAMETERS:
+2b.	PARSING/EXPORT/CD
+- doesn't work with space in new variable (not sure it makes sense with space in env var, but works in bash):
+
+	minishell> export aaa="bbb ccc"
+	minishell> echo $aaa
+	bbb
+Suggestion: I think the easiest solution to this might potentially be in the parsing,
+aaa=bbb ccc should expand to bbb, so export is set up to only add argv[1] to the enivornmental variables list.
+In the cases of aaa=bbc ccc and aaa="bbb ccc" there is also an array of two:
+
+minishell> export aaa=bbb ccc
+argv[1] == aaa=bbb
+argv[2] == ccc
+minishell> export aaa="bbb ccc"
+argv[1] == aaa="bbb
+argv[2] == ccc" 
+
+receiving argv[1] = aaa=bbb ccc might be easier than reconstructing the string
+echo "hello goodbye" has an argv array[1] = hello goodbye, so hopefully something small
+
+relatedly: export a="bb cc"dd, should be on the env list as a=bb ccdd
+also relatedly, "cd" doesn't do anything, and it should have the same result as cd
+
+5. NORMINETTE
+	
+6. VALGRIND & SUPPRESSED VALGRIND
+
+FIXED:
+
+FIXED? 1. FUNCTIONS WITH TOO MANY PARAMETERS:
 
 	handle_env_var
 
-2. EXPORT
+Seems to be sorted by putting a size variable in the env list structure, no obvious interference
+
+FIXED	2a. EXPORT
 	some undefined behaviours:
 	
 	- Doesn't work with numbers in var before =, but works with number in new var:
@@ -21,7 +53,6 @@ No refactoring if not absolutely necessary! Go through checklist and norminette_
 	minishell> export aaa=bbb3
 	minishell> echo $aaa
 	bbb3
-	
 	- the error still gives exit code 0
 	
 	bash works with numbers, as long as it's not the first character:
@@ -32,18 +63,9 @@ No refactoring if not absolutely necessary! Go through checklist and norminette_
 	zhedlund@c4c4c1:~$ export h666=lol
 	zhedlund@c4c4c1:~$ echo $h666
 	lol
+[this is solved in the valid identifier function, but some serious norminetting required]
 
-
-	
-	- doesn't work with space in new variable (not sure it makes sense with space in env var, but works in bash):
-
-	minishell> export aaa="bbb ccc"
-	minishell> echo $aaa
-	bbb
-	
-
-
-3. HEREDOC
+FIXED 3. HEREDOC
 	expansions not working with cat:
 	(I changed the promt to imitate bash)
 	
@@ -58,13 +80,9 @@ No refactoring if not absolutely necessary! Go through checklist and norminette_
 	> hh
 	zhedlund
 
-
-4. ENV PATH
+FIXED 4. ENV PATH
 	I still don't know how to test this in a simple way:
 	
 	"Set the $PATH to a multiple directory value (directory1:directory2) and ensure that directories are checked in order from left to right."
-	
-	
-5. NORMINETTE
-	
-	
+- need to point to the function - ft_is_there_a_path_sub - and put in this statement: printf("checking this path: %s\n", poss); after poss is assigned a value in the loop
+this shows the directories assigned to PATH being checked in order (finishing at either NULL or the successful path)

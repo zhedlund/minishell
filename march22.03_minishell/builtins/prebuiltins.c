@@ -17,15 +17,15 @@ char	*ft_is_there_a_path_sub(char **path_options, char *hold)
 	char	*poss;
 
 	a = 0;
-	poss = ft_strjoin(path_options[a], hold);
 	while (path_options[a] != NULL)
 	{
+		poss = ft_strjoin(path_options[a], hold);
 		if (access(poss, X_OK) == 0)
 			break ;
 		a++;
 	}
-	free(poss);
-	free(hold);
+	//free(poss);
+	//free(hold);
 	return (path_options[a]);
 }
 
@@ -43,10 +43,10 @@ bool	ft_path_search_sub(char *temp, t_exec *exec_cmd)
 	path_options_prep = ft_strtrim(temp, "PATH=");
 	path_options = ft_split(path_options_prep, ':');
 	hold = ft_is_there_a_path_sub(path_options, hold);
-	if (path_options[a + 1] == NULL)
+	if (path_options[a] == NULL)
 		path = false;
 	free(path_options_prep);
-	free(hold);
+	//free(hold);
 	ft_freearray(path_options);
 	return (path);
 }
@@ -87,6 +87,7 @@ void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 		ft_putstr_fd(exec_cmd->argv[0], 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		(*info)->unsetpath = true;
+		(*info)->exitstatus = 127;
 		if ((*info)->exiting == true)
 			exit (127);
 	}

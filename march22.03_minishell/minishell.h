@@ -70,6 +70,7 @@ typedef struct s_env
 	char			*field;
 	struct s_env	*prev;
 	struct s_env	*next;
+	size_t	i;
 }	t_env;
 
 typedef struct s_info
@@ -100,6 +101,7 @@ typedef struct s_info
 	char	*token_start;
 	char	*token_end;
 	int		token_type;
+	bool	invalid_export;
 }		t_info;
 
 /* constructors */
@@ -155,15 +157,15 @@ void	ft_othercommands(char **firstcommandarray, t_info **info);
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);
-void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input);
+void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input, t_env **head);
 char	**ft_heredocarray(int heredoc, char **inputs);
-void	ft_hdprocess_prep(t_info **info, char **hdarray);
-void	ft_heredocexecute(char **hdarray, t_info **info);
+void	ft_hdprocess_prep(t_info **info, char **hdarray, t_env **head);
+void	ft_heredocexecute(char **hdarray, t_info **info, t_env **head);
 bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file);
 void	ft_hdcountsub(char **temp, int i, t_info **info);
 void	ft_hdcount(char **temp, t_info **info, char **inputs);
-char	**ft_checkheredoc(char **inputs, t_info **info);
-void	ft_heredocmain(char *cmdline, t_info **info);
+char	**ft_checkheredoc(char **inputs, t_info **info, t_env **head);
+void	ft_heredocmain(char *cmdline, t_info **info, t_env **head);
 
 /* builtins */
 void	ft_exiting(t_exec *exec_cmd, t_env **head, t_info **info);

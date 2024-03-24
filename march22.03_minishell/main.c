@@ -44,7 +44,7 @@ int	main(void)
 	get_env(&head);
 	while (get_cmd(buf, sizeof(buf), &head, &info) >= 0)
 	{
-		ft_heredocmain(buf, &info);
+		ft_heredocmain(buf, &info, &head);
 		ft_isitcat(buf, &info);
 		ft_mainsignals(&info, buf);
 		if (ft_disinherit(buf, &head, &info) == false && info->panic == false)

@@ -6,7 +6,7 @@
 #    By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 16:02:43 by jelliott          #+#    #+#              #
-#    Updated: 2024/03/21 21:17:21 by zhedlund         ###   ########.fr        #
+#    Updated: 2024/03/26 18:13:25 by zhedlund         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,7 +35,7 @@ SRC = main.c \
     builtins/ft_unset.c \
     execution/constructors.c \
     execution/ft_execvp.c \
-    execution/handle_exec_cmd.c \
+    execution/handle_paths.c \
     execution/pipes.c \
     execution/redirections.c \
     execution/run_cmd.c \

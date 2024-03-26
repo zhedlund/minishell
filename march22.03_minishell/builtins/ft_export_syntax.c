@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_syntax.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:52:41 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 12:52:44 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:16:05 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info)
@@ -39,7 +40,6 @@ void	ft_invalid_identifier(t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	ft_putstr_fd("':  not a valid identifier\n", 2);
 	(*info)->exitstatus = 1;
-	printf("exit status == %d\n", (*info)->exitstatus);
 	if ((*info)->inchild == true)
 	{
 		ft_exportfree(exec_cmd, head, info);
@@ -61,7 +61,7 @@ int	ft_valididentifier(char *check)
 	while (check[a] != '=')
 	{
 		if ((check[a] >= 48 && check[a] <= 57)
-			||(check[a] >= 65 && check[a] <= 90)
+			|| (check[a] >= 65 && check[a] <= 90)
 			|| (check[a] >= 97 && check[a] <= 122))
 			a++;
 		else

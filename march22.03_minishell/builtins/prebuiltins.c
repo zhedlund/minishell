@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   prebuiltins.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 14:59:55 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/24 14:59:57 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:20:43 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*ft_is_there_a_path_sub(char **path_options, char *hold)

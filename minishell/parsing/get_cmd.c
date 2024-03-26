@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:02:34 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/21 23:00:47 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/26 15:21:25 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	input_error(char *buf, t_info **info)
 	}
 	if (buf[0] == '.')
 		return (handle_dot(buf, info));
-	if (ft_identical(buf, "\"\""))
+	if (ft_identical(buf, "\"\"") || ft_identical(buf, "\'\'"))
 	{
 		printf("Command '' not found\n");
 		(*info)->exitstatus = 127;

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/25 21:29:29 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/22 15:29:33 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:27:29 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ typedef struct s_env
 	char			*field;
 	struct s_env	*prev;
 	struct s_env	*next;
+	size_t			position;
 }	t_env;
 
 typedef struct s_info
@@ -100,6 +101,7 @@ typedef struct s_info
 	char	*token_start;
 	char	*token_end;
 	int		token_type;
+	bool	invalid_export;
 }		t_info;
 
 /* constructors */
@@ -119,8 +121,6 @@ int		get_cmd(char *buf, int nbuf, t_env **head, t_info **info);
 int		get_token(char **input_ptr, char *end_str, char **token_start,
 			char **token_end);
 int		check_next_token(char **position_ptr, char *end_str, char *token_char);
-//void	parse_tokens(t_exec *exec_cmd, t_cmd **cmd, char **position_ptr,
-			//char *end_str, t_info **info, t_env **head);
 char	*make_copy(char *start_ptr, char *end_ptr);
 char	**expand_env(char **argv, t_env **head);
 char	*expand_env_in_str(const char *str, int exit_status, t_env **head);
@@ -155,15 +155,16 @@ void	ft_othercommands(char **firstcommandarray, t_info **info);
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);
-void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input);
+void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input,
+			t_env **head);
 char	**ft_heredocarray(int heredoc, char **inputs);
-void	ft_hdprocess_prep(t_info **info, char **hdarray);
-void	ft_heredocexecute(char **hdarray, t_info **info);
+void	ft_hdprocess_prep(t_info **info, char **hdarray, t_env **head);
+void	ft_heredocexecute(char **hdarray, t_info **info, t_env **head);
 bool	ft_validheredoc(t_info **info, bool direct, int heredoc, char *file);
 void	ft_hdcountsub(char **temp, int i, t_info **info);
 void	ft_hdcount(char **temp, t_info **info, char **inputs);
-char	**ft_checkheredoc(char **inputs, t_info **info);
-void	ft_heredocmain(char *cmdline, t_info **info);
+char	**ft_checkheredoc(char **inputs, t_info **info, t_env **head);
+void	ft_heredocmain(char *cmdline, t_info **info, t_env **head);
 
 /* builtins */
 void	ft_exiting(t_exec *exec_cmd, t_env **head, t_info **info);
@@ -177,7 +178,6 @@ void	ft_is_there_a_path(char *temp, t_exec *exec_cmd);
 char	*ft_is_there_a_path_sub(char **path_options, char *hold);
 char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd,
 			t_env **head);
-//bool	ft_checkdirectory(char	*tocheck, t_info **info);
 int		ft_choice(const char *file);
 char	*ft_shorten(const char	*file);
 char	*ft_home(char *locate, t_env **head, t_info **info);

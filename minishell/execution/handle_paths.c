@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   handle_exec_cmd.c                                  :+:      :+:    :+:   */
+/*   handle_paths.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 14:55:46 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/22 15:26:21 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:13:07 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,22 +78,4 @@ void	ft_exiting(t_exec *exec_cmd, t_env **head, t_info **info)
 	ft_is_it_a_command(exec_cmd, head, info);
 	ft_pathexperiment(exec_cmd, info, head);
 	ft_execvp(exec_cmd, exec_cmd->argv, head, info);
-}
-
-/* exec_cmd: pointer to the command struct
-	return: void
-	note: the function is called by: run_cmd()
- */
-void	handle_exec_cmd(t_exec *exec_cmd, t_env **head, t_info **info)
-{
-	if (exec_cmd->argv[0] == NULL 
-		|| exec_cmd->argv[0][0] == '\0')
-	{
-		ft_multifree(head, info, exec_cmd);
-		exit(0);
-	}
-	if ((*info)->exiting == true)
-		ft_exiting(exec_cmd, head, info);
-	else 
-		ft_builtins_not_env(exec_cmd, head, info);
 }

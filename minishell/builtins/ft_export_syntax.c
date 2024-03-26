@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export_syntax.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/23 12:52:41 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/23 12:52:44 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:16:05 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info)
@@ -24,7 +25,8 @@ void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info)
 	}
 	else
 	{
-		(*info)->exitstatus = 0;
+		if ((*info)->invalid_export != true)
+			(*info)->exitstatus = 0;
 		while (exec_cmd->argv[a] != NULL)
 		{
 			free(exec_cmd->argv[a]);
@@ -50,13 +52,21 @@ int	ft_valididentifier(char *check)
 	int	a;
 
 	a = 0;
-	while (check[a] != '\0')
+	if (check[a] >= 48 && check[a] <= 57)
 	{
-		if ((check[a] >= 65 && check[a] <= 90)
+		ft_putstr_fd("Minishell: export: '", 2);
+		ft_putstr_fd(check, 2);
+		return (2);
+	}
+	while (check[a] != '=')
+	{
+		if ((check[a] >= 48 && check[a] <= 57)
+			|| (check[a] >= 65 && check[a] <= 90)
 			|| (check[a] >= 97 && check[a] <= 122))
 			a++;
 		else
 			break ;
+		a++;
 	}
 	if (check[a] == '=' && a != 0)
 		return (0);

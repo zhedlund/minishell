@@ -6,13 +6,13 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:38:58 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/22 15:24:12 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/26 18:37:50 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	handle_env_var(const char *str, size_t i, char *expanded, 
+static int	handle_env_var(const char *str, char *expanded, 
 							size_t *index, t_env **head)
 {
 	const char	*start;
@@ -21,7 +21,7 @@ static int	handle_env_var(const char *str, size_t i, char *expanded,
 	char		*name;
 	size_t		len;
 
-	start = str + i + 1;
+	start = str + (*head)->position + 1;
 	end = start;
 	while (*end && (*end == '_' || ft_isalnum(*end)))
 		end++;
@@ -52,31 +52,32 @@ static void	copy_to_expanded(char *expanded, size_t *index, char c)
 
 /* 	Expands env variables $USER, $HOME, etc in quoted strings
 	returns a new string with the expanded variables
-	note: called by parse_tokens()
+	note: called by parse_exec()
 	*/
 char	*expand_env_in_str(const char *str, int exit_status, t_env **head)
 {
 	char	*expanded;
 	size_t	index;
-	size_t	i;
 
 	index = 0;
 	expanded = (char *)malloc(PATH_MAX);
 	if (!expanded)
 		return (NULL);
-	i = 0;
-	while (i < ft_strlen(str))
+	(*head)->position = 0;
+	while ((*head)->position < ft_strlen(str))
 	{
-		if (str[i] == '$' && str[i + 1] != '\0' && str[i + 1] != '?')
-			i = handle_env_var(str, i, expanded, &index, head);
-		else if (str[i] == '$' && str[i + 1] == '?')
+		if (str[(*head)->position] == '$' && str[(*head)->position + 1] != '\0'
+			&& str[(*head)->position + 1] != '?')
+			(*head)->position = handle_env_var(str, expanded, &index, head);
+		else if (str[(*head)->position] == '$'
+			&& str[(*head)->position + 1] == '?')
 		{
 			expand_exit_status(exit_status, expanded, &index);
-			i++;
+			(*head)->position++;
 		}
 		else
-			copy_to_expanded(expanded, &index, str[i]);
-		i++;
+			copy_to_expanded(expanded, &index, str[(*head)->position]);
+		(*head)->position++;
 	}
 	expanded[index] = '\0';
 	return (expanded);
@@ -84,7 +85,6 @@ char	*expand_env_in_str(const char *str, int exit_status, t_env **head)
 
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
 	returns a new array with the expanded variable
-	note: called by parse_tokens()
 	*/
 char	**expand_env(char **argv, t_env **head)
 {
@@ -112,7 +112,6 @@ void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
 {
 	char	*token;
 
-	//expand_env(&cmd->argv[args], head);
 	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
 	free(cmd->argv[args]);
 	cmd->argv[args] = token;

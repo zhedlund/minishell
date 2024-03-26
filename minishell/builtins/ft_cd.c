@@ -6,9 +6,10 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/11 15:25:07 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/19 21:34:53 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/03/26 16:00:19 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	ft_move(char *locate, t_env **head, t_info **info)
@@ -92,7 +93,7 @@ void	ft_cd(t_exec *exec_cmd, t_env **head, t_info **info)
 	if (cmdarray[1] != NULL && cmdarray[2] != NULL)
 	{
 		(*info)->exitstatus = 1;
-		ft_putstr_fd("Minishell: cd: too many arguments\n", 2);
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
 	}
 	else
 		ft_cd_execute(exec_cmd, head, info);

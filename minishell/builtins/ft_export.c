@@ -78,7 +78,10 @@ void	valid_identifier_export(t_exec *exec_cmd, t_env **head, t_info **info)
 	{
 		export = ft_valididentifier(check[a]);
 		if (export == 2)
+		{
 			ft_invalid_identifier(head, info, exec_cmd);
+			(*info)->invalid_export = true;
+		}
 		if (ft_equalpresent(check[a]) == true && export != 2)
 		{
 			ft_exportsub(check[a], head);

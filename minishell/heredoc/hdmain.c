@@ -73,7 +73,7 @@ void	ft_hdcount(char **temp, t_info **info, char **inputs)
 	ft_freearray(check);
 }
 
-char	**ft_checkheredoc(char **inputs, t_info **info)
+char	**ft_checkheredoc(char **inputs, t_info **info, t_env **head)
 {
 	char	**heredocarray;
 	char	**temp;
@@ -93,12 +93,12 @@ char	**ft_checkheredoc(char **inputs, t_info **info)
 	}
 	(*info)->first = true;
 	heredocarray = ft_heredocarray((*info)->hdcount, temp);
-	ft_heredocexecute(heredocarray, info);
+	ft_heredocexecute(heredocarray, info, head);
 	ft_freearray(temp);
 	return (NULL);
 }
 
-void	ft_heredocmain(char *cmdline, t_info **info)
+void	ft_heredocmain(char *cmdline, t_info **info, t_env **head)
 {
 	int	i;
 
@@ -110,7 +110,7 @@ void	ft_heredocmain(char *cmdline, t_info **info)
 		if ((*info)->inputs[i] == NULL)
 			break ;
 		(*info)->inputs[i] = ft_strtrim((*info)->inputs[i], " ");
-		ft_checkheredoc((*info)->inputs, info);
+		ft_checkheredoc((*info)->inputs, info, head);
 		i++;
 	}
 	ft_freearray((*info)->inputs);

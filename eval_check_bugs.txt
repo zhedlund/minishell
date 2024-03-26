@@ -6,65 +6,79 @@ Spreadsheet: https://docs.google.com/spreadsheets/d/1TDwyd-S0WBAXehgkrKQtBJ6zquQ
 
 No refactoring if not absolutely necessary! Go through checklist and norminette_list first.
 
+STILL TO DO:
 
-1. FUNCTIONS WITH TOO MANY PARAMETERS:
+LEAKS
+VALGRIND some "definitely lost" 
 
-	handle_env_var
+FUNCTIONS WITH TOO MANY PARAMETERS:
+	ft_hdprocess	
 
-2. EXPORT
-	some undefined behaviours:
+1. HEREDOC
+	- multiple heredoc doesn't work with cat = doesn't expand. (only the last one should be printed and expand with cat) but I'd argue it's an edgecase.
 	
-	- Doesn't work with numbers in var before =, but works with number in new var:
+	minishell> <<hh | cat <<jj
+	> $USER
+	> hh
+	> $USER
+	> jj
+	minishell>
 	
-	minishell> export hhh3=hhh
-	Minishell: export: 'hhh3=hhh':  not a valid identifier
-	minishell> export aaa=bbb3
-	minishell> echo $aaa
-	bbb3
+	bash:
+	zhedlund@c4b8c2:~$ <<hh | cat <<jj
+	> $USER
+	> hh
+	> $USER
+	> jj
+	zhedlund
 	
-	- the error still gives exit code 0
+2. CD: 
+	- doesn't work with "cd -" anymore, but it's actually not in the eval sheet.
+
+2. PARSING/EXPORT/CD
+	- exported string should actually execute as a command, but i makes 0 sense to export a command as an env variable. That would be an alias and we're not doing alias, soooo I can argue about that. An bc of that, I don't think space in the variable name is necessary either.
 	
-	bash works with numbers, as long as it's not the first character:
-
-	zhedlund@c4c4c1:~$ export 666="lol"
-	bash: export: `666=lol': not a valid identifier
-	zhedlund@c4c4c1:~$ export h666="lol"
-	zhedlund@c4c4c1:~$ export h666=lol
-	zhedlund@c4c4c1:~$ echo $h666
-	lol
-
-
+	- "cd" doesn't do anything, not "unset" or "export" either, but "ls", "cat" etc does, so it might be a builtin issue. "echo" and "pwd" also works, but it's probably that it uses /bin/pwd, /bin/echo. I would argue that this is an edgecase though.  
 	
-	- doesn't work with space in new variable (not sure it makes sense with space in env var, but works in bash):
-
+	
+	
+	
 	minishell> export aaa="bbb ccc"
 	minishell> echo $aaa
 	bbb
-	
+Suggestion: I think the easiest solution to this might potentially be in the parsing,
+aaa=bbb ccc should expand to bbb, so export is set up to only add argv[1] to the enivornmental variables list.
+In the cases of aaa=bbc ccc and aaa="bbb ccc" there is also an array of two:
+
+minishell> export aaa=bbb ccc
+argv[1] == aaa=bbb
+argv[2] == ccc
+minishell> export aaa="bbb ccc"
+argv[1] == aaa="bbb
+argv[2] == ccc" 
+
+receiving argv[1] = aaa=bbb ccc might be easier than reconstructing the string
+echo "hello goodbye" has an argv array[1] = hello goodbye, so hopefully something small
+
+relatedly: export a="bb cc"dd, should be on the env list as a=bb ccdd
+also relatedly, "cd" doesn't do anything, and it should have the same result as cd
 
 
-3. HEREDOC
-	expansions not working with cat:
-	(I changed the promt to imitate bash)
-	
-	minishell> cat << hh
-	> $USER
-	> hh
-	$USER
-	
-	bash:
-	zhedlund@c4c4c1:~$ cat << hh
-	> $USER
-	> hh
-	zhedlund
 
 
-4. ENV PATH
-	I still don't know how to test this in a simple way:
+FIXED 4. ENV PATH
+	- This should be possible to test in the shell without writing a function for it, but hey, anything that works.
+
 	
 	"Set the $PATH to a multiple directory value (directory1:directory2) and ensure that directories are checked in order from left to right."
-	
-	
+- need to point to the function - ft_is_there_a_path_sub - and put in this statement: printf("checking this path: %s\n", poss); after poss is assigned a value in the loop
+this shows the directories assigned to PATH being checked in order (finishing at either NULL or the successful path)
+
+
+
 5. NORMINETTE
 	
-	
+6. VALGRIND & SUPPRESSED VALGRIND
+
+
+

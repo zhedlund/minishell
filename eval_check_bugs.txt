@@ -8,6 +8,9 @@ No refactoring if not absolutely necessary! Go through checklist and norminette_
 
 STILL TO DO:
 
+LEAKS
+VALGRIND some "definitely lost" 
+
 FUNCTIONS WITH TOO MANY PARAMETERS:
 	ft_hdprocess	
 

@@ -42,7 +42,10 @@ void	run_cmd(t_cmd *cmd, t_env **head, t_info **info)
 		handle_exec_cmd((t_exec *)cmd, head, info);
 	else if (cmd->type == '>' || cmd->type == '<' || cmd->type == 'x'
 		|| cmd->type == 'h')
+	{
 		handle_redir_cmd((t_redir *)cmd, head, info);
+		rl_clear_history();
+	}
 	else if (cmd->type == '|')
 	{
 		(*info)->inchild = true;

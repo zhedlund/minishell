@@ -77,9 +77,12 @@ void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
 	else if (ft_identical(cmdarray[1], ".") == true)
 		locate = ft_cdsub(cmdarray[1]);
 	else
-		locate = cmdarray[1];
+		locate = ft_strdup(cmdarray[1]);
 	if (move == true)
+	{
 		ft_move(locate, head, info);
+		free(locate);
+	}
 	else if (locate && cmdarray[0] != NULL 
 		&& ft_identical(locate, cmdarray[1]) == false)
 		free(locate);

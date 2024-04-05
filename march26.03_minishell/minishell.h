@@ -152,6 +152,7 @@ int		ft_firstcommandcheck(char *buf, t_info **info);
 bool	ft_greponearguement(char *totest);
 char	**ft_arraytrim(char **totrim);
 void	ft_othercommands(char **firstcommandarray, t_info **info);
+int		ft_cat_check(char *cmd);
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);

@@ -36,6 +36,7 @@ static int	handle_env_var(const char *str, char *expanded,
 			error_max_size();
 		ft_strlcpy(expanded + *index, value, PATH_MAX - *index);
 		*index += ft_strlen(value);
+		free((void *)value);
 		return (end - str - 1);
 	}
 	else

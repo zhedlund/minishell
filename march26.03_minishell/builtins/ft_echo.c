@@ -23,10 +23,14 @@ int	ft_minusnfun(char *cmdarg)
 	int	i;
 
 	i = 1;
+	if (cmdarg == NULL)
+		return (false);
 	if (ft_strlen(cmdarg) < ft_strlen("-n"))
 		return (false);
 	if (ft_strncmp(cmdarg, "-n", ft_strlen("-n")) != 0)
 		return (false);
+	//if (ft_identical("-n", cmdarg) != 0)
+	//	return (false);
 	while (cmdarg[i] != '\0')
 	{
 		if (cmdarg[i] != 'n')
@@ -77,7 +81,7 @@ void	ft_minusndecide(t_env **head, t_info **info, t_exec *exec_cmd)
 		}
 	}
 	if (cmdargs[2] == NULL)
-		newline = true;
+		newline = false;
 	if (newline == false)
 		a -= 1;
 	ft_printout(a, cmdargs, newline);

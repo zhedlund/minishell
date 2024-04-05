@@ -22,7 +22,11 @@ char	*ft_is_there_a_path_sub(char **path_options, char *hold)
 	{
 		poss = ft_strjoin(path_options[a], hold);
 		if (access(poss, X_OK) == 0)
+		{
+			free (poss);
 			break ;
+		}
+		free(poss);
 		a++;
 	}
 	//free(poss);
@@ -37,17 +41,19 @@ bool	ft_path_search_sub(char *temp, t_exec *exec_cmd)
 	char	**path_options;
 	int		a;
 	bool	path;
+	char	*copy;
 
 	a = 0;
 	path = true;
 	hold = ft_strjoin("/", exec_cmd->argv[0]);
 	path_options_prep = ft_strtrim(temp, "PATH=");
 	path_options = ft_split(path_options_prep, ':');
-	hold = ft_is_there_a_path_sub(path_options, hold);
+	copy = hold;
+	hold = ft_is_there_a_path_sub(path_options, copy);
 	if (path_options[a] == NULL)
 		path = false;
 	free(path_options_prep);
-	//free(hold);
+	free(copy);
 	ft_freearray(path_options);
 	return (path);
 }
@@ -73,6 +79,7 @@ void	ft_is_there_a_path(char *temp, t_exec *exec_cmd)
 void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 {
 	t_env	*temp;
+	char	*copy;
 
 	temp = *head;
 	while (temp != NULL)
@@ -90,10 +97,17 @@ void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 		(*info)->unsetpath = true;
 		(*info)->exitstatus = 127;
 		if ((*info)->exiting == true)
+		{
+			rl_clear_history();
 			exit (127);
+		}
 	}
 	else
-		ft_is_there_a_path(ft_strdup(temp->field), exec_cmd);
+	{
+		copy = ft_strdup(temp->field);
+		ft_is_there_a_path(copy, exec_cmd);
+		free(copy);
+	}
 	if (ft_identical(exec_cmd->argv[0], "env") == true)
 		ft_env(head, info, exec_cmd);
 	else if ((*info)->unsetpath == false)

@@ -19,7 +19,7 @@ int	ft_firstcommandcheck(char *buf, t_info **info)
 	i = 0;
 	firstcommandarray = ft_split(buf, '|');
 	firstcommandarray = ft_arraytrim(firstcommandarray);
-	if (ft_identical(firstcommandarray[0], "cat") == true
+	if (ft_cat_check(firstcommandarray[0]) == 0
 		|| ft_identical(firstcommandarray[0], "wc") == true
 		|| ft_identical(firstcommandarray[0], "wc -l") == true
 		|| ft_greponearguement(firstcommandarray[0]) == true)
@@ -75,11 +75,14 @@ void	ft_othercommands(char **firstcommandarray, t_info **info)
 char	**ft_arraytrim(char **totrim)
 {
 	int		i;
-
+	char	*hold;
+	
 	i = 0;
 	while (totrim[i] != NULL)
 	{
+		hold = totrim[i];
 		totrim[i] = ft_strtrim(totrim[i], " ");
+		free(hold);
 		i++;
 	}
 	return (totrim);

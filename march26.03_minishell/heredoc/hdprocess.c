@@ -27,16 +27,18 @@ void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input,
 						t_env **head)
 {
 	int	i;
+	char	*hold;
 
 	i = 0;
 	while (g_signal == 0 && (*info)->runhere != (*info)->hdcount)
 	{
-		input = (readline("> "));
+		input = (readline("heredoc<< "));
 		if (input != NULL 
 			&& ft_identical(hdarray[i], input) == false)
 		{
-			input = expand_env_in_str(input, 0, head);
-			write(fd, input, ft_strlen(input));
+			hold = expand_env_in_str(input, 0, head);
+			write(fd, hold, ft_strlen(hold));
+			free(hold);
 		}
 		if (input == NULL || (ft_strlen(hdarray[i]) == ft_strlen(input) 
 				&& ft_strncmp(hdarray[i], input, ft_strlen(hdarray[i])) == 0))

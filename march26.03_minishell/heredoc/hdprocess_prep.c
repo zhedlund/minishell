@@ -33,7 +33,7 @@ char	**ft_heredocarray(int heredoc, char **inputs)
 		else if (ft_strlen(inputs[i]) > ft_strlen("<<")
 			&& ft_strncmp(inputs[i], "<<", 1) == 0)
 		{
-			hdarray[j] = ft_strtrim((ft_strdup(inputs[i])), "<<");
+			hdarray[j] = ft_strtrim(inputs[i], "<<");
 			j++;
 		}
 		i++;

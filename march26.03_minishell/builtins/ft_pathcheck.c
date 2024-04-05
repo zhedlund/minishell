@@ -90,10 +90,11 @@ char	*ft_pathcheck(char *pp, t_info **info, t_exec *exec_cmd, t_env **head)
 		ft_putstr_fd(pp, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
 		ft_multifree(head, info, exec_cmd);
+		rl_clear_history();
 		exit (127);
 	}
 	(*info)->stillexecute = true;
-	return (ft_shorten(pp));
+	return (pp);
 }
 
 bool	ft_isitapath(char *input)

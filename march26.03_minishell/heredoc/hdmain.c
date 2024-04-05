@@ -101,6 +101,7 @@ char	**ft_checkheredoc(char **inputs, t_info **info, t_env **head)
 void	ft_heredocmain(char *cmdline, t_info **info, t_env **head)
 {
 	int	i;
+	char	*hold;
 
 	i = 0;
 	(*info)->hdcount = 0;
@@ -109,7 +110,9 @@ void	ft_heredocmain(char *cmdline, t_info **info, t_env **head)
 	{
 		if ((*info)->inputs[i] == NULL)
 			break ;
+		hold = (*info)->inputs[i];
 		(*info)->inputs[i] = ft_strtrim((*info)->inputs[i], " ");
+		free(hold);
 		ft_checkheredoc((*info)->inputs, info, head);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/24 11:50:12 by jelliott          #+#    #+#             */
-/*   Updated: 2024/03/26 18:14:49 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:27:15 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ void	ft_hdctrld(char *input, t_info **info, char *hdarray)
 void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input,
 						t_env **head)
 {
-	int	i;
+	int		i;
 	char	*hold;
 
 	i = 0;
 	while (g_signal == 0 && (*info)->runhere != (*info)->hdcount)
 	{
-		input = (readline("heredoc<< "));
+		input = (readline("> "));
 		if (input != NULL 
 			&& ft_identical(hdarray[i], input) == false)
 		{

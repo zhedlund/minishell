@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:21:41 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/22 15:42:30 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:28:54 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	ft_cat_check(char *cmd)
 {
 	//char	*hold;
-	
+
 	//hold = ft_strtrim(cmd, " ");
 	if (ft_identical(cmd, "cat") == 0)
 		return (0);

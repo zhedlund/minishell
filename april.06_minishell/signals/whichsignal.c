@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   whichsignal.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:27:18 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/26 16:27:20 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:29:59 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	ft_firstcommandcheck(char *buf, t_info **info)
@@ -76,7 +77,7 @@ char	**ft_arraytrim(char **totrim)
 {
 	int		i;
 	char	*hold;
-	
+
 	i = 0;
 	while (totrim[i] != NULL)
 	{

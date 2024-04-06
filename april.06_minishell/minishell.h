@@ -32,6 +32,7 @@
 # include "./libft/libft.h"
 
 # define MAXARGS 100
+# define BUFSIZE 1024
 # define WHITESPACE " \t\r\n\v"
 # define SYMBOLS "<|>"
 

@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:14:46 by jelliott          #+#    #+#             */
-/*   Updated: 2024/03/26 18:16:50 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:36:51 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	run_minishell(char *buf, t_info **info, t_env **head)
 
 int	main(void)
 {
-	static char	buf[1024];
+	static char	buf[BUFSIZE];
 	t_info		*info;
 	t_env		*head;
 

@@ -39,9 +39,7 @@ void	ft_cd_finish(t_exec *exec_cmd, t_env **head, t_info **info)
 	a = 0;
 	if ((*info)->inchild == true)
 	{
-		ft_freelist(head);
-		free((*info));
-		free(exec_cmd);
+		ft_multifree(head, info, exec_cmd);
 		exit(0);
 	}
 	else
@@ -64,7 +62,7 @@ void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
 	locate = NULL;
 	cmdarray = exec_cmd->argv;
 	if (cmdarray[1] == NULL || cmdarray[1][0] == '~')
-		locate = ft_home(locate, head, info);
+		locate = ft_home(locate, head, info, exec_cmd);
 	else if (ft_identical(cmdarray[1], "..") == true
 		&& ft_identical(cmdarray[1], "/") == false)
 		locate = ft_backone(locate);

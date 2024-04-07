@@ -19,8 +19,7 @@ void	ft_exportfree(t_exec *exec_cmd, t_env **head, t_info **info)
 	a = 0;
 	if ((*info)->inchild == true)
 	{
-		ft_freelist(head);
-		free((*info));
+		ft_multifree(head, info, exec_cmd);
 		exit(0);
 	}
 	else

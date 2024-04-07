@@ -55,7 +55,8 @@ bool	ft_path_search_sub(char *temp, t_exec *exec_cmd, char *hold,
 	return (path);
 }
 
-void	ft_is_there_a_path(char *temp, t_exec *exec_cmd)
+void	ft_is_there_a_path(char *temp, t_exec *exec_cmd, t_info **info, 
+							t_env **head)
 {
 	bool	path;
 	char	*hold;
@@ -72,6 +73,7 @@ void	ft_is_there_a_path(char *temp, t_exec *exec_cmd)
 		{
 			ft_putstr_fd("The command could not be located, ", 2);
 			ft_putstr_fd("please alter the PATH environmental variable\n", 2);
+			ft_multifree(head, info, exec_cmd);
 			exit (127);
 		}
 	}
@@ -110,7 +112,7 @@ void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head)
 	else
 	{
 		copy = ft_strdup(temp->field);
-		ft_is_there_a_path(copy, exec_cmd);
+		ft_is_there_a_path(copy, exec_cmd, info, head);
 		free(copy);
 	}
 	if (ft_identical(exec_cmd->argv[0], "env") == true)

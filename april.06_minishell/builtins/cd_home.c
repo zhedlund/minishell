@@ -54,7 +54,7 @@ char	*ft_gethome(t_env **head, char *locate)
 	return (address);
 }
 
-char	*ft_home(char *locate, t_env **head, t_info **info)
+char	*ft_home(char *locate, t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	if (ft_homeset(head) == true)
 		locate = ft_gethome(head, locate);
@@ -63,7 +63,10 @@ char	*ft_home(char *locate, t_env **head, t_info **info)
 		ft_putstr_fd("Minishell: cd: HOME not set\n", 2);
 		(*info)->exitstatus = 1;
 		if ((*info)->inchild == true)
+		{
+			ft_multifree(head, info, exec_cmd);
 			exit(1);
+		}
 	}
 	return (locate);
 }

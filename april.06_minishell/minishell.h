@@ -183,13 +183,14 @@ void	ft_command_not_found(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_builtins_not_env(t_exec *exec_cmd, t_env **head, t_info **info);
 bool	ft_isitapath(char *input);
 void	ft_pathexperiment(t_exec *exec_cmd, t_info **info, t_env **head);
-void	ft_is_there_a_path(char *temp, t_exec *exec_cmd);
+void	ft_is_there_a_path(char *temp, t_exec *exec_cmd, t_info **info, 
+			t_env **head);
 char	*ft_is_there_a_path_sub(char **path_options, char *hold);
 char	*ft_pathcheck(char *potentialpath, t_info **info, t_exec *exec_cmd,
 			t_env **head);
 int		ft_choice(const char *file);
 char	*ft_shorten(const char	*file);
-char	*ft_home(char *locate, t_env **head, t_info **info);
+char	*ft_home(char *locate, t_env **head, t_info **info, t_exec *exec_cmd);
 char	*ft_gethome(t_env **head, char *locate);
 bool	ft_homeset(t_env **head);
 char	*ft_cdsub(char *arraystring);

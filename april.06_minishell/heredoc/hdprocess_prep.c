@@ -53,15 +53,14 @@ static void	ft_hdsigint(int signal)
 void	ft_hdprocess_prep(t_info **info, char **hdarray, t_env **head)
 {
 	int		i;
-	char	*input;
 	int		fd;
 
 	fd = open("/tmp/hdtemp", O_WRONLY | O_CREAT, 0644);
 	i = 0;
 	(*info)->runhere = 0;
-	input = NULL;
+	(*info)->hdinput = NULL;
 	g_signal = 0;
-	ft_hdprocess(hdarray, info, fd, input, head);
+	ft_hdprocess(hdarray, info, fd, head);
 	g_signal = 0;
 	(*info)->hdcount = 0;
 }

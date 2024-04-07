@@ -29,6 +29,14 @@ int	fork_process(void)
 	return (pid);
 }
 
+void	ft_free_some(t_cmd *cmd)
+{
+	t_exec	*tofree;
+
+	tofree = (t_exec *)cmd;
+	ft_multifree(NULL, NULL, tofree);
+}
+
 /* cmd: pointer to the command struct
 	fd_pipe: file descriptor array
 	return: void
@@ -72,18 +80,19 @@ void	handle_pipe_cmd(t_pipe *pipe_cmd, t_env **head, t_info **info)
 		exit(1);
 	}
 	pid = fork_process();
-	if ((*info)->solocat == false)
+	if ((*info)->solocat == false && (*info)->firstcommandmix == false)
 	{
 		if (pid == 0)
 			pipe_cmd_left((t_cmd *)pipe_cmd, fd_pipe, head, info);
 		else
 			pipe_cmd_right((t_cmd *)pipe_cmd, fd_pipe, head, info);
 	}
-	if ((*info)->solocat == true)
+	if ((*info)->solocat == true || (*info)->firstcommandmix == true)
 	{
 		if (pid == 0)
 			pipe_cmd_right((t_cmd *)pipe_cmd, fd_pipe, head, info);
 		else
 			pipe_cmd_left((t_cmd *)pipe_cmd, fd_pipe, head, info);
+		free (pipe_cmd);
 	}
 }

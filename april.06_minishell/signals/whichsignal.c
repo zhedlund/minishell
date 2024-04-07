@@ -20,7 +20,7 @@ int	ft_firstcommandcheck(char *buf, t_info **info)
 	i = 0;
 	firstcommandarray = ft_split(buf, '|');
 	firstcommandarray = ft_arraytrim(firstcommandarray);
-	if (ft_cat_check(firstcommandarray[0]) == 0
+	if (ft_cat_check(firstcommandarray[0]) == true
 		|| ft_identical(firstcommandarray[0], "wc") == true
 		|| ft_identical(firstcommandarray[0], "wc -l") == true
 		|| ft_greponearguement(firstcommandarray[0]) == true)

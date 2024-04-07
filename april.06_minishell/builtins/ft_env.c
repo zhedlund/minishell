@@ -12,6 +12,28 @@
 
 #include "../minishell.h"
 
+void	ft_es(char **cmdargs, t_exec *exec_cmd, t_env **head, t_info **info)
+{
+	int		n;
+
+	n = 1;
+	while (cmdargs[1][n] != '\0')
+	{
+		if (cmdargs[1][n] != 'n')
+			break ;
+		n++;
+	}
+	if (cmdargs[1][n] == '\0')
+		ft_minusndecide(head, info, exec_cmd);
+}
+
+int	ft_validsub(char *check)
+{
+	ft_putstr_fd("Minishell: export: '", 2);
+	ft_putstr_fd(check, 2);
+	return (2);
+}
+
 void	ft_env(t_env **head, t_info **info, t_exec *exec_cmd)
 {
 	t_env	*temp;

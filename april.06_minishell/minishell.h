@@ -49,6 +49,12 @@ typedef struct s_exec
 	char	*argv[MAXARGS];
 }		t_exec;
 
+typedef struct s_experiment
+{
+	int		type;
+	char	*argv[MAXARGS];
+}		t_experiment;
+
 typedef struct s_redir
 {
 	int		type;
@@ -103,6 +109,8 @@ typedef struct s_info
 	char	*token_end;
 	int		token_type;
 	bool	invalid_export;
+	char	*hdinput;
+	int		signaltype;
 }		t_info;
 
 /* constructors */
@@ -153,12 +161,11 @@ int		ft_firstcommandcheck(char *buf, t_info **info);
 bool	ft_greponearguement(char *totest);
 char	**ft_arraytrim(char **totrim);
 void	ft_othercommands(char **firstcommandarray, t_info **info);
-int		ft_cat_check(char *cmd);
+bool	ft_cat_check(char *cmd);
 
 /* heredoc */
 void	ft_hdctrld(char *input, t_info **info, char *hdarray);
-void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input,
-			t_env **head);
+void	ft_hdprocess(char **hdarray, t_info **info, int fd, t_env **head);
 char	**ft_heredocarray(int heredoc, char **inputs);
 void	ft_hdprocess_prep(t_info **info, char **hdarray, t_env **head);
 void	ft_heredocexecute(char **hdarray, t_info **info, t_env **head);
@@ -197,6 +204,8 @@ void	ft_printout(int a, char **cmdargs, bool newline);
 void	ft_echo(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd);
 void	ft_env(t_env **head, t_info **info, t_exec *exec_cmd);
+int		ft_validsub(char *check);
+void	ft_es(char **cmdargs, t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_exit(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unset(t_exec *exec_cmd, t_env **head, t_info **info);
 void	ft_unset_end_free(t_exec *exec_cmd, t_env **head, t_info **info);
@@ -217,6 +226,7 @@ void	ft_export(t_exec *exec_cmd, t_env **head, t_info **info);
 void	get_env(t_env **head);
 char	*ft_findvalue(char *name, t_env **head);
 int		ft_disinherit(char *buf, t_env **head, t_info **info);
+void	ft_minusndecide(t_env **head, t_info **info, t_exec *exec_cmd);
 
 /* utils */
 int		is_whitespace(const char *buf);

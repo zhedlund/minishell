@@ -75,6 +75,36 @@ void	ft_unsetpath(t_info **info, char **cmdarray)
 	}
 }
 
+bool	ft_typecheck(char *cmdarray)
+{
+	if (ft_identical("export", cmdarray) == true)
+		return (true);
+	if (ft_identical("unset", cmdarray) == true)
+		return (true);
+	if (ft_identical("cd", cmdarray) == true)
+		return (true);
+	if (ft_identical("exit", cmdarray) == true)
+		return (true);
+	return (false);
+}
+
+bool	ft_type_check_is_true(char **cmdarray, t_info **info, char *buf, 
+								t_env **head)
+{
+	if (ft_identical("exit", cmdarray[0]) == true)
+		ft_freearray(cmdarray);
+	run_cmd(parse_cmd(buf, info, head), head, info);
+	if (ft_identical("export", cmdarray[0]) == true
+		&& cmdarray[1] == NULL)
+	{
+		ft_freearray(cmdarray);
+		return (true);
+	}
+	ft_unsetpath(info, cmdarray);
+	ft_freearray(cmdarray);
+	return (true);
+}
+
 int	ft_disinherit(char *buf, t_env **head, t_info **info)
 {
 	int		a;
@@ -88,24 +118,8 @@ int	ft_disinherit(char *buf, t_env **head, t_info **info)
 		a++;
 	}
 	cmdarray = ft_split(buf, ' ');
-	if (ft_identical("export", cmdarray[0]) == true
-		|| ft_identical("unset", cmdarray[0]) == true
-		|| ft_identical("cd", cmdarray[0]) == true
-		|| ft_identical("exit", cmdarray[0]) == true)
-	{
-		if (ft_identical("exit", cmdarray[0]) == true)
-			ft_freearray(cmdarray);
-		run_cmd(parse_cmd(buf, info, head), head, info);
-		if (ft_identical("export", cmdarray[0]) == true
-			&& cmdarray[1] == NULL)
-		{
-			ft_freearray(cmdarray);
-			return (true);
-		}
-		ft_unsetpath(info, cmdarray);
-		ft_freearray(cmdarray);
-		return (true);
-	}
+	if (ft_typecheck(cmdarray[0]) == true)
+		return (ft_type_check_is_true(cmdarray, info, buf, head));
 	ft_freearray(cmdarray);
 	return (false);
 }

@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+//thi needs to be altered - which signal function != 2
+//why130 ? why 6? - sigint/sigquit
 void	ft_mainsignals(t_info **info, char *buf)
 {
 	signal(SIGQUIT, ft_ctrlc); 
@@ -21,13 +23,17 @@ void	ft_mainsignals(t_info **info, char *buf)
 		signal(SIGINT, ft_ctrlc2);
 		signal(SIGQUIT, ft_ctrlc2);
 	}
-	if (g_signal == 130 || g_signal == 6)
+	(*info)->signaltype = ft_whichsignalfunction(buf, info);
+	if (g_signal == 3 || g_signal == 4)
 	{
-		if (g_signal == 130)
-			(*info)->exitstatus = 130;
-		if (g_signal == 6)
-			(*info)->exitstatus = 0;
-		g_signal = 0;
+		if ((*info)->signaltype != 2)
+		{
+			if (g_signal == 3)
+				(*info)->exitstatus = 130;
+			if (g_signal == 4)
+				(*info)->exitstatus = 0;
+			g_signal = 0;
+		}
 	}
 }
 

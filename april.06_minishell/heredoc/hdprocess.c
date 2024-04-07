@@ -22,9 +22,7 @@ void	ft_hdctrld(char *input, t_info **info, char *hdarray)
 	(*info)->runhere++;
 }
 
-//new header issue
-void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input,
-						t_env **head)
+void	ft_hdprocess(char **hdarray, t_info **info, int fd, t_env **head)
 {
 	int		i;
 	char	*hold;
@@ -32,21 +30,21 @@ void	ft_hdprocess(char **hdarray, t_info **info, int fd, char *input,
 	i = 0;
 	while (g_signal == 0 && (*info)->runhere != (*info)->hdcount)
 	{
-		input = (readline("> "));
-		if (input != NULL 
-			&& ft_identical(hdarray[i], input) == false)
+		(*info)->hdinput = (readline("> "));
+		if ((*info)->hdinput != NULL 
+			&& ft_identical(hdarray[i], (*info)->hdinput) == false)
 		{
-			hold = expand_env_in_str(input, 0, head);
+			hold = expand_env_in_str((*info)->hdinput, 0, head);
 			write(fd, hold, ft_strlen(hold));
 			free(hold);
 		}
-		if (input == NULL || (ft_strlen(hdarray[i]) == ft_strlen(input) 
-				&& ft_strncmp(hdarray[i], input, ft_strlen(hdarray[i])) == 0))
+		if ((*info)->hdinput == NULL 
+			|| (ft_identical(hdarray[i], (*info)->hdinput) == 1))
 		{
-			ft_hdctrld(input, info, hdarray[i]);
+			ft_hdctrld((*info)->hdinput, info, hdarray[i]);
 			i++;
 		}
-		free (input);
+		free ((*info)->hdinput);
 		if ((*info)->runhere == (*info)->hdcount)
 			break ;
 		write(fd, "\n", 1);

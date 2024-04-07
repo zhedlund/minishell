@@ -12,18 +12,29 @@
 
 #include "../minishell.h"
 
-int	ft_cat_check(char *cmd)
+bool	ft_cat_check(char *cmd)
 {
-	//char	*hold;
+	if (ft_identical(cmd, "cat") == true)
+		return (true);
+	if (ft_identical(cmd, "/usr/bin/cat") == true)
+		return (true);
+	if (ft_identical(cmd, "/bin/cat") == true)
+		return (true);
+	return (false);
+}
 
-	//hold = ft_strtrim(cmd, " ");
-	if (ft_identical(cmd, "cat") == 0)
-		return (0);
-	if (ft_identical(cmd, "/usr/bin/cat") == 0)
-		return (0);
-	if (ft_identical(cmd, "/bin/cat") == 0)
-		return (0);
-	return (9);
+void	ft_isitcatsub(t_info **info, int catplus,
+						int catcount, char *cmdarray)
+{
+	if (catplus != 0)
+		(*info)->solocat = false;
+	if (catcount == 0)
+		(*info)->solocat = false;
+	if (catcount != 0 && catplus == 0)
+		(*info)->solocat = true;
+	if (ft_strlen(cmdarray) != ft_strlen("cat") 
+		|| ft_strncmp("cat", cmdarray, ft_strlen("cat")) != 0)
+		(*info)->solocat = false;
 }
 
 void	ft_isitcat(char	*buf, t_info **info)
@@ -40,24 +51,17 @@ void	ft_isitcat(char	*buf, t_info **info)
 	cmdarray = ft_split(buf, '|');
 	while (cmdarray[count] != NULL)
 	{
-		hold = cmdarray[count];
+		hold = cmdarray[count]; 
 		cmdarray[count] = ft_strtrim(cmdarray[count], " ");
 		free(hold);
-		if (ft_cat_check(cmdarray[count]) == 0)
+		if (ft_strlen("cat") == ft_strlen(cmdarray[count]) 
+			&& ft_strncmp("cat", cmdarray[count], ft_strlen("cat")) == 0)
 			catcount++;
-		if (ft_strlen(cmdarray[count]) > ft_strlen("cat")
+		if (ft_strlen(cmdarray[count]) > ft_strlen("cat") 
 			&& ft_strncmp("cat ", cmdarray[count], ft_strlen("cat ")) == 0)
 			catplus++;
 		count++;
 	}
-	if (catplus != 0)
-		(*info)->solocat = false;
-	if (catcount == 0)
-		(*info)->solocat = false;
-	if (catcount != 0 && catplus == 0)
-		(*info)->solocat = true;
-	if (ft_cat_check(cmdarray[0]) != 0)
-		(*info)->solocat = false;
+	ft_isitcatsub(info, catplus, catcount, cmdarray[0]);
 	ft_freearray(cmdarray);
-	//ft_freearray(hold);
 }

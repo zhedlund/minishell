@@ -60,17 +60,11 @@ void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	char	*locate;
 	char	**cmdarray;
-	bool	move;
 
-	move = true;
 	locate = NULL;
 	cmdarray = exec_cmd->argv;
 	if (cmdarray[1] == NULL || cmdarray[1][0] == '~')
-	{
 		locate = ft_home(locate, head, info);
-		if (ft_homeset(head) == false)
-			move = false;
-	}
 	else if (ft_identical(cmdarray[1], "..") == true
 		&& ft_identical(cmdarray[1], "/") == false)
 		locate = ft_backone(locate);
@@ -78,7 +72,7 @@ void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
 		locate = ft_cdsub(cmdarray[1]);
 	else
 		locate = ft_strdup(cmdarray[1]);
-	if (move == true)
+	if (ft_homeset(head) == true)
 	{
 		ft_move(locate, head, info);
 		free(locate);

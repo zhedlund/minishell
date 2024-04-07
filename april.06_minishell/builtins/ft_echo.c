@@ -29,8 +29,6 @@ int	ft_minusnfun(char *cmdarg)
 		return (false);
 	if (ft_strncmp(cmdarg, "-n", ft_strlen("-n")) != 0)
 		return (false);
-	//if (ft_identical("-n", cmdarg) != 0)
-	//	return (false);
 	while (cmdarg[i] != '\0')
 	{
 		if (cmdarg[i] != 'n')
@@ -102,19 +100,10 @@ void	ft_echo(t_exec *exec_cmd, t_env **head, t_info **info)
 	if (cmdargs[1] == NULL)
 	{
 		printf("\n");
-		exit(0);
+		ft_echoend(head, info, exec_cmd);
 	}
 	if (cmdargs[1][0] == '-' && cmdargs[1][1] == 'n')
-	{
-		while (cmdargs[1][n] != '\0')
-		{
-			if (cmdargs[1][n] != 'n')
-				break ;
-			n++;
-		}
-		if (cmdargs[1][n] == '\0')
-			ft_minusndecide(head, info, exec_cmd);
-	}
+		ft_es(cmdargs, exec_cmd, head, info);
 	ft_printout(a, cmdargs, newline);
 	ft_echoend(head, info, exec_cmd);
 }

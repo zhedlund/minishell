@@ -53,11 +53,7 @@ int	ft_valididentifier(char *check)
 
 	a = 0;
 	if (check[a] >= 48 && check[a] <= 57)
-	{
-		ft_putstr_fd("Minishell: export: '", 2);
-		ft_putstr_fd(check, 2);
-		return (2);
-	}
+		ft_validsub(check);
 	while (check[a] != '=')
 	{
 		if ((check[a] >= 48 && check[a] <= 57)
@@ -73,11 +69,7 @@ int	ft_valididentifier(char *check)
 	if (check[a] == '\0')
 		return (1);
 	else
-	{
-		ft_putstr_fd("Minishell: export: '", 2);
-		ft_putstr_fd(check, 2);
-		return (2);
-	}
+		return (ft_validsub(check));
 }
 
 bool	ft_unexpectedtoken(char *check)

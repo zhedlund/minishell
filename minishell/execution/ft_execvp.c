@@ -60,11 +60,13 @@ static char	*find_cmd_path(const char *file, t_env **head)
 		if (full_path != NULL && access(full_path, X_OK) == 0)
 		{
 			free(path_copy);
+			free(path);
 			return (full_path);
 		}
 		free(full_path);
 		token = ft_strtok(NULL, ":");
 	}
+	free(path);
 	free(path_copy);
 	return (NULL);
 }

@@ -39,9 +39,7 @@ void	ft_cd_finish(t_exec *exec_cmd, t_env **head, t_info **info)
 	a = 0;
 	if ((*info)->inchild == true)
 	{
-		ft_freelist(head);
-		free((*info));
-		free(exec_cmd);
+		ft_multifree(head, info, exec_cmd);
 		exit(0);
 	}
 	else
@@ -60,26 +58,23 @@ void	ft_cd_execute(t_exec *exec_cmd, t_env **head, t_info **info)
 {
 	char	*locate;
 	char	**cmdarray;
-	bool	move;
 
-	move = true;
 	locate = NULL;
 	cmdarray = exec_cmd->argv;
 	if (cmdarray[1] == NULL || cmdarray[1][0] == '~')
-	{
-		locate = ft_home(locate, head, info);
-		if (ft_homeset(head) == false)
-			move = false;
-	}
+		locate = ft_home(locate, head, info, exec_cmd);
 	else if (ft_identical(cmdarray[1], "..") == true
 		&& ft_identical(cmdarray[1], "/") == false)
 		locate = ft_backone(locate);
 	else if (ft_identical(cmdarray[1], ".") == true)
 		locate = ft_cdsub(cmdarray[1]);
 	else
-		locate = cmdarray[1];
-	if (move == true)
+		locate = ft_strdup(cmdarray[1]);
+	if (ft_homeset(head) == true)
+	{
 		ft_move(locate, head, info);
+		free(locate);
+	}
 	else if (locate && cmdarray[0] != NULL 
 		&& ft_identical(locate, cmdarray[1]) == false)
 		free(locate);

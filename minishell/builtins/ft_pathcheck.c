@@ -93,7 +93,7 @@ char	*ft_pathcheck(char *pp, t_info **info, t_exec *exec_cmd, t_env **head)
 		exit (127);
 	}
 	(*info)->stillexecute = true;
-	return (ft_shorten(pp));
+	return (pp);
 }
 
 bool	ft_isitapath(char *input)

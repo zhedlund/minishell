@@ -16,16 +16,17 @@ void	handle_signals(t_info **info)
 {
 	if (g_signal != 0)
 	{
-		if (g_signal == 2 && (*info)->firstcommandmix == false)
+		if (g_signal == 4 && (*info)->firstcommandmix == false
+			&& (*info)->signaltype == 2)
 			printf("Quit (core dumped)\n");
-		else if (g_signal == 4)
+		else if (g_signal == 3 && (*info)->signaltype == 2)
 			printf("\n");
-		if (g_signal == 2 
+		if (g_signal == 4 && (*info)->signaltype == 2
 			&& (*info)->firstcommandmix == false)
 			(*info)->exitstatus = 131;
-		else if (g_signal != 2 && (*info)->firstcommandmix == false)
+		else if (g_signal != 4 && (*info)->firstcommandmix == false)
 			(*info)->exitstatus = 130;
-		else if (g_signal == 130)
+		else if (g_signal == 3 && (*info)->signaltype != 2)
 			(*info)->exitstatus = 130;
 		else
 			(*info)->exitstatus = 0;

@@ -72,8 +72,7 @@ void	ft_unset_end_free(t_exec *exec_cmd, t_env **head, t_info **info)
 	a = 0;
 	if ((*info)->inchild == true)
 	{
-		ft_freelist(head);
-		free((*info));
+		ft_multifree(head, info, exec_cmd);
 		exit(0);
 	}
 	else
@@ -99,7 +98,10 @@ void	ft_unset(t_exec *exec_cmd, t_env **head, t_info **info)
 	{
 		(*info)->exitstatus = 0;
 		if ((*info)->inchild == true)
+		{
+			ft_multifree(head, info, exec_cmd);
 			exit(0);
+		}
 	}
 	while (input[i] != NULL)
 	{

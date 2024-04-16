@@ -23,6 +23,8 @@ int	ft_minusnfun(char *cmdarg)
 	int	i;
 
 	i = 1;
+	if (cmdarg == NULL)
+		return (false);
 	if (ft_strlen(cmdarg) < ft_strlen("-n"))
 		return (false);
 	if (ft_strncmp(cmdarg, "-n", ft_strlen("-n")) != 0)
@@ -77,7 +79,7 @@ void	ft_minusndecide(t_env **head, t_info **info, t_exec *exec_cmd)
 		}
 	}
 	if (cmdargs[2] == NULL)
-		newline = true;
+		newline = false;
 	if (newline == false)
 		a -= 1;
 	ft_printout(a, cmdargs, newline);
@@ -98,19 +100,10 @@ void	ft_echo(t_exec *exec_cmd, t_env **head, t_info **info)
 	if (cmdargs[1] == NULL)
 	{
 		printf("\n");
-		exit(0);
+		ft_echoend(head, info, exec_cmd);
 	}
 	if (cmdargs[1][0] == '-' && cmdargs[1][1] == 'n')
-	{
-		while (cmdargs[1][n] != '\0')
-		{
-			if (cmdargs[1][n] != 'n')
-				break ;
-			n++;
-		}
-		if (cmdargs[1][n] == '\0')
-			ft_minusndecide(head, info, exec_cmd);
-	}
+		ft_es(cmdargs, exec_cmd, head, info);
 	ft_printout(a, cmdargs, newline);
 	ft_echoend(head, info, exec_cmd);
 }

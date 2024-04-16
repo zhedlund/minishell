@@ -24,9 +24,12 @@ void	ft_multifree(t_env **head, t_info **info, t_exec *exec_cmd)
 		free (cmdargs[check]);
 		check++;
 	}
-	ft_freelist(head);
-	free((*info));
 	free(exec_cmd);
+	if (head != NULL)
+	{
+		ft_freelist(head);
+		free((*info));
+	}
 }
 
 void	ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd)
@@ -49,9 +52,6 @@ void	ft_pwd(t_env **head, t_info **info, t_exec *exec_cmd)
 		printf("%s", strerror(errno));
 	write(1, "\n", 1);
 	(*info)->exitstatus = 0;
-	if ((*info)->inchild == true)
-		ft_multifree(head, info, exec_cmd);
-	else
-		ft_multifree(head, info, exec_cmd);
+	ft_multifree(head, info, exec_cmd);
 	exit(0);
 }

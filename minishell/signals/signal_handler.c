@@ -19,13 +19,13 @@ void	ft_ctrlc2(int signal)
 	{
 		(void)signal;
 		rl_replace_line("\0", 0);
-		g_signal = 4;
+		g_signal = 3;
 	}
 	if (signal == SIGQUIT)
 	{
 		(void)signal;
 		write(1, "\033[K", 3);
-		g_signal = 2;
+		g_signal = 4;
 	}
 }
 
@@ -39,7 +39,7 @@ void	ft_ctrlc(int sig)
 		rl_redisplay();
 		write(1, "\033[K", 3);
 		rl_redisplay();
-		g_signal = 6;
+		g_signal = 4;
 	}
 	if (sig == SIGINT)
 	{
@@ -48,7 +48,7 @@ void	ft_ctrlc(int sig)
 		write(STDERR_FILENO, "\n", 1);
 		rl_on_new_line();
 		rl_redisplay();
-		g_signal = 130;
+		g_signal = 3;
 	}
 }
 

@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   whichsignal.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jelliott <jelliott@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/26 16:27:18 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/26 16:27:20 by jelliott         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:29:59 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	ft_firstcommandcheck(char *buf, t_info **info)
@@ -19,7 +20,7 @@ int	ft_firstcommandcheck(char *buf, t_info **info)
 	i = 0;
 	firstcommandarray = ft_split(buf, '|');
 	firstcommandarray = ft_arraytrim(firstcommandarray);
-	if (ft_identical(firstcommandarray[0], "cat") == true
+	if (ft_cat_check(firstcommandarray[0]) == true
 		|| ft_identical(firstcommandarray[0], "wc") == true
 		|| ft_identical(firstcommandarray[0], "wc -l") == true
 		|| ft_greponearguement(firstcommandarray[0]) == true)
@@ -75,11 +76,14 @@ void	ft_othercommands(char **firstcommandarray, t_info **info)
 char	**ft_arraytrim(char **totrim)
 {
 	int		i;
+	char	*hold;
 
 	i = 0;
 	while (totrim[i] != NULL)
 	{
+		hold = totrim[i];
 		totrim[i] = ft_strtrim(totrim[i], " ");
+		free(hold);
 		i++;
 	}
 	return (totrim);

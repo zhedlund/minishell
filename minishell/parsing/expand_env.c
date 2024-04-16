@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 15:38:58 by zhedlund          #+#    #+#             */
-/*   Updated: 2024/03/26 18:37:50 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/04/08 13:50:50 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ static int	handle_env_var(const char *str, char *expanded,
 			error_max_size();
 		ft_strlcpy(expanded + *index, value, PATH_MAX - *index);
 		*index += ft_strlen(value);
+		free((void *)value);
 		return (end - str - 1);
 	}
-	else
-		return (end - str);
+	return (end - str);
 }
 
 static void	copy_to_expanded(char *expanded, size_t *index, char c)
@@ -83,10 +83,19 @@ char	*expand_env_in_str(const char *str, int exit_status, t_env **head)
 	return (expanded);
 }
 
+void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
+{
+	char	*token;
+
+	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
+	free(cmd->argv[args]);
+	cmd->argv[args] = token;
+}
+
 /* 	Expands environment variables in the form of $USER, $HOME, etc. 
 	returns a new array with the expanded variable
 	*/
-char	**expand_env(char **argv, t_env **head)
+/*char	**expand_env(char **argv, t_env **head)
 {
 	int		i;
 	char	*name;
@@ -106,13 +115,4 @@ char	**expand_env(char **argv, t_env **head)
 		i++;
 	}
 	return (argv);
-}
-
-void	expand_env_var(t_exec *cmd, int args, t_info **info, t_env **head)
-{
-	char	*token;
-
-	token = expand_env_in_str(cmd->argv[args], (*info)->exitstatus, head);
-	free(cmd->argv[args]);
-	cmd->argv[args] = token;
-}
+}*/

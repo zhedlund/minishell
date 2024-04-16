@@ -6,7 +6,7 @@
 /*   By: zhedlund <zhedlund@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/20 10:18:05 by jelliott          #+#    #+#             */
-/*   Updated: 2024/02/25 21:33:38 by zhedlund         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:26:51 by zhedlund         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,8 @@ char	**ft_checkheredoc(char **inputs, t_info **info, t_env **head)
 
 void	ft_heredocmain(char *cmdline, t_info **info, t_env **head)
 {
-	int	i;
+	int		i;
+	char	*hold;
 
 	i = 0;
 	(*info)->hdcount = 0;
@@ -109,7 +110,9 @@ void	ft_heredocmain(char *cmdline, t_info **info, t_env **head)
 	{
 		if ((*info)->inputs[i] == NULL)
 			break ;
+		hold = (*info)->inputs[i];
 		(*info)->inputs[i] = ft_strtrim((*info)->inputs[i], " ");
+		free(hold);
 		ft_checkheredoc((*info)->inputs, info, head);
 		i++;
 	}

@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-//thi needs to be altered - which signal function != 2
-//why130 ? why 6? - sigint/sigquit
 void	ft_mainsignals(t_info **info, char *buf)
 {
 	signal(SIGQUIT, ft_ctrlc); 

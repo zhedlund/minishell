@@ -1,7 +1,4 @@
 # minishell
-
----
-
 A lightweight, custom shell written in C, designed to replicate key features and behaviors of Bash. Developed and tested on Linux, `minishell` provides a foundation for understanding shell internals, while supporting a subset of Bash functionality.
 
 ---
@@ -9,7 +6,7 @@ A lightweight, custom shell written in C, designed to replicate key features and
 ## **Features**
 
 - **Command Parsing**: Handles single and double quotes for complex input.
-- **Redirection**: Supports input (`<`), output (`>`), and append (`>>`) redirections.
+- **Redirection**: Supports input (`<`), output (`>`), append (`>>`) and heredoc (`<<`) redirections.
 - **Pipelines**: Implements Unix-style piping (`|`).
 - **History**: Tracks command history within the session.
 - **Environment Variable Expansion**: Supports `$VAR` and `$?` for the last exit status.

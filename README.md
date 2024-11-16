@@ -78,21 +78,17 @@ $ exit
 
 ---
 
-## **Contributing**
+## **Team**
 
-Contributions are welcome! To contribute:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b feature-name`.
-3. Commit your changes: `git commit -m "Add new feature"`.
-4. Push the branch: `git push origin feature-name`.
-5. Submit a pull request.
+This project was developed by:
+- **zhedlund** ([GitHub](https://github.com/zhedlund))  
+- **jelliott** ([GitHub](https://github.com/jelliott))
 
 ---
 
-## **License**
+## **Made For**
 
-This project is licensed under the [MIT License](LICENSE).
+- Linux operating systems.
 
 ---
 
@@ -101,3 +97,7 @@ This project is licensed under the [MIT License](LICENSE).
 `minishell` was developed as part of a hands-on exploration of shell internals at 42 Berlin.
 
 ---
+
+## **License**
+
+This project is licensed under the [MIT License](LICENSE).

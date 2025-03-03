@@ -82,7 +82,7 @@ $ exit
 
 This project was developed by:
 - **zhedlund** ([GitHub](https://github.com/zhedlund))  
-- **jelliott** ([GitHub](https://github.com/jelliott))
+- **jelliott980** ([GitHub](https://github.com/jelliott980))
 
 ---
 
